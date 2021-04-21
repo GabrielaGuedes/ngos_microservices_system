@@ -1,4 +1,5 @@
 const mongoose = require("mongoose-schema-jsonschema")();
+const uniqueValidator = require("mongoose-unique-validator");
 
 const { Schema } = mongoose;
 
@@ -7,7 +8,7 @@ const donatorSchema = new Schema({
     type: String,
     required: true,
   },
-  birth_date: {
+  birthDate: {
     type: Date,
     required: true,
   },
@@ -34,23 +35,29 @@ const donatorSchema = new Schema({
   email: {
     type: String,
     required: true,
-    index: true,
+    index: {
+      unique: true,
+      dropDups: true,
+    },
   },
   phone: {
     type: Number,
     required: false,
   },
-  amount_donated: {
+  donatedValue: {
     type: Number,
     required: false,
   },
-  last_donation: {
+  lastDonation: {
     type: Date,
     required: false,
     default: Date.now,
   },
 });
 
-exports.jsonSchema = donatorSchema.jsonSchema();
+donatorSchema.plugin(uniqueValidator);
 
-exports.Model = mongoose.model("donators", donatorSchema);
+module.exports = {
+  jsonSchema: donatorSchema.jsonSchema(),
+  Model: mongoose.model("donators", donatorSchema),
+};
