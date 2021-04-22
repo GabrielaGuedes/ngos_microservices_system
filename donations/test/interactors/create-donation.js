@@ -13,7 +13,7 @@ const { expect } = chai;
 describe("CreateDonation", () => {
   it("Creates a donation when context passed is correct", async () => {
     const context = {
-      id: "123123",
+      donationId: "123123",
       status: "AUTHORIZED",
       chargeInfo: {
         donatedValue: 25.0,
@@ -32,7 +32,7 @@ describe("CreateDonation", () => {
   describe("Create donation with repeated id", () => {
     before(() => {
       const context = {
-        id: "1",
+        donationId: "1",
         status: "AUTHORIZED",
         chargeInfo: {
           donatedValue: 25.0,
@@ -49,7 +49,7 @@ describe("CreateDonation", () => {
 
     it("Throws an error", async () => {
       const context = {
-        id: "1",
+        donationId: "1",
         status: "AUTHORIZED",
         chargeInfo: {
           donatedValue: 25.0,
