@@ -109,11 +109,11 @@ describe("CreateDonator", () => {
       },
     };
 
-    return CreateDonator.run(contextWithoutBirthDate).then(async (res) => {
+    return CreateDonator.run(contextWithoutBirthDate).catch(async (err) => {
       const donator = await Donator.Model.findOne({
         email: contextWithoutBirthDate.donatorInfo.email,
       });
-      expect(res).to.not.have.own.property("donatorRecordId");
+      expect(err).to.not.eq(null);
       expect(donator).to.eq(null);
     });
   });

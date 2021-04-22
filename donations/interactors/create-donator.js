@@ -35,6 +35,11 @@ module.exports = class CreateDonator extends Interactor {
         // eslint-disable-next-line no-underscore-dangle
         context.donatorRecordId = result._id;
       })
-      .catch((err) => err);
+      .catch((err) => Promise.reject(err));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  rollback() {
+    console.log("rollbackkkkkkkkkkkkkkkkkkkk");
   }
 };
