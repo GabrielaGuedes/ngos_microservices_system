@@ -36,9 +36,7 @@ describe("ChargeCreditCard", () => {
     }));
 
   it("Does not charge the credit card when context passed is invalid", () =>
-    ChargeCreditCard.run(invalidContext).then((res) => {
-      expect(res).to.have.own.property("status");
-      expect(res).to.have.own.property("donationId");
-      expect(res.status).to.eq("DECLINED");
+    ChargeCreditCard.run(invalidContext).catch((err) => {
+      expect(err).to.eq(undefined);
     }));
 });

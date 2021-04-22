@@ -8,9 +8,12 @@ module.exports = class ChargeCreditCard extends Interactor {
   async run(context) {
     const result = await this.getChargeResult(context);
     const jsonResult = await result.json();
+    this.id = jsonResult.id;
 
-    if (result.status === 200 || result.status === 201) {
-      this.id = jsonResult.id;
+    if (
+      (result.status === 200 || result.status === 201) &&
+      (jsonResult.status === "PAID" || jsonResult.status === "AUTHORIZED")
+    ) {
       context.donationId = jsonResult.id;
       context.status = jsonResult.status;
       return Promise.resolve();

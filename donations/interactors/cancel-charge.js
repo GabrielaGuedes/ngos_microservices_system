@@ -13,7 +13,7 @@ module.exports = class CancelCharge extends Interactor {
 
   cancelChargeResult(context) {
     this.body = {
-      amount: context.chargeInfo.donatedValue,
+      amount: context.body.amount.value,
     };
 
     return cancel(context.chargeId, this.body);

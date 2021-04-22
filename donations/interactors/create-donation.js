@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Interactor = require("interactor");
 const Donation = require("../models/donations");
 
@@ -15,14 +16,24 @@ module.exports = class CreateDonation extends Interactor {
     await this.donation
       .save()
       .then((result) => {
-        // eslint-disable-next-line no-underscore-dangle
         context.donationRecordId = result._id;
       })
-      .catch((err) => err);
+      .catch(async (err) => {
+        await this.saveDonationRecordId();
+        return Promise.reject(err);
+      });
   }
 
-  rollback() {
-    console.log("rollbackkkkkkkkkkkkkkkkkkkk");
-    Donation.Model.findOneAndRemove({ donationId: this.context.id });
+  async saveDonationRecordId() {
+    const donation = await Donation.Model.findOne({
+      donationId: this.context.donationId,
+    });
+    this.donationRecordId = donation ? donation._id : null;
+  }
+
+  async rollback() {
+    await Donation.Model.findOneAndRemove({
+      _id: this.context.donationRecordId,
+    });
   }
 };
