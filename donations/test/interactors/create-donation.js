@@ -4,6 +4,7 @@ process.env.NODE_ENV = "test";
 const mongoose = require("mongoose");
 const chai = require("chai");
 const CreateDonation = require("../../interactors/create-donation");
+const Donation = require("../../models/donations");
 require("dotenv/config");
 require("../../config/db");
 
@@ -30,7 +31,8 @@ describe("CreateDonation", () => {
   });
 
   describe("Create donation with repeated id", () => {
-    before(() => {
+    before(async () => {
+      await Donation.Model.remove({});
       const context = {
         donationId: "1",
         status: "AUTHORIZED",
@@ -60,8 +62,11 @@ describe("CreateDonation", () => {
         source: "CREDIT_CARD",
       };
 
-      return CreateDonation.run(context).then((res) => {
-        expect(res).to.not.have.own.property("donationRecordId");
+      return CreateDonation.run(context).catch(async (err) => {
+        const donation = await Donation.Model.find({ donationId: "1" });
+
+        expect(donation.length).to.eq(1);
+        expect(err).to.not.eq(null);
       });
     });
   });
