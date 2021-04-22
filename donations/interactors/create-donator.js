@@ -27,6 +27,8 @@ module.exports = class CreateDonator extends Interactor {
         upsert: true,
         useFindAndModify: false,
         returnOriginal: false,
+        runValidators: true,
+        context: "query",
       }
     )
       .then(async (result) => {

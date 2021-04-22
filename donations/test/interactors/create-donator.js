@@ -91,6 +91,32 @@ describe("CreateDonator", () => {
       });
     });
   });
+
+  it("Does not create the record when there are required params missing", async () => {
+    const contextWithoutBirthDate = {
+      chargeInfo: {
+        donatedValue: 25.0,
+      },
+      donatorInfo: {
+        name: "Example Name",
+        motivation: "Any reason here",
+        occupation: "Software Engineer",
+        city: "Sao Paulo",
+        state: "SP",
+        country: "Brazil",
+        email: "test3@example.com",
+        phone: 5511999999999,
+      },
+    };
+
+    return CreateDonator.run(contextWithoutBirthDate).then(async (res) => {
+      const donator = await Donator.Model.findOne({
+        email: contextWithoutBirthDate.donatorInfo.email,
+      });
+      expect(res).to.not.have.own.property("donatorRecordId");
+      expect(donator).to.eq(null);
+    });
+  });
 });
 
 after((done) => {
