@@ -4,12 +4,17 @@ const cors = require("cors");
 require("./config/db");
 const validation = require("./middleware/validate-errors");
 const routes = require("./routes");
+require("dotenv/config");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(validation);
 app.use("/", routes);
+app.use(validation);
 
-app.listen(9000);
+const env = process.env.NODE_ENV || "development";
+if (env === "test") {
+  process.env.PORT = process.env.TEST_PORT;
+}
+app.listen(process.env.PORT);

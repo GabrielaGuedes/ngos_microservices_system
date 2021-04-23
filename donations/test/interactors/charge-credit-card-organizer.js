@@ -11,6 +11,11 @@ require("../../config/db");
 const { expect } = chai;
 
 describe("ChargeCreditCardOrganizer", () => {
+  beforeEach(async () => {
+    await Donation.Model.remove({});
+    await Donator.Model.remove({});
+  });
+
   it("Charges the credit card, create the donation and the donator if everything is fine", async () => {
     const context = {
       chargeInfo: {
@@ -45,11 +50,6 @@ describe("ChargeCreditCardOrganizer", () => {
   });
 
   describe("When cant charge the credit card", () => {
-    before(async () => {
-      await Donation.Model.remove({});
-      await Donator.Model.remove({});
-    });
-
     it("Doesnt create the donation nor the donator", () => {
       const context = {
         chargeInfo: {
@@ -88,11 +88,6 @@ describe("ChargeCreditCardOrganizer", () => {
   });
 
   describe("When cant create the donator", () => {
-    before(async () => {
-      await Donation.Model.remove({});
-      await Donator.Model.remove({});
-    });
-
     it("Rollbacks the donation and the credit card charge", async () => {
       const context = {
         chargeInfo: {

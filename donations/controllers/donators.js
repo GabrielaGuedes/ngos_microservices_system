@@ -12,14 +12,14 @@ router.post(
   async (req, res, next) => {
     const newDonator = new Donator.Model({
       name: req.body.name,
-      birth_date: req.body.birth_date,
+      birthDate: req.body.birthDate,
       occupation: req.body.occupation,
       city: req.body.city,
       state: req.body.state,
       country: req.body.country,
       email: req.body.email,
       phone: req.body.phone,
-      amount_donated: req.body.amount_donated,
+      donatedValue: req.body.donatedValue,
     });
 
     await newDonator
