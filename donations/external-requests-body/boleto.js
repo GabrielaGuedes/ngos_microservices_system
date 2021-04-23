@@ -11,7 +11,7 @@ exports.boletoBody = (
   email,
   cpf,
   country,
-  stateCode,
+  state,
   city,
   postalCode,
   street,
@@ -38,7 +38,7 @@ exports.boletoBody = (
         email,
         address: {
           country,
-          regionCode: stateCode,
+          regionCode: state,
           city,
           postal_code: postalCode.toString(),
           street,

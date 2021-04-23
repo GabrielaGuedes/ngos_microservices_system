@@ -192,3 +192,119 @@ describe("/POST Charge credit card", () => {
     done();
   });
 });
+
+describe("/POST Charge boleto", () => {
+  beforeEach(async () => {
+    await Donation.Model.remove({});
+    await Donator.Model.remove({});
+  });
+
+  describe("When body is missing required param (birthDate) from donator", () => {
+    it("Returns bad request", () => {
+      const chargeInfo = {
+        name: "Example Name",
+        occupation: "Software Engineer",
+        motivation: "Any reason here",
+        city: "São Paulo",
+        state: "SP",
+        country: "Brazil",
+        email: "example@test.com",
+        phone: 5511999999999,
+        donatedValue: 50.0,
+        cpf: 99176560066,
+        postalCode: 76820320,
+        street: "Rua das Casas",
+        number: 100,
+        neighborhood: "Bairro qualquer",
+      };
+      chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/donations/charge-boleto")
+        .send(chargeInfo)
+        .end(async (_err, res) => {
+          const donation = await Donation.Model.find();
+          const donator = await Donator.Model.find();
+
+          res.should.have.status(400);
+          expect(res.error.text).to.include("birthDate");
+          expect(donation.length).to.eql(0);
+          expect(donator.length).to.eql(0);
+        });
+    });
+  });
+
+  describe("When body is missing required param (donatedValue) from donation", () => {
+    it("Returns bad request", () => {
+      const chargeInfo = {
+        name: "Example Name",
+        birthDate: "1990-01-01T20:20:39+00:00",
+        occupation: "Software Engineer",
+        motivation: "Any reason here",
+        city: "São Paulo",
+        state: "SP",
+        country: "Brazil",
+        email: "example@test.com",
+        phone: 5511999999999,
+        cpf: 99176560066,
+        postalCode: 76820320,
+        street: "Rua das Casas",
+        number: 100,
+        neighborhood: "Bairro qualquer",
+      };
+      chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/donations/charge-boleto")
+        .send(chargeInfo)
+        .end(async (_err, res) => {
+          const donation = await Donation.Model.find();
+          const donator = await Donator.Model.find();
+
+          res.should.have.status(400);
+          expect(res.error.text).to.include("donatedValue");
+          expect(donation.length).to.eql(0);
+          expect(donator.length).to.eql(0);
+        });
+    });
+  });
+
+  describe("When body is missing required param from both donator and donation", () => {
+    it("Returns bad request", () => {
+      it("Returns bad request", () => {
+        const chargeInfo = {
+          name: "Example Name",
+          occupation: "Software Engineer",
+          motivation: "Any reason here",
+          city: "São Paulo",
+          state: "SP",
+          country: "Brazil",
+          email: "example@test.com",
+          phone: 5511999999999,
+          cpf: 99176560066,
+          postalCode: 76820320,
+          street: "Rua das Casas",
+          number: 100,
+          neighborhood: "Bairro qualquer",
+        };
+        chai
+          .request(`http://localhost:${process.env.TEST_PORT}`)
+          .post("/api/donations/charge-boleto")
+          .send(chargeInfo)
+          .end(async (_err, res) => {
+            const donation = await Donation.Model.find();
+            const donator = await Donator.Model.find();
+
+            res.should.have.status(400);
+            expect(res.error.text).to.include("birthDate");
+            expect(res.error.text).to.include("donatedValue");
+            expect(donation.length).to.eql(0);
+            expect(donator.length).to.eql(0);
+          });
+      });
+    });
+
+    after((done) => {
+      mongoose.connection.dropDatabase(process.env.TEST_DB);
+      done();
+    });
+  });
+});

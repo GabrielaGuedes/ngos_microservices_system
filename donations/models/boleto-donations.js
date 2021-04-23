@@ -6,7 +6,7 @@ const boletoDonationSchema = {
     "email",
     "cpf",
     "country",
-    "stateCode",
+    "state",
     "city",
     "postalCode",
     "street",
@@ -31,7 +31,7 @@ const boletoDonationSchema = {
     country: {
       type: "string",
     },
-    stateCode: {
+    state: {
       type: "string",
       pattern: "[A-Z]{2}",
     },
