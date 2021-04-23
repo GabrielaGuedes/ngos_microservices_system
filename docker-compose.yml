@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  server_zero:
+    container_name: NGO_AUTHENTICATION
+    build: "./authentication"
+    volumes:
+      - ./authentication:/node-app
+      - ./authentication/node_modules:/node-app/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    ports:
+      - "2000:2000"
+
+  server_one:
+    container_name: NGO_DONATIONS
+    build: "./donations"
+    volumes:
+      - ./donations:/node-app
+      - ./donations/node_modules:/node-app/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    ports:
+      - "9000:9000"
+
+  mongo_db:
+    image: "mongo"
+    container_name: NGO_MONGODB
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
