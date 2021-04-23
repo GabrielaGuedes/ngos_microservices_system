@@ -88,10 +88,9 @@ describe("ChargeCreditCardOrganizer", () => {
   });
 
   describe("When cant create the donator", () => {
-    before((done) => {
-      Donation.Model.remove({});
-      Donator.Model.remove({});
-      done();
+    before(async () => {
+      await Donation.Model.remove({});
+      await Donator.Model.remove({});
     });
 
     it("Rollbacks the donation and the credit card charge", async () => {
@@ -126,9 +125,9 @@ describe("ChargeCreditCardOrganizer", () => {
       });
     });
   });
-});
 
-after((done) => {
-  mongoose.connection.dropDatabase(process.env.TEST_DB);
-  done();
+  after((done) => {
+    mongoose.connection.dropDatabase(process.env.TEST_DB);
+    done();
+  });
 });

@@ -117,9 +117,9 @@ describe("CreateDonator", () => {
       expect(donator).to.eq(null);
     });
   });
-});
 
-after((done) => {
-  mongoose.connection.dropDatabase(process.env.TEST_DB);
-  done();
+  after((done) => {
+    mongoose.connection.dropDatabase(process.env.TEST_DB);
+    done();
+  });
 });
