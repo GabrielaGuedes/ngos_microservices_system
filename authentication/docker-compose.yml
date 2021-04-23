@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  server:
+    container_name: NGO_AUTHENTICATION
+    build: "."
+    volumes:
+      - ./:/node-app
+      - ./node_modules:/node-app/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - "2000:2000"
+
+  db:
+    image: "mongo"
+    container_name: NGO_MONGODB_AUTH
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
