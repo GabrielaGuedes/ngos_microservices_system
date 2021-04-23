@@ -1,29 +1,80 @@
+/* eslint-disable no-underscore-dangle */
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const donators = require("./controllers/donators");
-const donations = require("./controllers/donations");
+const { Validator } = require("express-json-validator-middleware");
+const User = require("./models/users");
+const verifyJWT = require("./middleware/verify-jwt");
 
+const { validate } = new Validator();
 const router = express.Router();
+const EXPIRATION_TIME = 3000;
 
-router.use("/login", (req, res) => {
-  //esse teste abaixo deve ser feito no seu banco de dados
-  console.log(req.body);
-  if (req.body.user === "tuk" && req.body.password === "123") {
-    //auth ok
-    const id = 1; //esse id viria do banco de dados
-    const token = jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: 300, // expires in 5min
+router.post(
+  "/signup",
+  validate({ body: User.jsonSchema }),
+  async (req, res, next) => {
+    const newUser = new User.Model({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
     });
-    return res.json({ auth: true, token });
+
+    await newUser
+      .save()
+      .then((result) => {
+        const token = jwt.sign({ result: result._id }, process.env.SECRET, {
+          expiresIn: EXPIRATION_TIME,
+        });
+        return res.json({ auth: true, token });
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+    next();
   }
+);
 
-  return res.status(500).json({ message: "Login inválido!" });
-});
-router.use("/logout", (req, res) => {
-  res.json({ auth: false, token: null });
+router.post("/login", async (req, res) => {
+  const user = await User.Model.findOne({ email: req.body.email });
+
+  User.rawSchema.methods.comparePassword(
+    req.body.password,
+    user.password,
+    (_err, isMatch) => {
+      if (isMatch) {
+        const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+          expiresIn: EXPIRATION_TIME,
+        });
+        return res.json({ auth: true, token });
+      }
+      return res.status(500).json({ message: "Invalid Login" });
+    }
+  );
 });
 
-router.use("/api/donators", donators);
-router.use("/api/donations", donations);
+router.post("/reset-password", verifyJWT, async (req, res) => {
+  const user = await User.Model.findOne({ _id: req.userId });
+
+  User.rawSchema.methods.comparePassword(
+    req.body.oldPassword,
+    user.password,
+    (_err, isMatch) => {
+      if (isMatch) {
+        user.password = req.body.newPassword;
+        return user
+          .save()
+          .then(() => res.json({ message: "Success!" }))
+          .catch(() => res.status(500).json({ message: "Error. Try again." }));
+      }
+      return res.status(400).json({ message: "Invalid Password" });
+    }
+  );
+});
+
+router.get("/", async (_req, res) => {
+  await User.Model.find()
+    .then((result) => res.json(result))
+    .catch((error) => res.status(500).json(error));
+});
 
 module.exports = router;
