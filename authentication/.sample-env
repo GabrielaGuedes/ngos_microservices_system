@@ -1,0 +1,6 @@
+DB_CONNECTION=mongodb://mongo_db:27017/authentication
+TEST_DB_CONNECTION=mongodb://localhost:27017/testDB
+TEST_DB=testDB
+TEST_PORT=2001
+PORT=2000
+SECRET=<SECRET_FOR_THE_JWT>
