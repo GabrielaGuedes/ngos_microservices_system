@@ -30,6 +30,7 @@ const userSchema = new Schema(
 userSchema.plugin(uniqueValidator);
 
 // Encrypt password before saving
+// eslint-disable-next-line func-names
 userSchema.pre("save", function (next) {
   const user = this;
 
