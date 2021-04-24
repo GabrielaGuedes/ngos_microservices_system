@@ -93,6 +93,7 @@ router.post(
         res.json({
           donationId: result.donationRecordId,
           donatorRecordId: result.donatorRecordId,
+          pdfLink: result.boletoPdf,
         });
       })
       .catch((error) => {

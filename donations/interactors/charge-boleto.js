@@ -14,6 +14,9 @@ module.exports = class ChargeBoleto extends Interactor {
     ) {
       context.donationId = jsonResult.id;
       context.status = jsonResult.status;
+      context.boletoPdf = jsonResult.links.find(
+        (link) => link.media === "application/pdf"
+      ).href;
       return Promise.resolve();
     }
 
