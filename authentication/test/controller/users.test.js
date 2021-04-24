@@ -212,7 +212,7 @@ describe("/POST Login", () => {
   });
 });
 
-describe("/POST Reset Password", () => {
+describe("/POST Redefine Password", () => {
   let token = "";
   beforeEach(async () => {
     await User.Model.deleteMany({});
@@ -234,7 +234,7 @@ describe("/POST Reset Password", () => {
   });
 
   describe("When body is correct and token is passed", () => {
-    it("Resets the password", async () => {
+    it("Redefines the password", async () => {
       const userInfo = {
         oldPassword: "password1234",
         newPassword: "password",
@@ -242,7 +242,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -260,7 +260,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .send(userInfo);
 
       res.should.have.status(401);
@@ -277,7 +277,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .set("x-access-token", "wrongToken")
         .send(userInfo);
 
@@ -294,7 +294,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -311,7 +311,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -328,7 +328,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put("/api/reset-password")
+        .put("/api/redefine-password")
         .set("x-access-token", "wrongToken")
         .send(userInfo);
 

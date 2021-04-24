@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
   );
 });
 
-router.put("/reset-password", verifyJWT, async (req, res) => {
+router.put("/redefine-password", verifyJWT, async (req, res) => {
   const user = await User.Model.findOne({ _id: req.userId });
 
   User.rawSchema.methods.comparePassword(
