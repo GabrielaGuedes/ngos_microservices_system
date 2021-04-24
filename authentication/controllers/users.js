@@ -11,20 +11,25 @@ const { validate } = new Validator();
 router.post(
   "/signup",
   validate({ body: User.jsonSchema }),
-  async (req, res, next) => {
+  async (req, res) => {
+    const users = await User.Model.find();
+    if (users.length > 0)
+      return res
+        .status(401)
+        .json({ error: "Please, ask the admin to register the new user" });
+
     const newUser = new User.Model({
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
     });
 
-    await newUser
+    return newUser
       .save()
       .then((result) => res.json({ auth: true, token: token(result._id) }))
       .catch((error) => {
         res.status(500).json(error);
       });
-    next();
   }
 );
 
@@ -45,7 +50,7 @@ router.post("/login", async (req, res) => {
   );
 });
 
-router.post("/reset-password", verifyJWT, async (req, res) => {
+router.put("/reset-password", verifyJWT, async (req, res) => {
   const user = await User.Model.findOne({ _id: req.userId });
 
   User.rawSchema.methods.comparePassword(
@@ -63,5 +68,27 @@ router.post("/reset-password", verifyJWT, async (req, res) => {
     }
   );
 });
+
+router.post(
+  "/register-user",
+  validate({ body: User.jsonSchema }),
+  verifyJWT,
+  async (req, res) => {
+    const newUser = new User.Model({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    return newUser
+      .save()
+      .then((result) =>
+        res.json({ message: "Success", email: result.email, name: result.name })
+      )
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  }
+);
 
 module.exports = router;

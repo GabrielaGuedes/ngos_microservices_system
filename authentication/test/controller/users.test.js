@@ -12,6 +12,7 @@ const { expect } = chai;
 const should = chai.should();
 
 chai.use(chaiHttp);
+
 describe("/POST Sign up", () => {
   describe("When body is correct", () => {
     before(async () => {
@@ -43,7 +44,7 @@ describe("/POST Sign up", () => {
       await User.Model.deleteMany({});
     });
 
-    it("Returns an validate error", async () => {
+    it("Returns a validate error", async () => {
       const userInfo = {
         name: "Example Name",
         email: "example@test.com",
@@ -63,8 +64,8 @@ describe("/POST Sign up", () => {
     });
   });
 
-  describe("When email is already being used", () => {
-    beforeEach(async () => {
+  describe("When there is already someone registered", () => {
+    before(async () => {
       await User.Model.deleteMany({});
       await new User.Model({
         name: "First Example User",
@@ -73,10 +74,10 @@ describe("/POST Sign up", () => {
       }).save();
     });
 
-    it("Returns an error", async () => {
+    it("Returns unauthorized", async () => {
       const userInfo = {
         name: "Second Example User",
-        email: "example@test.com",
+        email: "second_example@test.com",
         password: "pass1234",
       };
       const res = await chai
@@ -86,11 +87,11 @@ describe("/POST Sign up", () => {
 
       const users = await User.Model.find();
 
-      res.should.have.status(500);
+      res.should.have.status(401);
       expect(users.length).to.eql(1);
       expect(users[0].name).to.eql("First Example User");
-      expect(res.error.text).to.include("email");
-      expect(res.error.text).to.include("unique");
+      expect(res.error.text).to.include("ask");
+      expect(res.error.text).to.include("admin");
       expect(res.body).to.not.have.own.property("auth");
       expect(res.body).to.not.have.own.property("token");
     });
@@ -241,7 +242,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -259,7 +260,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .send(userInfo);
 
       res.should.have.status(401);
@@ -276,7 +277,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .set("x-access-token", "wrongToken")
         .send(userInfo);
 
@@ -293,7 +294,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -310,7 +311,7 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .set("x-access-token", token)
         .send(userInfo);
 
@@ -327,12 +328,150 @@ describe("/POST Reset Password", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reset-password")
+        .put("/api/reset-password")
         .set("x-access-token", "wrongToken")
         .send(userInfo);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
+    });
+  });
+
+  after((done) => {
+    mongoose.connection.dropDatabase(process.env.TEST_DB);
+    done();
+  });
+});
+
+describe("/POST Register user", () => {
+  let token = "";
+  beforeEach(async () => {
+    await User.Model.deleteMany({});
+    await new User.Model({
+      name: "Example User",
+      email: "example@test.com",
+      password: "password1234",
+    }).save();
+
+    const res = await chai
+      .request(`http://localhost:${process.env.TEST_PORT}`)
+      .post("/api/login")
+      .send({
+        email: "example@test.com",
+        password: "password1234",
+      });
+
+    token = res.body.token;
+  });
+
+  describe("When body is correct and token is passed", () => {
+    it("Creates a new user", async () => {
+      const userInfo = {
+        name: "New Example Name",
+        email: "new_example@test.com",
+        password: "password123",
+      };
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/register-user")
+        .set("x-access-token", token)
+        .send(userInfo);
+
+      const user = await User.Model.find();
+
+      res.should.have.status(200);
+      expect(user.length).to.eql(2);
+      expect(res.body.email).to.eq(userInfo.email);
+      expect(res.body.name).to.eq(userInfo.name);
+      expect(res.body.message).to.eq("Success");
+    });
+  });
+
+  describe("When body is missing password and token is passed", () => {
+    it("Returns a validate error", async () => {
+      const userInfo = {
+        name: "New Example Name",
+        email: "new_example@test.com",
+      };
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/register-user")
+        .set("x-access-token", token)
+        .send(userInfo);
+
+      const user = await User.Model.find();
+
+      res.should.have.status(400);
+      expect(user.length).to.eql(1);
+      expect(res.text).to.include("password");
+    });
+  });
+
+  describe("When params are correct, but email is already being used", () => {
+    it("Returns an error", async () => {
+      const userInfo = {
+        name: "New Example Name",
+        email: "new_example@test.com",
+        password: "password123",
+      };
+
+      await new User.Model(userInfo).save();
+
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/register-user")
+        .set("x-access-token", token)
+        .send(userInfo);
+
+      const user = await User.Model.find();
+
+      res.should.have.status(500);
+      expect(user.length).to.eql(2);
+      expect(res.text).to.include("email");
+      expect(res.text).to.include("unique");
+    });
+  });
+
+  describe("When body is correct, but token is not passed", () => {
+    it("Returns unauthorized", async () => {
+      const userInfo = {
+        name: "New Example Name",
+        email: "new_example@test.com",
+        password: "password123",
+      };
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/register-user")
+        .send(userInfo);
+
+      const user = await User.Model.find();
+
+      res.should.have.status(401);
+      expect(user.length).to.eql(1);
+      expect(res.text).to.include("No");
+      expect(res.text).to.include("token");
+      expect(res.text).to.include("provided");
+    });
+  });
+
+  describe("When body is correct, but token is wrong", () => {
+    it("Returns an error", async () => {
+      const userInfo = {
+        name: "New Example Name",
+        email: "new_example@test.com",
+        password: "password123",
+      };
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/register-user")
+        .set("x-access-token", "wrong token")
+        .send(userInfo);
+
+      const user = await User.Model.find();
+
+      res.should.have.status(500);
+      expect(user.length).to.eql(1);
+      expect(res.text).to.include("Failed");
     });
   });
 
