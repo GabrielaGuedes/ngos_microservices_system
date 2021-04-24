@@ -12,9 +12,6 @@ const { expect } = chai;
 describe("CreateDonator", () => {
   it("Creates a donator when context passed is correct", async () => {
     const context = {
-      chargeInfo: {
-        donatedValue: 25.0,
-      },
       donatorInfo: {
         name: "Example Name",
         birthDate: "1990-01-01",
@@ -33,16 +30,13 @@ describe("CreateDonator", () => {
         email: context.donatorInfo.email,
       });
       expect(res).to.have.own.property("donatorRecordId");
-      expect(donator.donatedValue).to.eq(context.chargeInfo.donatedValue);
+      expect(donator.name).to.eq(context.donatorInfo.name);
     });
   });
 
   describe("Create donator with repeated email", () => {
     before(() => {
       const context = {
-        chargeInfo: {
-          donatedValue: 25.0,
-        },
         donatorInfo: {
           name: "Example Name",
           birthDate: "1990-01-01",
@@ -63,9 +57,6 @@ describe("CreateDonator", () => {
 
     it("Updates the record with the new data", async () => {
       const context = {
-        chargeInfo: {
-          donatedValue: 25.0,
-        },
         donatorInfo: {
           name: "New Example Name",
           birthDate: "1990-01-01",
@@ -87,16 +78,12 @@ describe("CreateDonator", () => {
         expect(donator.motivation).to.eq(context.donatorInfo.motivation);
         expect(donator.occupation).to.eq(context.donatorInfo.occupation);
         expect(donator.name).to.eq(context.donatorInfo.name);
-        expect(donator.donatedValue).to.eq(context.chargeInfo.donatedValue * 2);
       });
     });
   });
 
   it("Does not create the record when there are required params missing", async () => {
     const contextWithoutBirthDate = {
-      chargeInfo: {
-        donatedValue: 25.0,
-      },
       donatorInfo: {
         name: "Example Name",
         motivation: "Any reason here",
