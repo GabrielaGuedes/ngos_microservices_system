@@ -21,7 +21,7 @@ describe("/POST Charge credit card", () => {
   });
 
   describe("When body is correct", () => {
-    it("Charges the credit card, creates a donation and a donator", () => {
+    it("Charges the credit card, creates a donation and a donator", async () => {
       const chargeInfo = {
         name: "Example Name",
         birthDate: "1990-01-01T20:20:39+00:00",
@@ -38,25 +38,24 @@ describe("/POST Charge credit card", () => {
         expireMonth: "12",
         expireYear: "2030",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-credit-card")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(200);
-          expect(donation.length).to.eql(1);
-          expect(donation[0]._id).to.eq(res.donationId);
-          expect(donator.length).to.eql(1);
-          expect(donator[0]._id).to.eq(res.donatorId);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(200);
+      expect(donation.length).to.eql(1);
+      expect(String(donation[0]._id)).to.eq(res.body.donationId);
+      expect(donator.length).to.eql(1);
+      expect(String(donator[0]._id)).to.eq(res.body.donatorId);
     });
   });
 
   describe("When body is missing required param (birthDate) from donator", () => {
-    it("Returns bad request", () => {
+    it("Returns bad request", async () => {
       const chargeInfo = {
         name: "Example Name",
         occupation: "Software Engineer",
@@ -72,24 +71,23 @@ describe("/POST Charge credit card", () => {
         expireMonth: "12",
         expireYear: "2030",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-credit-card")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(400);
-          expect(res.error.text).to.include("birthDate");
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("birthDate");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
   });
 
   describe("When body is missing required param (donatedValue) from donation", () => {
-    it("Returns bad request", () => {
+    it("Returns bad request", async () => {
       const chargeInfo = {
         name: "Example Name",
         birthDate: "1990-01-01T20:20:39+00:00",
@@ -105,24 +103,23 @@ describe("/POST Charge credit card", () => {
         expireMonth: "12",
         expireYear: "2030",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-credit-card")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(400);
-          expect(res.error.text).to.include("donatedValue");
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("donatedValue");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
   });
 
   describe("When body is missing required param from both donator and donation", () => {
-    it("Returns bad request", () => {
+    it("Returns bad request", async () => {
       const chargeInfo = {
         name: "Example Name",
         occupation: "Software Engineer",
@@ -137,25 +134,23 @@ describe("/POST Charge credit card", () => {
         expireMonth: "12",
         expireYear: "2030",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-credit-card")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(400);
-          expect(res.error.text).to.include("birthDate");
-          expect(res.error.text).to.include("donatedValue");
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("donatedValue");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
   });
 
   describe("When credit card is invalid", () => {
-    it("Returns internal server error", () => {
+    it("Returns internal server error", async () => {
       const chargeInfo = {
         name: "Example Name",
         birthDate: "1990-01-01T20:20:39+00:00",
@@ -172,18 +167,17 @@ describe("/POST Charge credit card", () => {
         expireMonth: "12",
         expireYear: "2030",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-credit-card")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(500);
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(500);
+      expect(donation.length).to.eq(0);
+      expect(donator.length).to.eq(0);
     });
   });
 
@@ -200,7 +194,7 @@ describe("/POST Charge boleto", () => {
   });
 
   describe("When body is missing required param (birthDate) from donator", () => {
-    it("Returns bad request", () => {
+    it("Returns bad request", async () => {
       const chargeInfo = {
         name: "Example Name",
         occupation: "Software Engineer",
@@ -217,24 +211,23 @@ describe("/POST Charge boleto", () => {
         number: 100,
         neighborhood: "Bairro qualquer",
       };
-      chai
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-boleto")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(400);
-          expect(res.error.text).to.include("birthDate");
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("birthDate");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
   });
 
   describe("When body is missing required param (donatedValue) from donation", () => {
-    it("Returns bad request", () => {
+    it("Returns bad request", async () => {
       const chargeInfo = {
         name: "Example Name",
         birthDate: "1990-01-01T20:20:39+00:00",
@@ -251,55 +244,51 @@ describe("/POST Charge boleto", () => {
         number: 100,
         neighborhood: "Bairro qualquer",
       };
-      chai
+
+      const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .post("/api/donations/charge-boleto")
-        .send(chargeInfo)
-        .end(async (_err, res) => {
-          const donation = await Donation.Model.find();
-          const donator = await Donator.Model.find();
+        .send(chargeInfo);
 
-          res.should.have.status(400);
-          expect(res.error.text).to.include("donatedValue");
-          expect(donation.length).to.eql(0);
-          expect(donator.length).to.eql(0);
-        });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("donatedValue");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
   });
 
   describe("When body is missing required param from both donator and donation", () => {
-    it("Returns bad request", () => {
-      it("Returns bad request", () => {
-        const chargeInfo = {
-          name: "Example Name",
-          occupation: "Software Engineer",
-          motivation: "Any reason here",
-          city: "São Paulo",
-          state: "SP",
-          country: "Brazil",
-          email: "example@test.com",
-          phone: 5511999999999,
-          cpf: 99176560066,
-          postalCode: 76820320,
-          street: "Rua das Casas",
-          number: 100,
-          neighborhood: "Bairro qualquer",
-        };
-        chai
-          .request(`http://localhost:${process.env.TEST_PORT}`)
-          .post("/api/donations/charge-boleto")
-          .send(chargeInfo)
-          .end(async (_err, res) => {
-            const donation = await Donation.Model.find();
-            const donator = await Donator.Model.find();
+    it("Returns bad request", async () => {
+      const chargeInfo = {
+        name: "Example Name",
+        occupation: "Software Engineer",
+        motivation: "Any reason here",
+        city: "São Paulo",
+        state: "SP",
+        country: "Brazil",
+        email: "example@test.com",
+        phone: 5511999999999,
+        cpf: 99176560066,
+        postalCode: 76820320,
+        street: "Rua das Casas",
+        number: 100,
+        neighborhood: "Bairro qualquer",
+      };
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .post("/api/donations/charge-boleto")
+        .send(chargeInfo);
 
-            res.should.have.status(400);
-            expect(res.error.text).to.include("birthDate");
-            expect(res.error.text).to.include("donatedValue");
-            expect(donation.length).to.eql(0);
-            expect(donator.length).to.eql(0);
-          });
-      });
+      const donation = await Donation.Model.find();
+      const donator = await Donator.Model.find();
+
+      res.should.have.status(400);
+      expect(res.error.text).to.include("donatedValue");
+      expect(donation.length).to.eql(0);
+      expect(donator.length).to.eql(0);
     });
 
     after((done) => {

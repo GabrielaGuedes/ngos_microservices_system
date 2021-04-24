@@ -43,7 +43,7 @@ router.post(
       .then((result) => {
         res.json({
           donationId: result.donationRecordId,
-          donatorRecordId: result.donatorRecordId,
+          donatorId: result.donatorRecordId,
         });
       })
       .catch((error) => {

@@ -23,7 +23,6 @@ const boletoDonationSchema = {
     },
     email: {
       type: "string",
-      pattern: "/^[a-z0-9.]+@[a-z0-9]+.[a-z]+.([a-z]+)?$/i",
     },
     cpf: {
       type: "integer",
