@@ -29,8 +29,4 @@ exports.creditCardBody = (
       },
     },
   },
-  notification_urls: [
-    // TODO: ADD URL
-    "https://yourserver.com/nas_ecommerce/277be731-3b7c-4dac-8c4e-4c3f4a1fdc46/",
-  ],
 });
