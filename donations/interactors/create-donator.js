@@ -15,6 +15,10 @@ module.exports = class CreateDonator extends Interactor {
       country: context.donatorInfo.country,
       email: context.donatorInfo.email,
       phone: context.donatorInfo.phone,
+      $inc: {
+        donatedValue:
+          context.status === "PAID" ? context.chargeInfo.donatedValue : 0,
+      },
     };
 
     await Donator.Model.findOneAndUpdate(
