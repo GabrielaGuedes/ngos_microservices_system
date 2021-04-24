@@ -1,43 +1,48 @@
 const express = require("express");
-const { Validator } = require("express-json-validator-middleware");
+const verifyJWT = require("../middleware/verify-jwt");
 const Donator = require("../models/donators");
 
 const router = express.Router();
 
-const { validate } = new Validator();
+router.get("/", verifyJWT, async (req, res) => {
+  const query = {};
+  let sort = {};
 
-router.post(
-  "/create",
-  validate({ body: Donator.jsonSchema }),
-  async (req, res, next) => {
-    const newDonator = new Donator.Model({
-      name: req.body.name,
-      birthDate: req.body.birthDate,
-      occupation: req.body.occupation,
-      city: req.body.city,
-      state: req.body.state,
-      country: req.body.country,
-      email: req.body.email,
-      phone: req.body.phone,
-      donatedValue: req.body.donatedValue,
-    });
-
-    await newDonator
-      .save()
-      .then((result) => {
-        res.json(result);
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
-    next();
+  if (req.query.city) {
+    query.city = req.query.city;
   }
-);
 
-router.get("/", async (req, res) => {
-  await Donator.Model.find()
-    .then((result) => res.json(result))
-    .catch((error) => res.status(500).json(error));
+  if (req.query.state) {
+    query.state = req.query.state;
+  }
+
+  if (req.query.country) {
+    query.country = req.query.country;
+  }
+
+  if (req.query.minValue) {
+    query.donatedValue = { $gte: parseFloat(req.query.minValue) };
+  }
+
+  if (req.query.maxValue) {
+    if (query.donatedValue) {
+      query.donatedValue.$lte = parseFloat(req.query.maxValue);
+    } else {
+      query.donatedValue = { $lte: parseFloat(req.query.maxValue) };
+    }
+  }
+
+  if (req.query.sortBy) {
+    sort = { [req.query.sortBy]: 1 };
+  }
+
+  await Donator.Model.find(query)
+    .sort(sort)
+    .exec((err, docs) => {
+      if (err) return res.status(500).json(err);
+
+      return res.json(docs);
+    });
 });
 
 module.exports = router;

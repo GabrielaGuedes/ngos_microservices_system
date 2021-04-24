@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive --exit --timeout 10000"
+    "test": "mocha --recursive --exit --timeout 50000"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "express-async-errors": "^3.1.1",
     "express-json-validator-middleware": "^2.1.1",
     "interactor": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mocha": "^8.3.2",
     "mongoose": "^5.12.3",
     "mongoose-schema-jsonschema": "^1.4.4",
