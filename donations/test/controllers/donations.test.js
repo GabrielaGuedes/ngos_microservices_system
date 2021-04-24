@@ -297,3 +297,314 @@ describe("/POST Charge boleto", () => {
     });
   });
 });
+
+describe("/GET Donations", () => {
+  let token = "";
+  const donations = [];
+
+  before(async () => {
+    await Donation.Model.remove({});
+
+    const res = await chai
+      .request(`http://localhost:${process.env.AUTHENTICATION_PORT}`)
+      .post("/api/login")
+      .send({
+        email: "test@example.com",
+        password: "password1234",
+      });
+
+    token = res.body.token;
+
+    donations.push(
+      await new Donation.Model({
+        donationId: "1",
+        status: "PAID",
+        amount: 25.0,
+        donatorEmail: "example@test.com",
+        source: "CREDIT_CARD",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+    donations.push(
+      await new Donation.Model({
+        donationId: "2",
+        status: "PAID",
+        amount: 5.0,
+        donatorEmail: "cexample@test.com",
+        source: "CREDIT_CARD",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+    donations.push(
+      await new Donation.Model({
+        donationId: "3",
+        status: "PAID",
+        amount: 100.0,
+        donatorEmail: "bexample@test.com",
+        source: "BOLETO",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+    donations.push(
+      await new Donation.Model({
+        donationId: "4",
+        status: "WAITING",
+        amount: 25.0,
+        donatorEmail: "dexample@test.com",
+        source: "BOLETO",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+    donations.push(
+      await new Donation.Model({
+        donationId: "5",
+        status: "EXPIRED",
+        amount: 30.0,
+        donatorEmail: "fexample@test.com",
+        source: "BOLETO",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+    donations.push(
+      await new Donation.Model({
+        donationId: "6",
+        status: "REJECTED",
+        amount: 25.2,
+        donatorEmail: "gexample@test.com",
+        source: "CREDIT_CARD",
+      })
+        .save()
+        .then((doc) => doc)
+    );
+  });
+
+  describe("When token is passed correctly and there are no params", () => {
+    it("Returns all donations", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(donations.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        donations.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        donations.map((don) => don.amount).reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is not passed and there are no params", () => {
+    it("Returns unauthorized", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/");
+
+      res.should.have.status(401);
+      expect(res.error.text).to.include("No");
+      expect(res.error.text).to.include("provided");
+    });
+  });
+
+  describe("When token is wrong and there are no params", () => {
+    it("Returns error", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .set("x-access-token", "wrong token");
+
+      res.should.have.status(500);
+      expect(res.error.text).to.include("Failed");
+    });
+  });
+
+  describe("When token is passed correctly and with paid filter as true", () => {
+    it("Returns only paid donations", async () => {
+      const paidDonations = donations.filter((don) => don.status === "PAID");
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .query({ paid: "true" })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(paidDonations.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        paidDonations.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        paidDonations
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and with paid filter as false", () => {
+    it("Returns only not paid donations", async () => {
+      const notPaidDonations = donations.filter((don) => don.status !== "PAID");
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .query({ paid: "false" })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(notPaidDonations.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        notPaidDonations.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        notPaidDonations
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and with source filter", () => {
+    it("Returns only not paid donations", async () => {
+      const source = "CREDIT_CARD";
+      const creditCardDonations = donations.filter(
+        (don) => don.source === "CREDIT_CARD"
+      );
+
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .query({ source })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(creditCardDonations.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        creditCardDonations.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        creditCardDonations
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and with minimum value filter", () => {
+    it("Returns only donations more than minimum", async () => {
+      const minValue = 15;
+      const donationsWithMinValue = donations.filter(
+        (donation) => donation.amount >= minValue
+      );
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations")
+        .query({ minValue })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(donationsWithMinValue.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        donationsWithMinValue.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        donationsWithMinValue
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and with maximum value filter", () => {
+    it("Returns only donations more than maximum", async () => {
+      const maxValue = 15;
+      const donationsWithMaxValue = donations.filter(
+        (donation) => donation.amount <= maxValue
+      );
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations")
+        .query({ maxValue })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(donationsWithMaxValue.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        donationsWithMaxValue.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        donationsWithMaxValue
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and in value range", () => {
+    it("Returns only donations more than maximum", async () => {
+      const maxValue = 150;
+      const minValue = 15;
+      const donationsInRange = donations.filter(
+        (donation) => donation.amount <= maxValue && donation.amount >= minValue
+      );
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations")
+        .query({ maxValue, minValue })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(donationsInRange.length);
+      expect(res.body.donations.map((don) => don._id)).to.eql(
+        donationsInRange.map((don) => String(don._id))
+      );
+      expect(res.body.total).to.eql(
+        donationsInRange
+          .map((don) => don.amount)
+          .reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  describe("When token is passed correctly and sorted by amount", () => {
+    it("Returns all donations sorted by amount", async () => {
+      const sortBy = "amount";
+      const sortedDonationsAmount = donations
+        .map((donation) => donation.amount)
+        .sort((a, b) => a - b);
+
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .query({ sortBy })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(sortedDonationsAmount.length);
+      expect(res.body.donations.map((don) => don.amount)).to.eql(
+        sortedDonationsAmount
+      );
+      expect(res.body.total).to.eql(
+        sortedDonationsAmount.reduce((total, don) => total + don)
+      );
+    });
+  });
+
+  after((done) => {
+    mongoose.connection.dropDatabase(process.env.TEST_DB);
+    done();
+  });
+});

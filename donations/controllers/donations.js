@@ -4,7 +4,9 @@ const CreditCardDonation = require("../models/credit-card-donations");
 const BoletoDonation = require("../models/boleto-donations");
 const ChargeCreditCardOrganizer = require("../interactors/charge-credit-card-organizer");
 const donators = require("../models/donators");
+const Donation = require("../models/donations");
 const ChargeBoletoOrganizer = require("../interactors/charge-boleto-organizer");
+const verifyJWT = require("../middleware/verify-jwt");
 
 const router = express.Router();
 
@@ -103,5 +105,48 @@ router.post(
     next();
   }
 );
+
+router.get("/", verifyJWT, async (req, res) => {
+  const query = {};
+  let sort = {};
+
+  if (req.query.paid) {
+    query.status =
+      req.query.paid === "true" ? { $eq: "PAID" } : { $ne: "PAID" };
+  }
+
+  if (req.query.source) {
+    query.source = req.query.source;
+  }
+
+  if (req.query.minValue) {
+    query.amount = { $gte: parseFloat(req.query.minValue) };
+  }
+
+  if (req.query.maxValue) {
+    if (query.amount) {
+      query.amount.$lte = parseFloat(req.query.maxValue);
+    } else {
+      query.amount = { $lte: parseFloat(req.query.maxValue) };
+    }
+  }
+
+  if (req.query.sortBy) {
+    sort = { [req.query.sortBy]: 1 };
+  }
+
+  await Donation.Model.find(query)
+    .sort(sort)
+    .exec((err, docs) => {
+      if (err) return res.status(500).json(err);
+
+      return res.json({
+        donations: docs,
+        total: docs
+          ? docs.map((doc) => doc.amount).reduce((total, doc) => total + doc)
+          : 0,
+      });
+    });
+});
 
 module.exports = router;
