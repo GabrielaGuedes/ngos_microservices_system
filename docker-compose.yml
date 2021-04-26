@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-  server_zero:
+  authentication_server:
     container_name: NGO_AUTHENTICATION
     build: "./authentication"
     volumes:
-      - ./authentication:/node-app
-      - ./authentication/node_modules:/node-app/node_modules
+      - ./authentication:/authentication
+      - ./authentication/node_modules:/authentication/node_modules
     environment:
       NODE_ENV: development
     depends_on:
@@ -16,7 +16,7 @@ services:
     ports:
       - "2000:2000"
 
-  server_one:
+  donations_server:
     container_name: NGO_DONATIONS
     build: "./donations"
     volumes:
@@ -31,6 +31,21 @@ services:
     ports:
       - "9000:9000"
 
+  employees_server:
+    container_name: NGO_EMPLOYEES
+    build: "./employees"
+    volumes:
+      - ./employees:/employees
+      - ./employees/node_modules:/employees/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_db
+    links:
+      - postgres_db
+    ports:
+      - "4000:4000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
@@ -38,3 +53,15 @@ services:
       - "27017:27017"
     volumes:
       - ./data/db:/data/db
+
+  postgres_db:
+    image: "postgres"
+    container_name: NGO_POSTGRES
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ngo
+    volumes:
+      - "./pgdata:/postgresql/pgdata"
+    ports:
+      - "5432:5432"
