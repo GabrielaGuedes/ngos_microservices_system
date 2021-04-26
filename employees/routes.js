@@ -1,8 +1,8 @@
 const express = require("express");
+const employees = require("./controllers/employees");
 
 const router = express.Router();
 
-// router.use("/api/donators", donators);
-// router.use("/api/donations", donations);
+router.use("/api/employees", employees);
 
 module.exports = router;
