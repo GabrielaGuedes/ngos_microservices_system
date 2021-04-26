@@ -20,8 +20,8 @@ services:
     container_name: NGO_DONATIONS
     build: "./donations"
     volumes:
-      - ./donations:/node-app
-      - ./donations/node_modules:/node-app/node_modules
+      - ./donations:/donations
+      - ./donations/node_modules:/donations/node_modules
     environment:
       NODE_ENV: development
     depends_on:

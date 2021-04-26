@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /node-app
+WORKDIR /donations
 
 COPY package.json .
 
