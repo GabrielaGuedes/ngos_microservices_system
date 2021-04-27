@@ -55,6 +55,7 @@ const jsonSchema = {
       type: "string",
     },
   },
+  additionalProperties: false,
 };
 
 const Employee = database.define(
