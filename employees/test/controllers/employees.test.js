@@ -5,7 +5,6 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const Employee = require("../../models/employees");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
-const database = require("../../config/db-connection");
 require("../../index");
 
 const { expect } = chai;
@@ -17,7 +16,6 @@ const employees = [];
 let token = "";
 
 before(async () => {
-  await database.sync({ force: true });
   token = await getTokenForTests();
   await Employee.Model.destroy({
     truncate: true,
