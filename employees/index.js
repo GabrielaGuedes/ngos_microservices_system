@@ -4,7 +4,7 @@ const cors = require("cors");
 const validation = require("./middleware/validate-errors");
 const routes = require("./routes");
 require("dotenv/config");
-require("./config/db");
+require("./config/db-connection");
 
 const app = express();
 

@@ -1,5 +1,5 @@
 const Sequelizer = require("sequelizer");
-const database = require("../config/db");
+const database = require("../config/db-connection");
 
 const jsonSchema = {
   type: "object",
@@ -59,7 +59,7 @@ const jsonSchema = {
 };
 
 const Employee = database.define(
-  "employee",
+  "Employee",
   Sequelizer.fromJsonSchema([jsonSchema], "employee", {
     uniqueFields: ["email"],
   })
