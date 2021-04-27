@@ -6,6 +6,25 @@ const Employee = require("../models/employees");
 const router = express.Router();
 const { validate } = new Validator();
 
+router.get("/", verifyJWT, async (req, res) => {
+  const { occupation, city, state } = req.query;
+
+  const query = { order: [["name", "ASC"]] };
+  if (occupation) query.where = { ...query.where, occupation };
+  if (city) query.where = { ...query.where, city };
+  if (state) query.where = { ...query.where, state };
+
+  await Employee.Model.findAll(query)
+    .then((result) => res.json(result))
+    .catch((error) => res.status(500).json(error));
+});
+
+router.get("/:id", verifyJWT, async (req, res) => {
+  await Employee.Model.findByPk(req.params.id)
+    .then((result) => res.json(result))
+    .catch((error) => res.status(500).json(error));
+});
+
 router.post(
   "/",
   validate({ body: Employee.jsonSchema }),
@@ -16,18 +35,6 @@ router.post(
       .catch((error) => res.status(500).json(error));
   }
 );
-
-router.get("/", verifyJWT, async (req, res) => {
-  await Employee.Model.findAll()
-    .then((result) => res.json(result))
-    .catch((error) => res.status(500).json(error));
-});
-
-router.get("/:id", verifyJWT, async (req, res) => {
-  await Employee.Model.findByPk(req.params.id)
-    .then((result) => res.json(result))
-    .catch((error) => res.status(500).json(error));
-});
 
 router.put(
   "/:id",
