@@ -3,7 +3,7 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const Area = require("../../models/areas");
+const Team = require("../../models/teams");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
 require("../../index");
 
@@ -12,66 +12,66 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const areas = [];
+const teams = [];
 let token = "";
 
 before(async () => {
   token = await getTokenForTests();
-  await Area.Model.destroy({
+  await Team.Model.destroy({
     truncate: true,
   });
-  areas.push(
-    await Area.Model.create({
-      name: "Area 1",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 1",
       description: "We like to drink water",
     }).then((res) => res)
   );
-  areas.push(
-    await Area.Model.create({
-      name: "Area 2",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 2",
       description: "We like to eat water",
     }).then((res) => res)
   );
-  areas.push(
-    await Area.Model.create({
-      name: "Area 3",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 3",
       description: "We like to cook water",
     }).then((res) => res)
   );
-  areas.push(
-    await Area.Model.create({
-      name: "Area 4",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 4",
       description: "We like to fry water",
     }).then((res) => res)
   );
-  areas.push(
-    await Area.Model.create({
-      name: "Area 5",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 5",
       description: "We like to lick water",
     }).then((res) => res)
   );
-  areas.push(
-    await Area.Model.create({
-      name: "Area 6",
+  teams.push(
+    await Team.Model.create({
+      name: "Team 6",
       description: "We like to see water",
     }).then((res) => res)
   );
 });
 
-describe("/GET Areas", () => {
+describe("/GET Teams", () => {
   describe("When token is valid", () => {
-    it("returns all areas ordered by name", async () => {
-      const sortedAreasNames = areas.map((area) => area.name).sort();
+    it("returns all teams ordered by name", async () => {
+      const sortedTeamsNames = teams.map((team) => team.name).sort();
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/areas/")
+        .get("/api/teams/")
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(areas.length);
-      expect(res.body.map((area) => area.name)).to.eql(sortedAreasNames);
-      expect(res.body[0].name).to.eql(sortedAreasNames[0]);
+      expect(res.body.length).to.eq(teams.length);
+      expect(res.body.map((team) => team.name)).to.eql(sortedTeamsNames);
+      expect(res.body[0].name).to.eql(sortedTeamsNames[0]);
     });
   });
 
@@ -79,7 +79,7 @@ describe("/GET Areas", () => {
     it("returns error", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/areas/")
+        .get("/api/teams/")
         .set("x-access-token", "invalid token");
 
       res.should.have.status(500);
@@ -92,7 +92,7 @@ describe("/GET Areas", () => {
     it("returns unauthorized", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/areas/");
+        .get("/api/teams/");
 
       res.should.have.status(401);
       res.body.should.not.be.a("array");
@@ -102,20 +102,20 @@ describe("/GET Areas", () => {
   });
 });
 
-describe("/GET :id Areas", () => {
+describe("/GET :id Teams", () => {
   describe("When token is valid and id exists", () => {
-    it("returns the area", async () => {
+    it("returns the team", async () => {
       const id = 2;
-      const area = areas.find((ar) => ar.id === id);
+      const team = teams.find((ar) => ar.id === id);
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/areas/${id}`)
+        .get(`/api/teams/${id}`)
         .set("x-access-token", token);
 
       res.should.have.status(200);
-      expect(res.body.id).to.eql(area.id);
-      expect(res.body.name).to.eql(area.name);
-      expect(res.body.description).to.eql(area.description);
+      expect(res.body.id).to.eql(team.id);
+      expect(res.body.name).to.eql(team.name);
+      expect(res.body.description).to.eql(team.description);
     });
   });
 
@@ -124,7 +124,7 @@ describe("/GET :id Areas", () => {
       const id = 2;
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/areas/${id}`)
+        .get(`/api/teams/${id}`)
         .set("x-access-token", "invalid_token");
 
       res.should.have.status(500);
@@ -138,7 +138,7 @@ describe("/GET :id Areas", () => {
       const id = 2;
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/areas/${id}`);
+        .get(`/api/teams/${id}`);
 
       res.should.have.status(401);
       res.body.should.not.be.a("array");
@@ -152,7 +152,7 @@ describe("/GET :id Areas", () => {
       const id = 200;
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/areas/${id}`)
+        .get(`/api/teams/${id}`)
         .set("x-access-token", token);
 
       res.should.have.status(200);
@@ -161,48 +161,48 @@ describe("/GET :id Areas", () => {
   });
 });
 
-describe("/POST Areas", () => {
-  const baseAreaInfo = {
-    name: "Area 7",
+describe("/POST Teams", () => {
+  const baseTeamInfo = {
+    name: "Team 7",
     description: "We like to dance with water",
   };
 
   describe("When token is valid and body is correct", () => {
-    it("creates the area and return it", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `1${baseAreaInfo.name}`,
+    it("creates the team and return it", async () => {
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `1${baseTeamInfo.name}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
+        .post("/api/teams/")
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { name: areaInfo.name },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { name: teamInfo.name },
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(areaFromDatabase.id);
-      expect(res.body.name).to.eq(areaInfo.name);
-      expect(res.body.description).to.eq(areaInfo.description);
+      expect(res.body.id).to.eq(teamFromDatabase.id);
+      expect(res.body.name).to.eq(teamInfo.name);
+      expect(res.body.description).to.eq(teamInfo.description);
     });
   });
 
   describe("When token is invalid and body is correct", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `2${baseAreaInfo.name}`,
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `2${baseTeamInfo.name}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
+        .post("/api/teams/")
         .set("x-access-token", "invalid token")
-        .send(areaInfo);
+        .send(teamInfo);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
@@ -211,15 +211,15 @@ describe("/POST Areas", () => {
 
   describe("When token is not passed and body is correct", () => {
     it("returns unauthorized", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `3${baseAreaInfo.name}`,
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `3${baseTeamInfo.name}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
-        .send(areaInfo);
+        .post("/api/teams/")
+        .send(teamInfo);
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
@@ -229,17 +229,17 @@ describe("/POST Areas", () => {
 
   describe("When token is valid and body is missing required param (name)", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `4${baseAreaInfo.name}`,
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `4${baseTeamInfo.name}`,
       };
-      delete areaInfo.name;
+      delete teamInfo.name;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
+        .post("/api/teams/")
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
       res.should.have.status(400);
       expect(res.error.text).to.include("name");
@@ -248,16 +248,16 @@ describe("/POST Areas", () => {
 
   describe("When token is valid but the name is already being used", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `${areas[0].name}`,
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `${teams[0].name}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
+        .post("/api/teams/")
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("name");
@@ -266,17 +266,17 @@ describe("/POST Areas", () => {
 
   describe("When token is valid but there is additional property in body", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `5${baseAreaInfo.name}`,
+      const teamInfo = {
+        ...baseTeamInfo,
+        name: `5${baseTeamInfo.name}`,
         otherPropertyHere: "malicious content",
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
+        .post("/api/teams/")
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
       res.should.have.status(400);
       expect(res.error.text).to.include("additional");
@@ -284,185 +284,185 @@ describe("/POST Areas", () => {
   });
 });
 
-describe("/PUT :id Areas", () => {
-  let baseAreaInfo = {};
+describe("/PUT :id Teams", () => {
+  let baseTeamInfo = {};
   before((done) => {
-    baseAreaInfo = {
-      name: areas[1].name,
-      description: areas[1].description,
+    baseTeamInfo = {
+      name: teams[1].name,
+      description: teams[1].description,
     };
     done();
   });
 
   describe("When token is valid and body is correct", () => {
-    it("updates the area and return it", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
+    it("updates the team and return it", async () => {
+      const teamInfo = {
+        ...baseTeamInfo,
         description: "We like to drink juice",
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/areas/${areas[1].id}`)
+        .put(`/api/teams/${teams[1].id}`)
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { name: areaInfo.name },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { name: teamInfo.name },
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(areaFromDatabase.id);
-      expect(res.body.description).to.eq(areaInfo.description);
-      expect(res.body.name).to.eq(areaInfo.name);
+      expect(res.body.id).to.eq(teamFromDatabase.id);
+      expect(res.body.description).to.eq(teamInfo.description);
+      expect(res.body.name).to.eq(teamInfo.name);
     });
   });
 
   describe("When token is invalid and body is correct", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
+      const teamInfo = {
+        ...baseTeamInfo,
         description: "We like to drink juice2",
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/areas/${areas[1].id}`)
+        .put(`/api/teams/${teams[1].id}`)
         .set("x-access-token", "invalid_token")
-        .send(areaInfo);
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { name: areaInfo.name },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { name: teamInfo.name },
       });
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
-      expect(areaFromDatabase.description).to.not.eq(areaInfo.description);
+      expect(teamFromDatabase.description).to.not.eq(teamInfo.description);
     });
   });
 
   describe("When token is not passed and body is correct", () => {
     it("returns unauthorized", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
+      const teamInfo = {
+        ...baseTeamInfo,
         description: "We like to drink juice3",
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/areas/${areas[1].id}`)
-        .send(areaInfo);
+        .put(`/api/teams/${teams[1].id}`)
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { name: areaInfo.name },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { name: teamInfo.name },
       });
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
       expect(res.error.text).to.include("provided");
-      expect(areaFromDatabase.description).to.not.eq(areaInfo.description);
+      expect(teamFromDatabase.description).to.not.eq(teamInfo.description);
     });
   });
 
   describe("When token is valid and body is missing required param (name)", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
+      const teamInfo = {
+        ...baseTeamInfo,
         description: "We like to drink juice4",
       };
-      delete areaInfo.name;
+      delete teamInfo.name;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/areas/${areas[1].id}`)
+        .put(`/api/teams/${teams[1].id}`)
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { id: areas[1].id },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { id: teams[1].id },
       });
 
       res.should.have.status(400);
       expect(res.error.text).to.include("name");
-      expect(areaFromDatabase.description).to.not.eq(areaInfo.description);
+      expect(teamFromDatabase.description).to.not.eq(teamInfo.description);
     });
   });
 
   describe("When token is valid but the name is already being used", () => {
     it("returns error", async () => {
-      const areaInfo = {
-        name: areas[0].name,
+      const teamInfo = {
+        name: teams[0].name,
         description: "We like to drink juice5",
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/areas/${areas[1].id}`)
+        .put(`/api/teams/${teams[1].id}`)
         .set("x-access-token", token)
-        .send(areaInfo);
+        .send(teamInfo);
 
-      const areaFromDatabase = await Area.Model.findOne({
-        where: { name: areas[1].name },
+      const teamFromDatabase = await Team.Model.findOne({
+        where: { name: teams[1].name },
       });
 
       res.should.have.status(500);
       expect(res.error.text).to.include("name");
-      expect(areaFromDatabase.description).to.not.eq(areaInfo.description);
+      expect(teamFromDatabase.description).to.not.eq(teamInfo.description);
     });
   });
 });
 
-describe("/DELETE :id Areas", () => {
+describe("/DELETE :id Teams", () => {
   describe("When token is valid and id exists", () => {
-    it("deletes the area", async () => {
-      const { id } = areas[0];
+    it("deletes the team", async () => {
+      const { id } = teams[0];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/areas/${id}`)
+        .delete(`/api/teams/${id}`)
         .set("x-access-token", token);
 
-      const areaFromDatabase = await Area.Model.findByPk(id);
+      const teamFromDatabase = await Team.Model.findByPk(id);
 
       res.should.have.status(200);
       expect(res.body.message).to.include("Destroyed");
-      expect(areaFromDatabase).to.eq(null);
+      expect(teamFromDatabase).to.eq(null);
     });
   });
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const { id } = areas[1];
+      const { id } = teams[1];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/areas/${id}`)
+        .delete(`/api/teams/${id}`)
         .set("x-access-token", "invalid_token");
 
-      const areaFromDatabase = await Area.Model.findByPk(id);
+      const teamFromDatabase = await Team.Model.findByPk(id);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
-      expect(areaFromDatabase).to.not.eq(null);
-      expect(areaFromDatabase.id).to.eq(id);
+      expect(teamFromDatabase).to.not.eq(null);
+      expect(teamFromDatabase.id).to.eq(id);
     });
   });
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const { id } = areas[2];
+      const { id } = teams[2];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/areas/${id}`);
+        .delete(`/api/teams/${id}`);
 
-      const areaFromDatabase = await Area.Model.findByPk(id);
+      const teamFromDatabase = await Team.Model.findByPk(id);
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
       expect(res.error.text).to.include("provided");
-      expect(areaFromDatabase).to.not.eq(null);
-      expect(areaFromDatabase.id).to.eq(id);
+      expect(teamFromDatabase).to.not.eq(null);
+      expect(teamFromDatabase.id).to.eq(id);
     });
   });
 
@@ -472,20 +472,20 @@ describe("/DELETE :id Areas", () => {
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/areas/${id}`)
+        .delete(`/api/teams/${id}`)
         .set("x-access-token", token);
 
-      const areaFromDatabase = await Area.Model.findByPk(id);
+      const teamFromDatabase = await Team.Model.findByPk(id);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("id");
-      expect(areaFromDatabase).to.eq(null);
+      expect(teamFromDatabase).to.eq(null);
     });
   });
 });
 
 after(async () => {
-  await Area.Model.destroy({
+  await Team.Model.destroy({
     truncate: true,
   });
 });
