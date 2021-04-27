@@ -105,4 +105,3 @@ dist
 
 # database files
 data/
-pgdata/

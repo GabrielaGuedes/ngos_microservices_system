@@ -60,8 +60,8 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: ngo
+      POSTGRES_MULTIPLE_DATABASES: employees,employees_test
     volumes:
-      - "./pgdata:/postgresql/pgdata"
+      - ./pgdata:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
