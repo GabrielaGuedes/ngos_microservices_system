@@ -29,14 +29,19 @@ router.get("/:id", verifyJWT, async (req, res) => {
     .catch((error) => res.status(500).json(error));
 });
 
-router.put("/:id", verifyJWT, async (req, res) => {
-  const employee = await Employee.Model.findByPk(req.params.id);
+router.put(
+  "/:id",
+  validate({ body: Employee.jsonSchema }),
+  verifyJWT,
+  async (req, res) => {
+    const employee = await Employee.Model.findByPk(req.params.id);
 
-  await employee
-    .update(req.body)
-    .then((result) => res.json(result))
-    .catch((error) => res.status(500).json(error));
-});
+    await employee
+      .update(req.body)
+      .then((result) => res.json(result))
+      .catch((error) => res.status(500).json(error));
+  }
+);
 
 router.delete("/:id", verifyJWT, async (req, res) => {
   await Employee.Model.destroy({ where: { id: req.params.id } })
