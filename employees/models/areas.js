@@ -17,7 +17,7 @@ const jsonSchema = {
 };
 
 const Area = database.define(
-  "Area",
+  "area",
   Sequelizer.fromJsonSchema([jsonSchema], "area", {
     uniqueFields: ["name"],
   })

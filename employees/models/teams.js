@@ -17,7 +17,7 @@ const jsonSchema = {
 };
 
 const Team = database.define(
-  "Team",
+  "team",
   Sequelizer.fromJsonSchema([jsonSchema], "team", {
     uniqueFields: ["name"],
   })
