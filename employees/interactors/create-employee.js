@@ -4,7 +4,7 @@ const Employee = require("../models/employees");
 module.exports = class CreateEmployee extends Interactor {
   // eslint-disable-next-line class-methods-use-this
   async run(context) {
-    return Employee.Model.create(context.body)
+    return Employee.Model.create(context.employeeInfo)
       .then((result) => {
         context.employee = result;
       })

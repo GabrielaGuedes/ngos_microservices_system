@@ -12,53 +12,65 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const teams = [];
+let teams = [];
 let token = "";
 
-before(async () => {
+const setTokenAndTeams = async () => {
   token = await getTokenForTests();
   await Team.Model.destroy({
-    truncate: true,
+    where: {},
   });
-  teams.push(
+  const teamsArray = [];
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 1",
       description: "We like to drink water",
     }).then((res) => res)
   );
-  teams.push(
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 2",
       description: "We like to eat water",
     }).then((res) => res)
   );
-  teams.push(
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 3",
       description: "We like to cook water",
     }).then((res) => res)
   );
-  teams.push(
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 4",
       description: "We like to fry water",
     }).then((res) => res)
   );
-  teams.push(
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 5",
       description: "We like to lick water",
     }).then((res) => res)
   );
-  teams.push(
+  teamsArray.push(
     await Team.Model.create({
       name: "Team 6",
       description: "We like to see water",
     }).then((res) => res)
   );
-});
+  teams = teamsArray;
+};
+
+const cleanTable = async () => {
+  await Team.Model.destroy({
+    where: {},
+  });
+};
 
 describe("/GET Teams", () => {
+  before(async () => {
+    await setTokenAndTeams();
+  });
+
   describe("When token is valid", () => {
     it("returns all teams ordered by name", async () => {
       const sortedTeamsNames = teams.map((team) => team.name).sort();
@@ -100,13 +112,21 @@ describe("/GET Teams", () => {
       expect(res.error.text).to.include("provided");
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/GET :id Teams", () => {
+  before(async () => {
+    await setTokenAndTeams();
+  });
+
   describe("When token is valid and id exists", () => {
     it("returns the team", async () => {
-      const id = 2;
-      const team = teams.find((ar) => ar.id === id);
+      const { id } = teams[1];
+      const team = teams.find((t) => t.id === id);
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/teams/${id}`)
@@ -121,7 +141,7 @@ describe("/GET :id Teams", () => {
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const id = 2;
+      const { id } = teams[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/teams/${id}`)
@@ -135,7 +155,7 @@ describe("/GET :id Teams", () => {
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const id = 2;
+      const { id } = teams[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/teams/${id}`);
@@ -159,9 +179,17 @@ describe("/GET :id Teams", () => {
       expect(res.body).to.eql(null);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/POST Teams", () => {
+  before(async () => {
+    await setTokenAndTeams();
+  });
+
   const baseTeamInfo = {
     name: "Team 7",
     description: "We like to dance with water",
@@ -282,9 +310,17 @@ describe("/POST Teams", () => {
       expect(res.error.text).to.include("additional");
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/PUT :id Teams", () => {
+  before(async () => {
+    await setTokenAndTeams();
+  });
+
   let baseTeamInfo = {};
   before((done) => {
     baseTeamInfo = {
@@ -410,9 +446,17 @@ describe("/PUT :id Teams", () => {
       expect(teamFromDatabase.description).to.not.eq(teamInfo.description);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/DELETE :id Teams", () => {
+  before(async () => {
+    await setTokenAndTeams();
+  });
+
   describe("When token is valid and id exists", () => {
     it("deletes the team", async () => {
       const { id } = teams[0];
@@ -482,10 +526,8 @@ describe("/DELETE :id Teams", () => {
       expect(teamFromDatabase).to.eq(null);
     });
   });
-});
 
-after(async () => {
-  await Team.Model.destroy({
-    truncate: true,
+  after(async () => {
+    await cleanTable();
   });
 });

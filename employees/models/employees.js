@@ -1,5 +1,6 @@
 const Sequelizer = require("sequelizer");
 const database = require("../config/db-connection");
+const areas = require("./areas");
 
 const jsonSchema = {
   type: "object",
@@ -55,15 +56,17 @@ const jsonSchema = {
       type: "string",
     },
   },
-  additionalProperties: false,
 };
 
 const Employee = database.define(
-  "Employee",
+  "employee",
   Sequelizer.fromJsonSchema([jsonSchema], "employee", {
     uniqueFields: ["email"],
   })
 );
+
+Employee.belongsToMany(areas.Model, { through: "areaEmployees" });
+areas.Model.belongsToMany(Employee, { through: "areaEmployees" });
 
 module.exports = {
   Model: Employee,

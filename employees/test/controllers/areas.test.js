@@ -12,53 +12,65 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const areas = [];
+let areas = [];
 let token = "";
 
-before(async () => {
+const setTokenAndAreas = async () => {
   token = await getTokenForTests();
   await Area.Model.destroy({
-    truncate: true,
+    where: {},
   });
-  areas.push(
+  const areasArray = [];
+  areasArray.push(
     await Area.Model.create({
       name: "Area 1",
       description: "We like to drink water",
     }).then((res) => res)
   );
-  areas.push(
+  areasArray.push(
     await Area.Model.create({
       name: "Area 2",
       description: "We like to eat water",
     }).then((res) => res)
   );
-  areas.push(
+  areasArray.push(
     await Area.Model.create({
       name: "Area 3",
       description: "We like to cook water",
     }).then((res) => res)
   );
-  areas.push(
+  areasArray.push(
     await Area.Model.create({
       name: "Area 4",
       description: "We like to fry water",
     }).then((res) => res)
   );
-  areas.push(
+  areasArray.push(
     await Area.Model.create({
       name: "Area 5",
       description: "We like to lick water",
     }).then((res) => res)
   );
-  areas.push(
+  areasArray.push(
     await Area.Model.create({
       name: "Area 6",
       description: "We like to see water",
     }).then((res) => res)
   );
-});
+  areas = areasArray;
+};
+
+const cleanTable = async () => {
+  await Area.Model.destroy({
+    where: {},
+  });
+};
 
 describe("/GET Areas", () => {
+  before(async () => {
+    await setTokenAndAreas();
+  });
+
   describe("When token is valid", () => {
     it("returns all areas ordered by name", async () => {
       const sortedAreasNames = areas.map((area) => area.name).sort();
@@ -100,12 +112,20 @@ describe("/GET Areas", () => {
       expect(res.error.text).to.include("provided");
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/GET :id Areas", () => {
+  before(async () => {
+    await setTokenAndAreas();
+  });
+
   describe("When token is valid and id exists", () => {
     it("returns the area", async () => {
-      const id = 2;
+      const { id } = areas[1];
       const area = areas.find((ar) => ar.id === id);
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
@@ -121,7 +141,7 @@ describe("/GET :id Areas", () => {
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const id = 2;
+      const { id } = areas[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/areas/${id}`)
@@ -135,7 +155,7 @@ describe("/GET :id Areas", () => {
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const id = 2;
+      const { id } = areas[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/areas/${id}`);
@@ -159,9 +179,17 @@ describe("/GET :id Areas", () => {
       expect(res.body).to.eql(null);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/POST Areas", () => {
+  before(async () => {
+    await setTokenAndAreas();
+  });
+
   const baseAreaInfo = {
     name: "Area 7",
     description: "We like to dance with water",
@@ -282,9 +310,17 @@ describe("/POST Areas", () => {
       expect(res.error.text).to.include("additional");
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/PUT :id Areas", () => {
+  before(async () => {
+    await setTokenAndAreas();
+  });
+
   let baseAreaInfo = {};
   before((done) => {
     baseAreaInfo = {
@@ -410,9 +446,17 @@ describe("/PUT :id Areas", () => {
       expect(areaFromDatabase.description).to.not.eq(areaInfo.description);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/DELETE :id Areas", () => {
+  before(async () => {
+    await setTokenAndAreas();
+  });
+
   describe("When token is valid and id exists", () => {
     it("deletes the area", async () => {
       const { id } = areas[0];
@@ -482,10 +526,8 @@ describe("/DELETE :id Areas", () => {
       expect(areaFromDatabase).to.eq(null);
     });
   });
-});
 
-after(async () => {
-  await Area.Model.destroy({
-    truncate: true,
+  after(async () => {
+    await cleanTable();
   });
 });

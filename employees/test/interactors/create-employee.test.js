@@ -22,12 +22,12 @@ const baseEmployee = {
   additionalInfo: "no more info",
 };
 
-before(async () => {
-  await employees.Model.destroy({ truncate: true });
-  await employees.Model.create(baseEmployee);
-});
-
 describe("CreateEmployee", () => {
+  before(async () => {
+    await employees.Model.destroy({ where: {} });
+    await employees.Model.create(baseEmployee);
+  });
+
   describe("When context passed is correct", () => {
     it("creates an employee", async () => {
       const context = {
@@ -44,7 +44,7 @@ describe("CreateEmployee", () => {
         additionalInfo: "no more info",
       };
 
-      const res = await CreateEmployee.run({ body: context });
+      const res = await CreateEmployee.run({ employeeInfo: context });
       const employeeFromDatabase = await employees.Model.findOne({
         where: {
           email: context.email,
@@ -63,7 +63,7 @@ describe("CreateEmployee", () => {
       const context = baseEmployee;
       const initialEmployees = await employees.Model.findAll();
 
-      const res = await CreateEmployee.run({ body: context })
+      const res = await CreateEmployee.run({ employeeInfo: context })
         .then((result) => result)
         .catch((error) => error);
 
@@ -72,5 +72,9 @@ describe("CreateEmployee", () => {
       expect(res).to.be.an("error");
       expect(employeesFromDatabase.length).to.eq(initialEmployees.length);
     });
+  });
+
+  after(async () => {
+    await employees.Model.destroy({ where: {} });
   });
 });
