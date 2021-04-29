@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const AddAreas = require("../../interactors/add-areas");
+const SetAreas = require("../../interactors/set-areas");
 const employees = require("../../models/employees");
 const areas = require("../../models/areas");
 const areaEmployees = require("../../models/area-employees");
@@ -13,7 +13,7 @@ const { expect } = chai;
 let employee = {};
 let areasCreated = [];
 
-describe("AddAreas", () => {
+describe("SetAreas", () => {
   beforeEach(async () => {
     await areaEmployees.Model.destroy({ where: {} });
     await employees.Model.destroy({ where: {} });
@@ -47,6 +47,7 @@ describe("AddAreas", () => {
     );
     areasCreated = newAreas;
   });
+
   describe("When context passed is correct", () => {
     it("adds areas to employee", async () => {
       const context = {
@@ -54,7 +55,7 @@ describe("AddAreas", () => {
         areaIds: [areasCreated[0].id],
       };
 
-      const res = await AddAreas.run(context);
+      const res = await SetAreas.run(context);
       const relationsFromDatabase = await areaEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("areaIds");
@@ -72,7 +73,7 @@ describe("AddAreas", () => {
         areaIds: areasCreated.map((area) => area.id),
       };
 
-      const res = await AddAreas.run(context);
+      const res = await SetAreas.run(context);
       const relationsFromDatabase = await areaEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("areaIds");
@@ -90,7 +91,7 @@ describe("AddAreas", () => {
         areaIds: [],
       };
 
-      const res = await AddAreas.run(context);
+      const res = await SetAreas.run(context);
       const relationsFromDatabase = await areaEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("areaIds");

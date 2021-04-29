@@ -1,11 +1,11 @@
 const Interactor = require("interactor");
 const CreateEmployee = require("./create-employee");
-const AddAreas = require("./add-areas");
-const AddTeams = require("./add-teams");
+const SetAreas = require("./set-areas");
+const SetTeams = require("./set-teams");
 
 module.exports = class CreateEmployeeOrganizer extends Interactor {
   // eslint-disable-next-line class-methods-use-this
   organize() {
-    return [CreateEmployee, AddAreas, AddTeams];
+    return [CreateEmployee, SetAreas, SetTeams];
   }
 };

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const AddTeams = require("../../interactors/add-teams");
+const SetTeams = require("../../interactors/set-teams");
 const employees = require("../../models/employees");
 const teams = require("../../models/teams");
 const teamEmployees = require("../../models/team-employees");
@@ -13,7 +13,7 @@ const { expect } = chai;
 let employee = {};
 let teamsCreated = [];
 
-describe("AddTeams", () => {
+describe("SetTeams", () => {
   beforeEach(async () => {
     await teamEmployees.Model.destroy({ where: {} });
     await employees.Model.destroy({ where: {} });
@@ -55,7 +55,7 @@ describe("AddTeams", () => {
         teamIds: [teamsCreated[0].id],
       };
 
-      const res = await AddTeams.run(context);
+      const res = await SetTeams.run(context);
       const relationsFromDatabase = await teamEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("teamIds");
@@ -73,7 +73,7 @@ describe("AddTeams", () => {
         teamIds: teamsCreated.map((team) => team.id),
       };
 
-      const res = await AddTeams.run(context);
+      const res = await SetTeams.run(context);
       const relationsFromDatabase = await teamEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("teamIds");
@@ -91,7 +91,7 @@ describe("AddTeams", () => {
         teamIds: [],
       };
 
-      const res = await AddTeams.run(context);
+      const res = await SetTeams.run(context);
       const relationsFromDatabase = await teamEmployees.Model.findAll();
 
       expect(res.employee.dataValues).to.have.own.property("teamIds");

@@ -59,7 +59,7 @@ describe("CreateEmployee", () => {
   });
 
   describe("When email from context is already in use", () => {
-    it("doesn't creates an employee", async () => {
+    it("doesn't create an employee", async () => {
       const context = baseEmployee;
       const initialEmployees = await employees.Model.findAll();
 
