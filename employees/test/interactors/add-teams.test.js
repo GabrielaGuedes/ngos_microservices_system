@@ -11,14 +11,15 @@ require("../../config/db-connection");
 const { expect } = chai;
 
 let employee = {};
-const teamsCreated = [];
+let teamsCreated = [];
 
 describe("AddTeams", () => {
-  before(async () => {
+  beforeEach(async () => {
     await teamEmployees.Model.destroy({ where: {} });
     await employees.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
 
+    const newTeams = [];
     employee = await employees.Model.create({
       name: "Base employee",
       address: "Base Street, 24",
@@ -32,19 +33,21 @@ describe("AddTeams", () => {
       email: "add_team_test@example.com",
       additionalInfo: "no more info",
     });
-    teamsCreated.push(
+    newTeams.push(
       await teams.Model.create({
         name: "Team 1",
         description: "Team 1 very cool",
       })
     );
-    teamsCreated.push(
+    newTeams.push(
       await teams.Model.create({
         name: "Team 2",
         description: "Team 2 not so cool",
       })
     );
+    teamsCreated = newTeams;
   });
+
   describe("When context passed is correct", () => {
     it("adds teams to employee", async () => {
       const context = {
@@ -78,6 +81,22 @@ describe("AddTeams", () => {
         teamsCreated.map((team) => team.id)
       );
       expect(relationsFromDatabase.length).to.eq(teamsCreated.length);
+    });
+  });
+
+  describe("When array is empty", () => {
+    it("doesn't add teams", async () => {
+      const context = {
+        employee,
+        teamIds: [],
+      };
+
+      const res = await AddTeams.run(context);
+      const relationsFromDatabase = await teamEmployees.Model.findAll();
+
+      expect(res.employee.dataValues).to.have.own.property("teamIds");
+      expect(res.employee.dataValues.teamIds).to.have.same.members([]);
+      expect(relationsFromDatabase.length).to.eq(0);
     });
   });
 
