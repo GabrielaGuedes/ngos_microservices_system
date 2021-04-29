@@ -34,14 +34,14 @@ describe("AddTeams", () => {
     });
     teamsCreated.push(
       await teams.Model.create({
-        name: "Area 1",
-        description: "Area 1 very cool",
+        name: "Team 1",
+        description: "Team 1 very cool",
       })
     );
     teamsCreated.push(
       await teams.Model.create({
-        name: "Area 2",
-        description: "Area 2 not so cool",
+        name: "Team 2",
+        description: "Team 2 not so cool",
       })
     );
   });
