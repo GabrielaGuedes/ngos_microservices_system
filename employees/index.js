@@ -6,6 +6,10 @@ const routes = require("./routes");
 require("dotenv/config");
 require("./config/db-connection");
 
+process.on("uncaughtException", (err) => {
+  console.log(err);
+  console.log("Node NOT Exiting...");
+});
 const app = express();
 
 app.use(express.json());
