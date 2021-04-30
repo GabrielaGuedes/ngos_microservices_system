@@ -97,7 +97,7 @@ describe("UpdateTeamOrganizer", () => {
       );
       expect(teamsRelationFromDatabase.length).to.eq(volunteerIds.length);
       expect(
-        teamsFromDatabase[0].volunteers.map((emp) => emp.id)
+        teamsFromDatabase[0].volunteers.map((vol) => vol.id)
       ).to.have.same.members(volunteerIds);
     });
   });

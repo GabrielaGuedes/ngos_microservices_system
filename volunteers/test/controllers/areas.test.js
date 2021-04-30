@@ -224,8 +224,8 @@ describe("/GET :id Areas", () => {
       res.should.have.status(200);
       res.body.should.be.a("array");
       expect(res.body.length).to.eq(1);
-      expect(res.body[0].volunteers.map((emp) => emp.id)).to.have.same.members(
-        areas[0].volunteers.map((emp) => emp.id)
+      expect(res.body[0].volunteers.map((vol) => vol.id)).to.have.same.members(
+        areas[0].volunteers.map((vol) => vol.id)
       );
     });
   });

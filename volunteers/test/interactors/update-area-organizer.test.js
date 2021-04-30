@@ -97,7 +97,7 @@ describe("UpdateAreaOrganizer", () => {
       );
       expect(areasRelationFromDatabase.length).to.eq(volunteerIds.length);
       expect(
-        areasFromDatabase[0].volunteers.map((emp) => emp.id)
+        areasFromDatabase[0].volunteers.map((vol) => vol.id)
       ).to.have.same.members(volunteerIds);
     });
   });
