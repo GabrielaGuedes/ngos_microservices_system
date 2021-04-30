@@ -29,7 +29,7 @@ services:
     links:
       - mongo_db
     ports:
-      - "9000:9000"
+      - "3000:3000"
 
   employees_server:
     container_name: NGO_EMPLOYEES
