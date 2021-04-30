@@ -4,7 +4,11 @@ process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const Employee = require("../../models/employees");
+const teams = require("../../models/teams");
+const teamEmployees = require("../../models/team-employees");
+const areaEmployees = require("../../models/area-employees");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
+const areas = require("../../models/areas");
 require("../../index");
 
 const { expect } = chai;
@@ -12,104 +16,135 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const employees = [];
+let employees = [];
 let token = "";
 
-before(async () => {
-  token = await getTokenForTests();
-  await Employee.Model.destroy({
-    truncate: true,
-  });
-  employees.push(
-    await Employee.Model.create({
-      name: "Example name",
-      address: "Any street, 123",
-      city: "Sao Paulo",
-      state: "SP",
-      country: "Brazil",
-      occupation: "Software Engineer",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "example@test.com",
-      additionalInfo: "I like to drink water",
-    }).then((res) => res)
-  );
-  employees.push(
-    await Employee.Model.create({
-      name: "A Example name",
-      address: "Any street, 123",
-      city: "Paulo",
-      state: "SP",
-      country: "Brazil",
-      occupation: "Data Engineer",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "a_example@test.com",
-      additionalInfo: "I like to drink water",
-    }).then((res) => res)
-  );
-  employees.push(
-    await Employee.Model.create({
-      name: "B Example name",
-      address: "Any street, 123",
-      city: "Rio Branco",
-      state: "AC",
-      country: "Brazil",
-      occupation: "Engineer",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "b_example@test.com",
-    }).then((res) => res)
-  );
-  employees.push(
-    await Employee.Model.create({
-      name: "C Example name",
-      address: "Any street, 123",
-      city: "City from Tuvalu",
-      state: "TU",
-      country: "Tuvalu",
-      occupation: "Software Engineer",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "c_example@test.com",
-    }).then((res) => res)
-  );
-  employees.push(
-    await Employee.Model.create({
-      name: "D Example name",
-      address: "Any street, 123",
-      city: "Sao Paulo",
-      state: "SP",
-      country: "Brazil",
-      occupation: "Marketing director",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "d_example@test.com",
-    }).then((res) => res)
-  );
-  employees.push(
-    await Employee.Model.create({
-      name: "E Example name",
-      address: "Any street, 123",
-      city: "Rio de janeiro",
-      state: "RJ",
-      country: "Brazil",
-      occupation: "CEO",
-      birthDate: "1990-01-01",
-      hireDate: "2020-01-01",
-      phone: 5511999999999,
-      email: "e_example@test.com",
-      additionalInfo: "I like to drink water",
-    }).then((res) => res)
-  );
-});
-
 describe("/GET Employees", () => {
+  before(async () => {
+    await areaEmployees.Model.destroy({ where: {} });
+    await teamEmployees.Model.destroy({ where: {} });
+    await teams.Model.destroy({ where: {} });
+    await areas.Model.destroy({ where: {} });
+    await Employee.Model.destroy({ where: {} });
+
+    token = await getTokenForTests();
+
+    const employeesCreated = [];
+    employeesCreated.push(
+      await Employee.Model.create(
+        {
+          name: "Example name With teams and areas",
+          address: "Any street, 123",
+          city: "Sao Paulo",
+          state: "SP",
+          country: "Brazil",
+          occupation: "Software Engineer",
+          birthDate: "1990-01-01",
+          hireDate: "2020-01-01",
+          phone: 5511999999999,
+          email: "example@test.com",
+          additionalInfo: "I like to drink water",
+          areas: [
+            {
+              name: "Area 1",
+              description: "Area 1 very cool",
+            },
+            {
+              name: "Area 2",
+              description: "Area 2 not so cool",
+            },
+          ],
+          teams: [
+            {
+              name: "Team 1",
+              description: "Team 1 very cool",
+            },
+            {
+              name: "Team 2",
+              description: "Team 2 not so cool",
+            },
+          ],
+        },
+        {
+          include: [areas.Model, teams.Model],
+        }
+      ).then((res) => res)
+    );
+    employeesCreated.push(
+      await Employee.Model.create({
+        name: "A Example name",
+        address: "Any street, 123",
+        city: "Paulo",
+        state: "SP",
+        country: "Brazil",
+        occupation: "Data Engineer",
+        birthDate: "1990-01-01",
+        hireDate: "2020-01-01",
+        phone: 5511999999999,
+        email: "a_example@test.com",
+        additionalInfo: "I like to drink water",
+      }).then((res) => res)
+    );
+    employeesCreated.push(
+      await Employee.Model.create({
+        name: "B Example name",
+        address: "Any street, 123",
+        city: "Rio Branco",
+        state: "AC",
+        country: "Brazil",
+        occupation: "Engineer",
+        birthDate: "1990-01-01",
+        hireDate: "2020-01-01",
+        phone: 5511999999999,
+        email: "b_example@test.com",
+      }).then((res) => res)
+    );
+    employeesCreated.push(
+      await Employee.Model.create({
+        name: "C Example name",
+        address: "Any street, 123",
+        city: "City from Tuvalu",
+        state: "TU",
+        country: "Tuvalu",
+        occupation: "Software Engineer",
+        birthDate: "1990-01-01",
+        hireDate: "2020-01-01",
+        phone: 5511999999999,
+        email: "c_example@test.com",
+      }).then((res) => res)
+    );
+    employeesCreated.push(
+      await Employee.Model.create({
+        name: "D Example name",
+        address: "Any street, 123",
+        city: "Sao Paulo",
+        state: "SP",
+        country: "Brazil",
+        occupation: "Marketing director",
+        birthDate: "1990-01-01",
+        hireDate: "2020-01-01",
+        phone: 5511999999999,
+        email: "d_example@test.com",
+      }).then((res) => res)
+    );
+    employeesCreated.push(
+      await Employee.Model.create({
+        name: "E Example name",
+        address: "Any street, 123",
+        city: "Rio de janeiro",
+        state: "RJ",
+        country: "Brazil",
+        occupation: "CEO",
+        birthDate: "1990-01-01",
+        hireDate: "2020-01-01",
+        phone: 5511999999999,
+        email: "e_example@test.com",
+        additionalInfo: "I like to drink water",
+      }).then((res) => res)
+    );
+    employees = employeesCreated;
+  });
+
   describe("When token is valid and there are no filters", () => {
     it("returns all employees ordered by name", async () => {
       const sortedEmployeesNames = employees
@@ -218,13 +253,30 @@ describe("/GET Employees", () => {
       );
     });
   });
+
+  describe("When token is valid filtered by area", () => {
+    it("returns only first employee", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/employees/")
+        .query({ areaId: employees[0].areas[0].id })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.should.be.a("array");
+      expect(res.body.length).to.eq(1);
+      expect(res.body[0].areas.map((area) => area.id)).to.have.same.members(
+        employees[0].areas.map((area) => area.id)
+      );
+    });
+  });
 });
 
 describe("/GET :id Employees", () => {
   describe("When token is valid and id exists", () => {
     it("returns the employee", async () => {
-      const id = 2;
-      const employee = employees.find((emp) => emp.id === id);
+      const { id } = employees[1];
+      const employee = employees[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/employees/${id}`)
@@ -239,7 +291,7 @@ describe("/GET :id Employees", () => {
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const id = 2;
+      const { id } = employees[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/employees/${id}`)
@@ -253,7 +305,7 @@ describe("/GET :id Employees", () => {
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const id = 2;
+      const { id } = employees[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/employees/${id}`);
@@ -267,7 +319,7 @@ describe("/GET :id Employees", () => {
 
   describe("When token is valid and id doesn't exist", () => {
     it("returns empty", async () => {
-      const id = 200;
+      const id = employees[1].id + 500;
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get(`/api/employees/${id}`)
@@ -292,6 +344,8 @@ describe("/POST Employees", () => {
     phone: 5511999999999,
     email: "g_example@test.com",
     additionalInfo: "I like to drink water",
+    areaIds: [],
+    teamIds: [],
   };
 
   describe("When token is valid and body is correct", () => {
@@ -395,25 +449,6 @@ describe("/POST Employees", () => {
       expect(res.error.text).to.include("email");
     });
   });
-
-  describe("When token is valid but there is additional property in body", () => {
-    it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `5${baseEmployeeInfo.email}`,
-        otherPropertyHere: "malicious content",
-      };
-
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
-        .set("x-access-token", token)
-        .send(employeeInfo);
-
-      res.should.have.status(400);
-      expect(res.error.text).to.include("additional");
-    });
-  });
 });
 
 describe("/PUT :id Employees", () => {
@@ -431,6 +466,8 @@ describe("/PUT :id Employees", () => {
       phone: employees[1].phone,
       email: employees[1].email,
       additionalInfo: employees[1].additionalInfo,
+      areaIds: [],
+      teamIds: [],
     };
     done();
   });
@@ -454,10 +491,10 @@ describe("/PUT :id Employees", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(employeeFromDatabase.id);
-      expect(res.body.city).to.eq(employeeInfo.city);
-      expect(res.body.phone).to.eq(employeeInfo.phone);
-      expect(res.body.email).to.eq(employeeInfo.email);
+      expect(res.body.employee.id).to.eq(employeeFromDatabase.id);
+      expect(res.body.employee.city).to.eq(employeeInfo.city);
+      expect(res.body.employee.phone).to.eq(employeeInfo.phone);
+      expect(res.body.employee.email).to.eq(employeeInfo.email);
     });
   });
 
@@ -620,7 +657,7 @@ describe("/DELETE :id Employees", () => {
 
   describe("When token is valid and id doesn't exist", () => {
     it("returns error", async () => {
-      const { id } = 200;
+      const id = employees[0].id + 500;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
@@ -630,14 +667,16 @@ describe("/DELETE :id Employees", () => {
       const employeeFromDatabase = await Employee.Model.findByPk(id);
 
       res.should.have.status(500);
-      expect(res.error.text).to.include("id");
+      expect(res.error).to.be.an("error");
       expect(employeeFromDatabase).to.eq(null);
     });
   });
-});
 
-after(async () => {
-  await Employee.Model.destroy({
-    truncate: true,
+  after(async () => {
+    await areaEmployees.Model.destroy({ where: {} });
+    await teamEmployees.Model.destroy({ where: {} });
+    await teams.Model.destroy({ where: {} });
+    await areas.Model.destroy({ where: {} });
+    await Employee.Model.destroy({ where: {} });
   });
 });
