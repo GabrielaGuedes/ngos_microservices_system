@@ -20,14 +20,13 @@ const router = express.Router();
 const { validate } = new Validator();
 
 router.get("/", verifyJWT, async (req, res) => {
-  const { occupation, city, state, areaId, teamId } = req.query;
+  const { city, state, areaId, teamId } = req.query;
 
   const query = {
     order: [["name", "ASC"]],
     include: [areas.Model, teams.Model],
   };
 
-  if (occupation) query.where = { ...query.where, occupation };
   if (city) query.where = { ...query.where, city };
   if (state) query.where = { ...query.where, state };
 

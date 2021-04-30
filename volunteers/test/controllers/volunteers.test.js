@@ -38,9 +38,7 @@ describe("/GET Volunteers", () => {
           city: "Sao Paulo",
           state: "SP",
           country: "Brazil",
-          occupation: "Software Engineer",
           birthDate: "1990-01-01",
-          hireDate: "2020-01-01",
           phone: 5511999999999,
           email: "example@test.com",
           additionalInfo: "I like to drink water",
@@ -77,9 +75,7 @@ describe("/GET Volunteers", () => {
         city: "Paulo",
         state: "SP",
         country: "Brazil",
-        occupation: "Data Engineer",
         birthDate: "1990-01-01",
-        hireDate: "2020-01-01",
         phone: 5511999999999,
         email: "a_example@test.com",
         additionalInfo: "I like to drink water",
@@ -92,9 +88,7 @@ describe("/GET Volunteers", () => {
         city: "Rio Branco",
         state: "AC",
         country: "Brazil",
-        occupation: "Engineer",
         birthDate: "1990-01-01",
-        hireDate: "2020-01-01",
         phone: 5511999999999,
         email: "b_example@test.com",
       }).then((res) => res)
@@ -106,9 +100,7 @@ describe("/GET Volunteers", () => {
         city: "City from Tuvalu",
         state: "TU",
         country: "Tuvalu",
-        occupation: "Software Engineer",
         birthDate: "1990-01-01",
-        hireDate: "2020-01-01",
         phone: 5511999999999,
         email: "c_example@test.com",
       }).then((res) => res)
@@ -120,9 +112,7 @@ describe("/GET Volunteers", () => {
         city: "Sao Paulo",
         state: "SP",
         country: "Brazil",
-        occupation: "Marketing director",
         birthDate: "1990-01-01",
-        hireDate: "2020-01-01",
         phone: 5511999999999,
         email: "d_example@test.com",
       }).then((res) => res)
@@ -134,9 +124,7 @@ describe("/GET Volunteers", () => {
         city: "Rio de janeiro",
         state: "RJ",
         country: "Brazil",
-        occupation: "CEO",
         birthDate: "1990-01-01",
-        hireDate: "2020-01-01",
         phone: 5511999999999,
         email: "e_example@test.com",
         additionalInfo: "I like to drink water",
@@ -188,27 +176,6 @@ describe("/GET Volunteers", () => {
       res.body.should.not.be.a("array");
       expect(res.error.text).to.include("No");
       expect(res.error.text).to.include("provided");
-    });
-  });
-
-  describe("When token is valid filtered by occupation", () => {
-    it("returns some volunteers", async () => {
-      const occupation = "Software Engineer";
-      const volunteersWithOccupation = volunteers.filter(
-        (volunteer) => volunteer.occupation === occupation
-      );
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/volunteers/")
-        .query({ occupation })
-        .set("x-access-token", token);
-
-      res.should.have.status(200);
-      res.body.should.be.a("array");
-      expect(res.body.length).to.eq(volunteersWithOccupation.length);
-      expect(res.body.map((volunteer) => volunteer.id)).to.have.same.members(
-        volunteersWithOccupation.map((volunteer) => volunteer.id)
-      );
     });
   });
 
@@ -338,9 +305,7 @@ describe("/POST Volunteers", () => {
     city: "Sao Paulo",
     state: "SP",
     country: "Brazil",
-    occupation: "RH professional",
     birthDate: "1990-01-01",
-    hireDate: "2020-01-01",
     phone: 5511999999999,
     email: "g_example@test.com",
     additionalInfo: "I like to drink water",
@@ -460,9 +425,7 @@ describe("/PUT :id Volunteers", () => {
       city: volunteers[1].city,
       state: volunteers[1].state,
       country: volunteers[1].country,
-      occupation: volunteers[1].occupation,
       birthDate: volunteers[1].birthDate,
-      hireDate: volunteers[1].hireDate,
       phone: volunteers[1].phone,
       email: volunteers[1].email,
       additionalInfo: volunteers[1].additionalInfo,

@@ -6,18 +6,7 @@ const teams = require("./teams");
 const jsonSchema = {
   type: "object",
   id: "volunteer",
-  required: [
-    "name",
-    "address",
-    "city",
-    "state",
-    "country",
-    "occupation",
-    "birthDate",
-    "hireDate",
-    "phone",
-    "email",
-  ],
+  required: ["name", "city", "state", "country", "birthDate", "phone", "email"],
   properties: {
     name: {
       type: "string",
@@ -35,14 +24,7 @@ const jsonSchema = {
     country: {
       type: "string",
     },
-    occupation: {
-      type: "string",
-    },
     birthDate: {
-      type: "string",
-      format: "date",
-    },
-    hireDate: {
       type: "string",
       format: "date",
     },

@@ -13,7 +13,7 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       city: {
         type: Sequelize.STRING,
@@ -27,15 +27,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      occupation: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       birthDate: {
-        type: Sequelize.DATEONLY,
-        allowNull: false,
-      },
-      hireDate: {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },

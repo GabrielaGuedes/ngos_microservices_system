@@ -22,7 +22,7 @@ Lists all volunteers sorted by name.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `occupation`, `city`, `state`, `areaId` or `teamId` using query string params (e.g. `/api/volunteers/?state=SP&areaId=1`)
+You can filter by `city`, `state`, `areaId` or `teamId` using query string params (e.g. `/api/volunteers/?state=SP&areaId=1`)
 
 When request is done correctly, returns success (200). Example response:
 
@@ -35,9 +35,7 @@ When request is done correctly, returns success (200). Example response:
     "city": "Sao paulo",
     "state": "SP",
     "country": "Brazil",
-    "occupation": "Software engineer",
     "birthDate": "1990-01-01",
-    "hireDate": "2020-01-01",
     "phone": "5511999999999",
     "email": "agoravai34@example.com",
     "additionalInfo": "Top demais",
@@ -83,9 +81,7 @@ When request is done correctly, returns success (200). Example response:
   "city": "Sao paulo",
   "state": "SP",
   "country": "Brazil",
-  "occupation": "Software engineer",
   "birthDate": "1990-01-01",
-  "hireDate": "2020-01-01",
   "phone": "5511999999999",
   "email": "agoravai34@example.com",
   "additionalInfo": "Top demais",
@@ -123,13 +119,11 @@ The authentication token needs to be passed in the header field `x-access-token`
 Params:
 
 - name: string
-- address: string
+- address: string, optional
 - city: string
 - state: string (with two uppercased caracters)
 - country: string
-- occupation: string
 - birthDate: date, format `yyyy-mm-dd`
-- hireDate: date, format `yyyy-mm-dd`
 - phone: number, with area code
 - email: string, must be unique
 - additionalInfo: string, optional
@@ -145,9 +139,7 @@ Example body:
   "city": "Sao paulo",
   "state": "SP",
   "country": "Brazil",
-  "occupation": "Software engineer",
   "birthDate": "1990-01-01",
-  "hireDate": "2020-01-01",
   "phone": 5511999999999,
   "email": "docs@example.com",
   "additionalInfo": "Top demais",
@@ -166,9 +158,7 @@ When request is done correctly, returns success (200). Example response:
   "city": "Sao paulo",
   "state": "SP",
   "country": "Brazil",
-  "occupation": "Software engineer",
   "birthDate": "1990-01-01",
-  "hireDate": "2020-01-01",
   "phone": "5511999999999",
   "email": "docs@example.com",
   "additionalInfo": "Top demais",
@@ -192,13 +182,11 @@ The authentication token needs to be passed in the header field `x-access-token`
 It is necessary to pass all the params (that are mandatory). Params:
 
 - name: string
-- address: string
+- address: string, optional
 - city: string
 - state: string (with two uppercased caracters)
 - country: string
-- occupation: string
 - birthDate: date, format `yyyy-mm-dd`
-- hireDate: date, format `yyyy-mm-dd`
 - phone: number, with area code
 - email: string, must be unique
 - additionalInfo: string, optional
@@ -214,9 +202,7 @@ Example body:
   "city": "Sao paulo",
   "state": "SP",
   "country": "Brazil",
-  "occupation": "Software engineer",
   "birthDate": "1990-01-01",
-  "hireDate": "2020-01-01",
   "phone": 5511999999999,
   "email": "docs@example.com",
   "additionalInfo": "Top demais",
@@ -235,9 +221,7 @@ When request is done correctly, returns success (200). Example response:
   "city": "Sao paulo",
   "state": "SP",
   "country": "Brazil",
-  "occupation": "Software engineer",
   "birthDate": "1990-01-01",
-  "hireDate": "2020-01-01",
   "phone": 5511999999999,
   "email": "docs@example.com",
   "additionalInfo": "Top demais",
@@ -296,9 +280,7 @@ When request is done correctly, returns success (200). Example response:
         "city": "Sao paulo",
         "state": "SP",
         "country": "Brazil",
-        "occupation": "Software engineer",
         "birthDate": "1990-01-01",
-        "hireDate": "2020-01-01",
         "phone": "5511999999999",
         "email": "example5@example.com",
         "additionalInfo": "Top demais",
@@ -343,9 +325,7 @@ When request is done correctly, returns success (200). Example response:
       "city": "Sao paulo",
       "state": "SP",
       "country": "Brazil",
-      "occupation": "Software engineer",
       "birthDate": "1990-01-01",
-      "hireDate": "2020-01-01",
       "phone": "5511999999999",
       "email": "example5@example.com",
       "additionalInfo": "Top demais",
@@ -488,9 +468,7 @@ When request is done correctly, returns success (200). Example response:
         "city": "Sao paulo",
         "state": "SP",
         "country": "Brazil",
-        "occupation": "Software engineer",
         "birthDate": "1990-01-01",
-        "hireDate": "2020-01-01",
         "phone": "5511999999999",
         "email": "example5@example.com",
         "additionalInfo": "Top demais",
@@ -535,9 +513,7 @@ When request is done correctly, returns success (200). Example response:
       "city": "Sao paulo",
       "state": "SP",
       "country": "Brazil",
-      "occupation": "Software engineer",
       "birthDate": "1990-01-01",
-      "hireDate": "2020-01-01",
       "phone": "5511999999999",
       "email": "example5@example.com",
       "additionalInfo": "Top demais",
