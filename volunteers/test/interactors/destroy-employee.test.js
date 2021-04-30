@@ -1,27 +1,27 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
-const DestroyEmployee = require("../../interactors/destroy-employee");
+const areaVolunteers = require("../../models/area-volunteers");
+const DestroyVolunteer = require("../../interactors/destroy-volunteer");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeeWithRelation = {};
-let employeeToBeDestroyed = {};
+let volunteerWithRelation = {};
+let volunteerToBeDestroyed = {};
 
-describe("DestroyEmployee", () => {
+describe("DestroyVolunteer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
-    employeeWithRelation = await employees.Model.create(
+    volunteerWithRelation = await volunteers.Model.create(
       {
-        name: "Base employee With relation",
+        name: "Base volunteer With relation",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -48,8 +48,8 @@ describe("DestroyEmployee", () => {
       }
     );
 
-    employeeToBeDestroyed = await employees.Model.create({
-      name: "Base employee to be destroyed",
+    volunteerToBeDestroyed = await volunteers.Model.create({
+      name: "Base volunteer to be destroyed",
       address: "Base Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -64,41 +64,41 @@ describe("DestroyEmployee", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("destroys the employee", async () => {
+    it("destroys the volunteer", async () => {
       const context = {
-        id: employeeToBeDestroyed.id,
+        id: volunteerToBeDestroyed.id,
       };
 
-      const res = await DestroyEmployee.run(context);
-      const employeeFromDatabase = await employees.Model.findAll({
-        where: { email: employeeToBeDestroyed.email },
+      const res = await DestroyVolunteer.run(context);
+      const volunteerFromDatabase = await volunteers.Model.findAll({
+        where: { email: volunteerToBeDestroyed.email },
       });
 
       expect(res.success).to.eql(true);
-      expect(employeeFromDatabase).to.eql([]);
+      expect(volunteerFromDatabase).to.eql([]);
     });
   });
 
-  describe("When employee has relations", () => {
-    it("cant destroy the employee", async () => {
+  describe("When volunteer has relations", () => {
+    it("cant destroy the volunteer", async () => {
       const context = {
-        id: employeeWithRelation.id,
+        id: volunteerWithRelation.id,
       };
 
-      await DestroyEmployee.run(context).catch(async (err) => {
-        const employeeFromDatabase = await employees.Model.findOne({
-          where: { email: employeeWithRelation.email },
+      await DestroyVolunteer.run(context).catch(async (err) => {
+        const volunteerFromDatabase = await volunteers.Model.findOne({
+          where: { email: volunteerWithRelation.email },
         });
 
         expect(err).to.be.an("error");
-        expect(employeeFromDatabase.id).to.eq(employeeWithRelation.id);
+        expect(volunteerFromDatabase.id).to.eq(volunteerWithRelation.id);
       });
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

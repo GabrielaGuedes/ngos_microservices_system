@@ -3,10 +3,10 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const Employee = require("../../models/employees");
+const Volunteer = require("../../models/volunteers");
 const teams = require("../../models/teams");
-const teamEmployees = require("../../models/team-employees");
-const areaEmployees = require("../../models/area-employees");
+const teamVolunteers = require("../../models/team-volunteers");
+const areaVolunteers = require("../../models/area-volunteers");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
 const areas = require("../../models/areas");
 require("../../index");
@@ -16,22 +16,22 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-let employees = [];
+let volunteers = [];
 let token = "";
 
-describe("/GET Employees", () => {
+describe("/GET Volunteers", () => {
   before(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await teamEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await Employee.Model.destroy({ where: {} });
+    await Volunteer.Model.destroy({ where: {} });
 
     token = await getTokenForTests();
 
-    const employeesCreated = [];
-    employeesCreated.push(
-      await Employee.Model.create(
+    const volunteersCreated = [];
+    volunteersCreated.push(
+      await Volunteer.Model.create(
         {
           name: "Example name With teams and areas",
           address: "Any street, 123",
@@ -70,8 +70,8 @@ describe("/GET Employees", () => {
         }
       ).then((res) => res)
     );
-    employeesCreated.push(
-      await Employee.Model.create({
+    volunteersCreated.push(
+      await Volunteer.Model.create({
         name: "A Example name",
         address: "Any street, 123",
         city: "Paulo",
@@ -85,8 +85,8 @@ describe("/GET Employees", () => {
         additionalInfo: "I like to drink water",
       }).then((res) => res)
     );
-    employeesCreated.push(
-      await Employee.Model.create({
+    volunteersCreated.push(
+      await Volunteer.Model.create({
         name: "B Example name",
         address: "Any street, 123",
         city: "Rio Branco",
@@ -99,8 +99,8 @@ describe("/GET Employees", () => {
         email: "b_example@test.com",
       }).then((res) => res)
     );
-    employeesCreated.push(
-      await Employee.Model.create({
+    volunteersCreated.push(
+      await Volunteer.Model.create({
         name: "C Example name",
         address: "Any street, 123",
         city: "City from Tuvalu",
@@ -113,8 +113,8 @@ describe("/GET Employees", () => {
         email: "c_example@test.com",
       }).then((res) => res)
     );
-    employeesCreated.push(
-      await Employee.Model.create({
+    volunteersCreated.push(
+      await Volunteer.Model.create({
         name: "D Example name",
         address: "Any street, 123",
         city: "Sao Paulo",
@@ -127,8 +127,8 @@ describe("/GET Employees", () => {
         email: "d_example@test.com",
       }).then((res) => res)
     );
-    employeesCreated.push(
-      await Employee.Model.create({
+    volunteersCreated.push(
+      await Volunteer.Model.create({
         name: "E Example name",
         address: "Any street, 123",
         city: "Rio de janeiro",
@@ -142,26 +142,26 @@ describe("/GET Employees", () => {
         additionalInfo: "I like to drink water",
       }).then((res) => res)
     );
-    employees = employeesCreated;
+    volunteers = volunteersCreated;
   });
 
   describe("When token is valid and there are no filters", () => {
-    it("returns all employees ordered by name", async () => {
-      const sortedEmployeesNames = employees
-        .map((employee) => employee.name)
+    it("returns all volunteers ordered by name", async () => {
+      const sortedVolunteersNames = volunteers
+        .map((volunteer) => volunteer.name)
         .sort();
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
+        .get("/api/volunteers/")
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(employees.length);
-      expect(res.body.map((employee) => employee.name)).to.eql(
-        sortedEmployeesNames
+      expect(res.body.length).to.eq(volunteers.length);
+      expect(res.body.map((volunteer) => volunteer.name)).to.eql(
+        sortedVolunteersNames
       );
-      expect(res.body[0].name).to.eql(sortedEmployeesNames[0]);
+      expect(res.body[0].name).to.eql(sortedVolunteersNames[0]);
     });
   });
 
@@ -169,7 +169,7 @@ describe("/GET Employees", () => {
     it("returns error", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
+        .get("/api/volunteers/")
         .set("x-access-token", "invalid token");
 
       res.should.have.status(500);
@@ -182,7 +182,7 @@ describe("/GET Employees", () => {
     it("returns unauthorized", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/");
+        .get("/api/volunteers/");
 
       res.should.have.status(401);
       res.body.should.not.be.a("array");
@@ -192,109 +192,109 @@ describe("/GET Employees", () => {
   });
 
   describe("When token is valid filtered by occupation", () => {
-    it("returns some employees", async () => {
+    it("returns some volunteers", async () => {
       const occupation = "Software Engineer";
-      const employeesWithOccupation = employees.filter(
-        (employee) => employee.occupation === occupation
+      const volunteersWithOccupation = volunteers.filter(
+        (volunteer) => volunteer.occupation === occupation
       );
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
+        .get("/api/volunteers/")
         .query({ occupation })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(employeesWithOccupation.length);
-      expect(res.body.map((employee) => employee.id)).to.have.same.members(
-        employeesWithOccupation.map((employee) => employee.id)
+      expect(res.body.length).to.eq(volunteersWithOccupation.length);
+      expect(res.body.map((volunteer) => volunteer.id)).to.have.same.members(
+        volunteersWithOccupation.map((volunteer) => volunteer.id)
       );
     });
   });
 
   describe("When token is valid filtered by city", () => {
-    it("returns some employees", async () => {
+    it("returns some volunteers", async () => {
       const city = "Rio de janeiro";
-      const employeesFromCity = employees.filter(
-        (employee) => employee.city === city
+      const volunteersFromCity = volunteers.filter(
+        (volunteer) => volunteer.city === city
       );
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
+        .get("/api/volunteers/")
         .query({ city })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(employeesFromCity.length);
-      expect(res.body.map((employee) => employee.id)).to.have.same.members(
-        employeesFromCity.map((employee) => employee.id)
+      expect(res.body.length).to.eq(volunteersFromCity.length);
+      expect(res.body.map((volunteer) => volunteer.id)).to.have.same.members(
+        volunteersFromCity.map((volunteer) => volunteer.id)
       );
     });
   });
 
   describe("When token is valid filtered by state", () => {
-    it("returns some employees", async () => {
+    it("returns some volunteers", async () => {
       const state = "SP";
-      const employeesFromState = employees.filter(
-        (employee) => employee.state === state
+      const volunteersFromState = volunteers.filter(
+        (volunteer) => volunteer.state === state
       );
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
+        .get("/api/volunteers/")
         .query({ state })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(employeesFromState.length);
-      expect(res.body.map((employee) => employee.id)).to.have.same.members(
-        employeesFromState.map((employee) => employee.id)
+      expect(res.body.length).to.eq(volunteersFromState.length);
+      expect(res.body.map((volunteer) => volunteer.id)).to.have.same.members(
+        volunteersFromState.map((volunteer) => volunteer.id)
       );
     });
   });
 
   describe("When token is valid filtered by area", () => {
-    it("returns only first employee", async () => {
+    it("returns only first volunteer", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/employees/")
-        .query({ areaId: employees[0].areas[0].id })
+        .get("/api/volunteers/")
+        .query({ areaId: volunteers[0].areas[0].id })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
       expect(res.body.length).to.eq(1);
       expect(res.body[0].areas.map((area) => area.id)).to.have.same.members(
-        employees[0].areas.map((area) => area.id)
+        volunteers[0].areas.map((area) => area.id)
       );
     });
   });
 });
 
-describe("/GET :id Employees", () => {
+describe("/GET :id Volunteers", () => {
   describe("When token is valid and id exists", () => {
-    it("returns the employee", async () => {
-      const { id } = employees[1];
-      const employee = employees[1];
+    it("returns the volunteer", async () => {
+      const { id } = volunteers[1];
+      const volunteer = volunteers[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/employees/${id}`)
+        .get(`/api/volunteers/${id}`)
         .set("x-access-token", token);
 
       res.should.have.status(200);
-      expect(res.body.id).to.eql(employee.id);
-      expect(res.body.name).to.eql(employee.name);
-      expect(res.body.email).to.eql(employee.email);
+      expect(res.body.id).to.eql(volunteer.id);
+      expect(res.body.name).to.eql(volunteer.name);
+      expect(res.body.email).to.eql(volunteer.email);
     });
   });
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const { id } = employees[1];
+      const { id } = volunteers[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/employees/${id}`)
+        .get(`/api/volunteers/${id}`)
         .set("x-access-token", "invalid_token");
 
       res.should.have.status(500);
@@ -305,10 +305,10 @@ describe("/GET :id Employees", () => {
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const { id } = employees[1];
+      const { id } = volunteers[1];
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/employees/${id}`);
+        .get(`/api/volunteers/${id}`);
 
       res.should.have.status(401);
       res.body.should.not.be.a("array");
@@ -319,10 +319,10 @@ describe("/GET :id Employees", () => {
 
   describe("When token is valid and id doesn't exist", () => {
     it("returns empty", async () => {
-      const id = employees[1].id + 500;
+      const id = volunteers[1].id + 500;
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get(`/api/employees/${id}`)
+        .get(`/api/volunteers/${id}`)
         .set("x-access-token", token);
 
       res.should.have.status(200);
@@ -331,8 +331,8 @@ describe("/GET :id Employees", () => {
   });
 });
 
-describe("/POST Employees", () => {
-  const baseEmployeeInfo = {
+describe("/POST Volunteers", () => {
+  const baseVolunteerInfo = {
     name: "G Example name",
     address: "Any street, 123",
     city: "Sao Paulo",
@@ -349,41 +349,41 @@ describe("/POST Employees", () => {
   };
 
   describe("When token is valid and body is correct", () => {
-    it("creates the employee and return it", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `1${baseEmployeeInfo.email}`,
+    it("creates the volunteer and return it", async () => {
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
+        email: `1${baseVolunteerInfo.email}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
+        .post("/api/volunteers/")
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(employeeFromDatabase.id);
-      expect(res.body.name).to.eq(employeeInfo.name);
-      expect(res.body.email).to.eq(employeeInfo.email);
+      expect(res.body.id).to.eq(volunteerFromDatabase.id);
+      expect(res.body.name).to.eq(volunteerInfo.name);
+      expect(res.body.email).to.eq(volunteerInfo.email);
     });
   });
 
   describe("When token is invalid and body is correct", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `2${baseEmployeeInfo.email}`,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
+        email: `2${baseVolunteerInfo.email}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
+        .post("/api/volunteers/")
         .set("x-access-token", "invalid token")
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
@@ -392,15 +392,15 @@ describe("/POST Employees", () => {
 
   describe("When token is not passed and body is correct", () => {
     it("returns unauthorized", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `3${baseEmployeeInfo.email}`,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
+        email: `3${baseVolunteerInfo.email}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
-        .send(employeeInfo);
+        .post("/api/volunteers/")
+        .send(volunteerInfo);
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
@@ -410,40 +410,40 @@ describe("/POST Employees", () => {
 
   describe("When token is valid and body is missing required param (name)", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `4${baseEmployeeInfo.email}`,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
+        email: `4${baseVolunteerInfo.email}`,
       };
-      delete employeeInfo.name;
+      delete volunteerInfo.name;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
+        .post("/api/volunteers/")
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(400);
       expect(res.error.text).to.include("name");
-      expect(employeeFromDatabase).to.eq(null);
+      expect(volunteerFromDatabase).to.eq(null);
     });
   });
 
   describe("When token is valid but the email is already being used", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
-        email: `${employees[0].email}`,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
+        email: `${volunteers[0].email}`,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/employees/")
+        .post("/api/volunteers/")
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("email");
@@ -451,21 +451,21 @@ describe("/POST Employees", () => {
   });
 });
 
-describe("/PUT :id Employees", () => {
-  let baseEmployeeInfo = {};
+describe("/PUT :id Volunteers", () => {
+  let baseVolunteerInfo = {};
   before((done) => {
-    baseEmployeeInfo = {
-      name: employees[1].name,
-      address: employees[1].address,
-      city: employees[1].city,
-      state: employees[1].state,
-      country: employees[1].country,
-      occupation: employees[1].occupation,
-      birthDate: employees[1].birthDate,
-      hireDate: employees[1].hireDate,
-      phone: employees[1].phone,
-      email: employees[1].email,
-      additionalInfo: employees[1].additionalInfo,
+    baseVolunteerInfo = {
+      name: volunteers[1].name,
+      address: volunteers[1].address,
+      city: volunteers[1].city,
+      state: volunteers[1].state,
+      country: volunteers[1].country,
+      occupation: volunteers[1].occupation,
+      birthDate: volunteers[1].birthDate,
+      hireDate: volunteers[1].hireDate,
+      phone: volunteers[1].phone,
+      email: volunteers[1].email,
+      additionalInfo: volunteers[1].additionalInfo,
       areaIds: [],
       teamIds: [],
     };
@@ -473,210 +473,210 @@ describe("/PUT :id Employees", () => {
   });
 
   describe("When token is valid and body is correct", () => {
-    it("updates the employee and return it", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
+    it("updates the volunteer and return it", async () => {
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
         city: "Salvador",
         phone: 5511966666666,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/employees/${employees[1].id}`)
+        .put(`/api/volunteers/${volunteers[1].id}`)
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(employeeFromDatabase.id);
-      expect(res.body.city).to.eq(employeeInfo.city);
-      expect(res.body.phone).to.eq(employeeInfo.phone);
-      expect(res.body.email).to.eq(employeeInfo.email);
+      expect(res.body.id).to.eq(volunteerFromDatabase.id);
+      expect(res.body.city).to.eq(volunteerInfo.city);
+      expect(res.body.phone).to.eq(volunteerInfo.phone);
+      expect(res.body.email).to.eq(volunteerInfo.email);
     });
   });
 
   describe("When token is invalid and body is correct", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
         city: "Salvador2",
         phone: 5511966666662,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/employees/${employees[1].id}`)
+        .put(`/api/volunteers/${volunteers[1].id}`)
         .set("x-access-token", "invalid_token")
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
-      expect(employeeFromDatabase.city).to.not.eq(employeeInfo.city);
-      expect(employeeFromDatabase.phone).to.not.eq(employeeInfo.phone);
+      expect(volunteerFromDatabase.city).to.not.eq(volunteerInfo.city);
+      expect(volunteerFromDatabase.phone).to.not.eq(volunteerInfo.phone);
     });
   });
 
   describe("When token is not passed and body is correct", () => {
     it("returns unauthorized", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
         city: "Salvador3",
         phone: 5511966666663,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/employees/${employees[1].id}`)
-        .send(employeeInfo);
+        .put(`/api/volunteers/${volunteers[1].id}`)
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
       expect(res.error.text).to.include("provided");
-      expect(employeeFromDatabase.city).to.not.eq(employeeInfo.city);
-      expect(employeeFromDatabase.phone).to.not.eq(employeeInfo.phone);
+      expect(volunteerFromDatabase.city).to.not.eq(volunteerInfo.city);
+      expect(volunteerFromDatabase.phone).to.not.eq(volunteerInfo.phone);
     });
   });
 
   describe("When token is valid and body is missing required param (name)", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
         city: "Salvador4",
         phone: 5511966666664,
       };
-      delete employeeInfo.name;
+      delete volunteerInfo.name;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/employees/${employees[1].id}`)
+        .put(`/api/volunteers/${volunteers[1].id}`)
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employeeInfo.email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteerInfo.email },
       });
 
       res.should.have.status(400);
       expect(res.error.text).to.include("name");
-      expect(employeeFromDatabase.city).to.not.eq(employeeInfo.city);
-      expect(employeeFromDatabase.phone).to.not.eq(employeeInfo.phone);
+      expect(volunteerFromDatabase.city).to.not.eq(volunteerInfo.city);
+      expect(volunteerFromDatabase.phone).to.not.eq(volunteerInfo.phone);
     });
   });
 
   describe("When token is valid but the email is already being used", () => {
     it("returns error", async () => {
-      const employeeInfo = {
-        ...baseEmployeeInfo,
+      const volunteerInfo = {
+        ...baseVolunteerInfo,
         city: "Salvador5",
         phone: 5511966666665,
-        email: employees[2].email,
+        email: volunteers[2].email,
       };
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/employees/${employees[1].id}`)
+        .put(`/api/volunteers/${volunteers[1].id}`)
         .set("x-access-token", token)
-        .send(employeeInfo);
+        .send(volunteerInfo);
 
-      const employeeFromDatabase = await Employee.Model.findOne({
-        where: { email: employees[1].email },
+      const volunteerFromDatabase = await Volunteer.Model.findOne({
+        where: { email: volunteers[1].email },
       });
 
       res.should.have.status(500);
       expect(res.error.text).to.include("email");
-      expect(employeeFromDatabase.city).to.not.eq(employeeInfo.city);
-      expect(employeeFromDatabase.phone).to.not.eq(employeeInfo.phone);
+      expect(volunteerFromDatabase.city).to.not.eq(volunteerInfo.city);
+      expect(volunteerFromDatabase.phone).to.not.eq(volunteerInfo.phone);
     });
   });
 });
 
-describe("/DELETE :id Employees", () => {
+describe("/DELETE :id Volunteers", () => {
   describe("When token is valid and id exists", () => {
-    it("deletes the employee", async () => {
-      const { id } = employees[0];
+    it("deletes the volunteer", async () => {
+      const { id } = volunteers[0];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/employees/${id}`)
+        .delete(`/api/volunteers/${id}`)
         .set("x-access-token", token);
 
-      const employeeFromDatabase = await Employee.Model.findByPk(id);
+      const volunteerFromDatabase = await Volunteer.Model.findByPk(id);
 
       res.should.have.status(200);
       expect(res.body.message).to.include("Destroyed");
-      expect(employeeFromDatabase).to.eq(null);
+      expect(volunteerFromDatabase).to.eq(null);
     });
   });
 
   describe("When token is invalid and id exists", () => {
     it("returns error", async () => {
-      const { id } = employees[1];
+      const { id } = volunteers[1];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/employees/${id}`)
+        .delete(`/api/volunteers/${id}`)
         .set("x-access-token", "invalid_token");
 
-      const employeeFromDatabase = await Employee.Model.findByPk(id);
+      const volunteerFromDatabase = await Volunteer.Model.findByPk(id);
 
       res.should.have.status(500);
       expect(res.error.text).to.include("Failed");
-      expect(employeeFromDatabase).to.not.eq(null);
-      expect(employeeFromDatabase.id).to.eq(id);
+      expect(volunteerFromDatabase).to.not.eq(null);
+      expect(volunteerFromDatabase.id).to.eq(id);
     });
   });
 
   describe("When token is not passed and id exists", () => {
     it("returns unauthorized", async () => {
-      const { id } = employees[2];
+      const { id } = volunteers[2];
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/employees/${id}`);
+        .delete(`/api/volunteers/${id}`);
 
-      const employeeFromDatabase = await Employee.Model.findByPk(id);
+      const volunteerFromDatabase = await Volunteer.Model.findByPk(id);
 
       res.should.have.status(401);
       expect(res.error.text).to.include("No");
       expect(res.error.text).to.include("provided");
-      expect(employeeFromDatabase).to.not.eq(null);
-      expect(employeeFromDatabase.id).to.eq(id);
+      expect(volunteerFromDatabase).to.not.eq(null);
+      expect(volunteerFromDatabase.id).to.eq(id);
     });
   });
 
   describe("When token is valid and id doesn't exist", () => {
     it("returns error", async () => {
-      const id = employees[0].id + 500;
+      const id = volunteers[0].id + 500;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .delete(`/api/employees/${id}`)
+        .delete(`/api/volunteers/${id}`)
         .set("x-access-token", token);
 
-      const employeeFromDatabase = await Employee.Model.findByPk(id);
+      const volunteerFromDatabase = await Volunteer.Model.findByPk(id);
 
       res.should.have.status(500);
       expect(res.error).to.be.an("error");
-      expect(employeeFromDatabase).to.eq(null);
+      expect(volunteerFromDatabase).to.eq(null);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await teamEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await Employee.Model.destroy({ where: {} });
+    await Volunteer.Model.destroy({ where: {} });
   });
 });

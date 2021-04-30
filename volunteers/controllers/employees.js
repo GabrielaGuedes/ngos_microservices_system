@@ -2,18 +2,18 @@ const express = require("express");
 const { Validator } = require("express-json-validator-middleware");
 const verifyJWT = require("../middleware/verify-jwt");
 
-const CreateEmployeeOrganizer = require("../interactors/create-employee-organizer");
-const UpdateEmployeeOrganizer = require("../interactors/update-employee-organizer");
-const DestroyEmployeeOrganizer = require("../interactors/destroy-employee-organizer");
+const CreateVolunteerOrganizer = require("../interactors/create-volunteer-organizer");
+const UpdateVolunteerOrganizer = require("../interactors/update-volunteer-organizer");
+const DestroyVolunteerOrganizer = require("../interactors/destroy-volunteer-organizer");
 
-const employees = require("../models/employees");
+const volunteers = require("../models/volunteers");
 const areas = require("../models/areas");
 const teams = require("../models/teams");
 const areaIds = require("../models/area-ids");
 const teamIds = require("../models/team-ids");
 const {
-  filterEmployeesWithTeamId,
-  filterEmployeesWithAreaId,
+  filterVolunteersWithTeamId,
+  filterVolunteersWithAreaId,
 } = require("../utils/filters-with");
 
 const router = express.Router();
@@ -31,11 +31,11 @@ router.get("/", verifyJWT, async (req, res) => {
   if (city) query.where = { ...query.where, city };
   if (state) query.where = { ...query.where, state };
 
-  await employees.Model.findAll(query)
+  await volunteers.Model.findAll(query)
     .then((result) => {
       res.json(
-        filterEmployeesWithTeamId(
-          filterEmployeesWithAreaId(result, areaId),
+        filterVolunteersWithTeamId(
+          filterVolunteersWithAreaId(result, areaId),
           teamId
         )
       );
@@ -44,7 +44,7 @@ router.get("/", verifyJWT, async (req, res) => {
 });
 
 router.get("/:id", verifyJWT, async (req, res) => {
-  await employees.Model.findOne({
+  await volunteers.Model.findOne({
     where: { id: req.params.id },
     include: [areas.Model, teams.Model],
   })
@@ -56,19 +56,19 @@ router.post(
   "/",
   validate({
     body: {
-      allOf: [employees.jsonSchema, areaIds.jsonSchema, teamIds.jsonSchema],
+      allOf: [volunteers.jsonSchema, areaIds.jsonSchema, teamIds.jsonSchema],
     },
   }),
   verifyJWT,
   async (req, res) => {
     const context = {
-      employeeInfo: req.body,
+      volunteerInfo: req.body,
       teamIds: req.body.teamIds,
       areaIds: req.body.areaIds,
     };
 
-    await CreateEmployeeOrganizer.run(context)
-      .then((result) => res.json(result.employee))
+    await CreateVolunteerOrganizer.run(context)
+      .then((result) => res.json(result.volunteer))
       .catch((error) => res.status(500).json(error));
   }
 );
@@ -77,26 +77,26 @@ router.put(
   "/:id",
   validate({
     body: {
-      allOf: [employees.jsonSchema, areaIds.jsonSchema, teamIds.jsonSchema],
+      allOf: [volunteers.jsonSchema, areaIds.jsonSchema, teamIds.jsonSchema],
     },
   }),
   verifyJWT,
   async (req, res) => {
     const context = {
-      employee: await employees.Model.findByPk(req.params.id),
-      employeeInfo: req.body,
+      volunteer: await volunteers.Model.findByPk(req.params.id),
+      volunteerInfo: req.body,
       areaIds: req.body.areaIds,
       teamIds: req.body.teamIds,
     };
 
-    await UpdateEmployeeOrganizer.run(context)
-      .then((result) => res.json(result.employee))
+    await UpdateVolunteerOrganizer.run(context)
+      .then((result) => res.json(result.volunteer))
       .catch((error) => res.status(500).json(error));
   }
 );
 
 router.delete("/:id", verifyJWT, async (req, res) => {
-  await DestroyEmployeeOrganizer.run({ id: req.params.id })
+  await DestroyVolunteerOrganizer.run({ id: req.params.id })
     .then(() => res.json({ message: "Destroyed!" }))
     .catch((error) =>
       res.status(500).json({

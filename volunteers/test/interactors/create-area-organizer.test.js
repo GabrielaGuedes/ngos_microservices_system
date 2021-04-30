@@ -1,16 +1,16 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 const CreateAreaOrganizer = require("../../interactors/create-area-organizer");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeesCreated = [];
+let volunteersCreated = [];
 
 const areaInfo = {
   name: "Area 1",
@@ -19,14 +19,14 @@ const areaInfo = {
 
 describe("CreateAreaOrganizer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
-    const newEmployees = [];
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee 1",
+    const newVolunteers = [];
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer 1",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -39,9 +39,9 @@ describe("CreateAreaOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee",
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -54,40 +54,44 @@ describe("CreateAreaOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    employeesCreated = newEmployees;
+    volunteersCreated = newVolunteers;
   });
 
   describe("When context passed is correct", () => {
-    it("creates area with employees", async () => {
-      const employeeIds = employeesCreated.map((employee) => employee.id);
+    it("creates area with volunteers", async () => {
+      const volunteerIds = volunteersCreated.map((volunteer) => volunteer.id);
       const context = {
         areaInfo,
-        employeeIds,
+        volunteerIds,
       };
 
       const res = await CreateAreaOrganizer.run(context);
-      const areasRelationFromDatabase = await areaEmployees.Model.findAll();
+      const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
       const areasFromDatabase = await areas.Model.findAll();
 
-      expect(res.area.dataValues).to.have.own.property("employeeIds");
+      expect(res.area.dataValues).to.have.own.property("volunteerIds");
       expect(areasFromDatabase.length).to.eq(1);
       expect(res.area.id).to.eq(areasFromDatabase[0].id);
-      expect(res.area.dataValues.employeeIds).to.have.same.members(employeeIds);
-      expect(areasRelationFromDatabase.length).to.eq(employeeIds.length);
+      expect(res.area.dataValues.volunteerIds).to.have.same.members(
+        volunteerIds
+      );
+      expect(areasRelationFromDatabase.length).to.eq(volunteerIds.length);
     });
   });
 
-  describe("When employeeIds doesn't exist", () => {
+  describe("When volunteerIds doesn't exist", () => {
     it("doesn't create area", async () => {
-      const employeeIds = employeesCreated.map((employee) => employee.id + 6);
+      const volunteerIds = volunteersCreated.map(
+        (volunteer) => volunteer.id + 6
+      );
       const context = {
         areaInfo,
-        employeeIds,
+        volunteerIds,
       };
 
       await CreateAreaOrganizer.run(context).catch(async (err) => {
         expect(err).to.be.an("error");
-        const areasRelationFromDatabase = await areaEmployees.Model.findAll();
+        const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
         const areasFromDatabase = await areas.Model.findAll();
 
         expect(areasFromDatabase.length).to.eq(0);
@@ -97,8 +101,8 @@ describe("CreateAreaOrganizer", () => {
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

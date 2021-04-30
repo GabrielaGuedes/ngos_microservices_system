@@ -1,28 +1,28 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const teams = require("../../models/teams");
-const teamEmployees = require("../../models/team-employees");
+const teamVolunteers = require("../../models/team-volunteers");
 const UpdateTeamOrganizer = require("../../interactors/update-team-organizer");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeesCreated = [];
-let teamCreatedWithEmployees = {};
+let volunteersCreated = [];
+let teamCreatedWithVolunteers = {};
 
 describe("UpdateTeamOrganizer", () => {
   beforeEach(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
 
-    const newEmployees = [];
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee 1",
+    const newVolunteers = [];
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer 1",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -35,9 +35,9 @@ describe("UpdateTeamOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee",
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -50,14 +50,14 @@ describe("UpdateTeamOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    employeesCreated = newEmployees;
-    teamCreatedWithEmployees = await teams.Model.create(
+    volunteersCreated = newVolunteers;
+    teamCreatedWithVolunteers = await teams.Model.create(
       {
         name: "Team 1",
         description: "Team 1 very cool",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee For team 1",
+            name: "Base volunteer For team 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -66,49 +66,51 @@ describe("UpdateTeamOrganizer", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_for_team_1@example.com",
+            email: "volunteer_for_team_1@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
   });
 
   describe("When context passed is correct", () => {
-    it("updates the team with new employees", async () => {
-      const employeeIds = employeesCreated.map((employee) => employee.id);
+    it("updates the team with new volunteers", async () => {
+      const volunteerIds = volunteersCreated.map((volunteer) => volunteer.id);
       const newDescription = "Brand new description here";
       const context = {
-        team: teamCreatedWithEmployees,
+        team: teamCreatedWithVolunteers,
         teamInfo: {
           description: newDescription,
         },
-        employeeIds,
+        volunteerIds,
       };
 
       const res = await UpdateTeamOrganizer.run(context);
-      const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
+      const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
       const teamsFromDatabase = await teams.Model.findAll({
-        include: employees.Model,
+        include: volunteers.Model,
       });
 
-      expect(res.team.dataValues).to.have.own.property("employeeIds");
+      expect(res.team.dataValues).to.have.own.property("volunteerIds");
       expect(teamsFromDatabase.length).to.eq(1);
       expect(teamsFromDatabase[0].description).to.eq(newDescription);
-      expect(res.team.dataValues.employeeIds).to.have.same.members(employeeIds);
-      expect(teamsRelationFromDatabase.length).to.eq(employeeIds.length);
+      expect(res.team.dataValues.volunteerIds).to.have.same.members(
+        volunteerIds
+      );
+      expect(teamsRelationFromDatabase.length).to.eq(volunteerIds.length);
       expect(
-        teamsFromDatabase[0].employees.map((emp) => emp.id)
-      ).to.have.same.members(employeeIds);
+        teamsFromDatabase[0].volunteers.map((emp) => emp.id)
+      ).to.have.same.members(volunteerIds);
     });
   });
 
   after(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
   });
 });

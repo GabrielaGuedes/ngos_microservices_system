@@ -1,32 +1,32 @@
-const filterEmployeesWithAreaId = (employees, areaId) => {
-  if (!areaId) return employees;
+const filterVolunteersWithAreaId = (volunteers, areaId) => {
+  if (!areaId) return volunteers;
 
-  return employees.filter(
+  return volunteers.filter(
     (emp) => emp.areas.findIndex((area) => area.id.toString() === areaId) !== -1
   );
 };
 
-const filterEmployeesWithTeamId = (employees, teamId) => {
-  if (!teamId) return employees;
+const filterVolunteersWithTeamId = (volunteers, teamId) => {
+  if (!teamId) return volunteers;
 
-  return employees.filter(
+  return volunteers.filter(
     (emp) => emp.teams.findIndex((team) => team.id.toString() === teamId) !== -1
   );
 };
 
-const filterArrayWithEmployeeId = (array, employeeId) => {
-  if (!employeeId) return array;
+const filterArrayWithVolunteerId = (array, volunteerId) => {
+  if (!volunteerId) return array;
 
   return array.filter(
     (a) =>
-      a.employees.findIndex(
-        (employee) => employee.id.toString() === employeeId
+      a.volunteers.findIndex(
+        (volunteer) => volunteer.id.toString() === volunteerId
       ) !== -1
   );
 };
 
 module.exports = {
-  filterEmployeesWithAreaId,
-  filterEmployeesWithTeamId,
-  filterArrayWithEmployeeId,
+  filterVolunteersWithAreaId,
+  filterVolunteersWithTeamId,
+  filterArrayWithVolunteerId,
 };

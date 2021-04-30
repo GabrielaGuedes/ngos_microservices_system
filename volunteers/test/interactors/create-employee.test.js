@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const CreateEmployee = require("../../interactors/create-employee");
-const employees = require("../../models/employees");
+const CreateVolunteer = require("../../interactors/create-volunteer");
+const volunteers = require("../../models/volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-const baseEmployee = {
-  name: "Base employee",
+const baseVolunteer = {
+  name: "Base volunteer",
   address: "Base Street, 24",
   city: "Sao Paulo",
   state: "SP",
@@ -22,14 +22,14 @@ const baseEmployee = {
   additionalInfo: "no more info",
 };
 
-describe("CreateEmployee", () => {
+describe("CreateVolunteer", () => {
   before(async () => {
-    await employees.Model.destroy({ where: {} });
-    await employees.Model.create(baseEmployee);
+    await volunteers.Model.destroy({ where: {} });
+    await volunteers.Model.create(baseVolunteer);
   });
 
   describe("When context passed is correct", () => {
-    it("creates an employee", async () => {
+    it("creates an volunteer", async () => {
       const context = {
         name: "Correct example",
         address: "Base Street, 24",
@@ -44,37 +44,37 @@ describe("CreateEmployee", () => {
         additionalInfo: "no more info",
       };
 
-      const res = await CreateEmployee.run({ employeeInfo: context });
-      const employeeFromDatabase = await employees.Model.findOne({
+      const res = await CreateVolunteer.run({ volunteerInfo: context });
+      const volunteerFromDatabase = await volunteers.Model.findOne({
         where: {
           email: context.email,
         },
       });
 
-      expect(res).to.have.own.property("employee");
-      expect(res.employee.id).to.eq(employeeFromDatabase.id);
-      expect(employeeFromDatabase.email).to.eq(context.email);
-      expect(employeeFromDatabase.name).to.eq(context.name);
+      expect(res).to.have.own.property("volunteer");
+      expect(res.volunteer.id).to.eq(volunteerFromDatabase.id);
+      expect(volunteerFromDatabase.email).to.eq(context.email);
+      expect(volunteerFromDatabase.name).to.eq(context.name);
     });
   });
 
   describe("When email from context is already in use", () => {
-    it("doesn't create an employee", async () => {
-      const context = baseEmployee;
-      const initialEmployees = await employees.Model.findAll();
+    it("doesn't create an volunteer", async () => {
+      const context = baseVolunteer;
+      const initialVolunteers = await volunteers.Model.findAll();
 
-      const res = await CreateEmployee.run({ employeeInfo: context })
+      const res = await CreateVolunteer.run({ volunteerInfo: context })
         .then((result) => result)
         .catch((error) => error);
 
-      const employeesFromDatabase = await employees.Model.findAll();
+      const volunteersFromDatabase = await volunteers.Model.findAll();
 
       expect(res).to.be.an("error");
-      expect(employeesFromDatabase.length).to.eq(initialEmployees.length);
+      expect(volunteersFromDatabase.length).to.eq(initialVolunteers.length);
     });
   });
 
   after(async () => {
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
   });
 });

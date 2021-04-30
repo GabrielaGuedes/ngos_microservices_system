@@ -3,9 +3,9 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const teamEmployees = require("../../models/team-employees");
+const teamVolunteers = require("../../models/team-volunteers");
 const Team = require("../../models/teams");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
 require("../../index");
 
@@ -18,8 +18,8 @@ let teams = [];
 let token = "";
 
 const setTokenAndTeams = async () => {
-  await teamEmployees.Model.destroy({ where: {} });
-  await employees.Model.destroy({ where: {} });
+  await teamVolunteers.Model.destroy({ where: {} });
+  await volunteers.Model.destroy({ where: {} });
   await Team.Model.destroy({ where: {} });
 
   const teamsArray = [];
@@ -30,7 +30,7 @@ const setTokenAndTeams = async () => {
       {
         name: "Team 1",
         description: "We like to drink water",
-        employees: [
+        volunteers: [
           {
             name: "Example for team",
             address: "Any street, 123",
@@ -60,7 +60,7 @@ const setTokenAndTeams = async () => {
         ],
       },
       {
-        include: [employees.Model],
+        include: [volunteers.Model],
       }
     ).then((res) => res)
   );
@@ -98,8 +98,8 @@ const setTokenAndTeams = async () => {
 };
 
 const cleanTable = async () => {
-  await teamEmployees.Model.destroy({ where: {} });
-  await employees.Model.destroy({ where: {} });
+  await teamVolunteers.Model.destroy({ where: {} });
+  await volunteers.Model.destroy({ where: {} });
   await Team.Model.destroy({ where: {} });
 };
 
@@ -217,19 +217,19 @@ describe("/GET :id Teams", () => {
     });
   });
 
-  describe("When token is valid filtered by employee", () => {
+  describe("When token is valid filtered by volunteer", () => {
     it("returns only first team", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/teams/")
-        .query({ employeeId: teams[0].employees[0].id })
+        .query({ volunteerId: teams[0].volunteers[0].id })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
       expect(res.body.length).to.eq(1);
-      expect(res.body[0].employees.map((emp) => emp.id)).to.have.same.members(
-        teams[0].employees.map((emp) => emp.id)
+      expect(res.body[0].volunteers.map((emp) => emp.id)).to.have.same.members(
+        teams[0].volunteers.map((emp) => emp.id)
       );
     });
   });
@@ -247,7 +247,7 @@ describe("/POST Teams", () => {
   const baseTeamInfo = {
     name: "Team 7",
     description: "We like to dance with water",
-    employeeIds: [],
+    volunteerIds: [],
   };
 
   describe("When token is valid and body is correct", () => {
@@ -362,7 +362,7 @@ describe("/PUT :id Teams", () => {
     baseTeamInfo = {
       name: teams[1].name,
       description: teams[1].description,
-      employeeIds: [],
+      volunteerIds: [],
     };
     done();
   });
@@ -466,7 +466,7 @@ describe("/PUT :id Teams", () => {
       const teamInfo = {
         name: teams[0].name,
         description: "We like to drink juice5",
-        employeeIds: [],
+        volunteerIds: [],
       };
 
       const res = await chai

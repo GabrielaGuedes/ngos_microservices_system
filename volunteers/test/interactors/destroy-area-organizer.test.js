@@ -3,29 +3,29 @@ process.env.NODE_ENV = "test";
 const chai = require("chai");
 const DestroyAreaOrganizer = require("../../interactors/destroy-area-organizer");
 const areas = require("../../models/areas");
-const employees = require("../../models/employees");
-const areaEmployees = require("../../models/area-employees");
+const volunteers = require("../../models/volunteers");
+const areaVolunteers = require("../../models/area-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let areaWithEmployees = {};
+let areaWithVolunteers = {};
 let areaWithNothing = {};
 
 describe("DestroyAreaOrganizer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
 
-    areaWithEmployees = await areas.Model.create(
+    areaWithVolunteers = await areas.Model.create(
       {
-        name: "Area with employees",
+        name: "Area with volunteers",
         description: "Just a cool area",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee 1",
+            name: "Base volunteer 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -34,11 +34,11 @@ describe("DestroyAreaOrganizer", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_1@example.com",
+            email: "volunteer_1@example.com",
             additionalInfo: "no more info",
           },
           {
-            name: "Base employee 2",
+            name: "Base volunteer 2",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -47,39 +47,41 @@ describe("DestroyAreaOrganizer", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_2@example.com",
+            email: "volunteer_2@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
 
     areaWithNothing = await areas.Model.create({
-      name: "Area without employees",
+      name: "Area without volunteers",
       description: "no more info",
     });
   });
 
-  describe("When area has employees", () => {
+  describe("When area has volunteers", () => {
     it("removes relations and destroys area", async () => {
       const context = {
-        id: areaWithEmployees.id,
+        id: areaWithVolunteers.id,
       };
 
       const res = await DestroyAreaOrganizer.run(context);
-      const employeeRelationsFromDatabase = await areaEmployees.Model.findAll({
-        where: { areaId: areaWithEmployees.id },
-      });
+      const volunteerRelationsFromDatabase = await areaVolunteers.Model.findAll(
+        {
+          where: { areaId: areaWithVolunteers.id },
+        }
+      );
       const areaFromDatabase = await areas.Model.findAll({
-        where: { name: areaWithEmployees.name },
+        where: { name: areaWithVolunteers.name },
       });
 
-      expect(res.employeeIds).to.eql([]);
+      expect(res.volunteerIds).to.eql([]);
       expect(res.success).to.eql(true);
-      expect(employeeRelationsFromDatabase.length).to.eq(0);
+      expect(volunteerRelationsFromDatabase.length).to.eq(0);
       expect(areaFromDatabase).to.eql([]);
     });
   });
@@ -101,8 +103,8 @@ describe("DestroyAreaOrganizer", () => {
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
   });
 });

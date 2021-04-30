@@ -1,21 +1,21 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const UpdateEmployee = require("../../interactors/update-employee");
-const employees = require("../../models/employees");
+const UpdateVolunteer = require("../../interactors/update-volunteer");
+const volunteers = require("../../models/volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let createdEmployee = {};
-let existentEmployee = {};
+let createdVolunteer = {};
+let existentVolunteer = {};
 
-describe("UpdateEmployee", () => {
+describe("UpdateVolunteer", () => {
   beforeEach(async () => {
-    await employees.Model.destroy({ where: {} });
-    createdEmployee = await employees.Model.create({
-      name: "Base employee",
+    await volunteers.Model.destroy({ where: {} });
+    createdVolunteer = await volunteers.Model.create({
+      name: "Base volunteer",
       address: "Base Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -27,8 +27,8 @@ describe("UpdateEmployee", () => {
       email: "created@example.com",
       additionalInfo: "no more info",
     });
-    existentEmployee = await employees.Model.create({
-      name: "Existent employee",
+    existentVolunteer = await volunteers.Model.create({
+      name: "Existent volunteer",
       address: "Existent Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -43,60 +43,60 @@ describe("UpdateEmployee", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("updates an employee", async () => {
-      const newName = "New name for employee";
+    it("updates an volunteer", async () => {
+      const newName = "New name for volunteer";
       const newAdditionalInfo = "Another info";
       const context = {
-        employee: createdEmployee,
-        employeeInfo: {
+        volunteer: createdVolunteer,
+        volunteerInfo: {
           name: newName,
           additionalInfo: newAdditionalInfo,
         },
       };
 
-      const res = await UpdateEmployee.run(context);
-      const employeeFromDatabase = await employees.Model.findOne({
+      const res = await UpdateVolunteer.run(context);
+      const volunteerFromDatabase = await volunteers.Model.findOne({
         where: {
-          email: createdEmployee.email,
+          email: createdVolunteer.email,
         },
       });
 
-      expect(res).to.have.own.property("employee");
-      expect(res.employee.name).to.eq(employeeFromDatabase.name);
-      expect(employeeFromDatabase.name).to.eq(newName);
-      expect(res.employee.additionalInfo).to.eq(
-        employeeFromDatabase.additionalInfo
+      expect(res).to.have.own.property("volunteer");
+      expect(res.volunteer.name).to.eq(volunteerFromDatabase.name);
+      expect(volunteerFromDatabase.name).to.eq(newName);
+      expect(res.volunteer.additionalInfo).to.eq(
+        volunteerFromDatabase.additionalInfo
       );
-      expect(employeeFromDatabase.additionalInfo).to.eq(newAdditionalInfo);
+      expect(volunteerFromDatabase.additionalInfo).to.eq(newAdditionalInfo);
     });
   });
 
   describe("When email from context is already in use", () => {
-    it("doesn't update employee", async () => {
-      const newName = "New name for employee";
+    it("doesn't update volunteer", async () => {
+      const newName = "New name for volunteer";
       const newAdditionalInfo = "Another info";
-      const repeatedEmail = existentEmployee.email;
+      const repeatedEmail = existentVolunteer.email;
       const context = {
-        employee: createdEmployee,
-        employeeInfo: {
+        volunteer: createdVolunteer,
+        volunteerInfo: {
           name: newName,
           additionalInfo: newAdditionalInfo,
           email: repeatedEmail,
         },
       };
 
-      await UpdateEmployee.run(context).catch(async (error) => {
-        const employeeFromDatabase = await employees.Model.findOne({
+      await UpdateVolunteer.run(context).catch(async (error) => {
+        const volunteerFromDatabase = await volunteers.Model.findOne({
           where: { name: newName },
         });
 
         expect(error).to.be.an("error");
-        expect(employeeFromDatabase).to.eq(null);
+        expect(volunteerFromDatabase).to.eq(null);
       });
     });
   });
 
   after(async () => {
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
   });
 });

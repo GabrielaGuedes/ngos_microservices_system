@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const teams = require("../../models/teams");
-const teamEmployees = require("../../models/team-employees");
+const teamVolunteers = require("../../models/team-volunteers");
 const DestroyTeam = require("../../interactors/destroy-team");
 require("dotenv/config");
 require("../../config/db-connection");
@@ -15,17 +15,17 @@ let teamToBeDestroyed = {};
 
 describe("DestroyTeam", () => {
   beforeEach(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
 
     teamWithRelation = await teams.Model.create(
       {
         name: "Team with relations",
         description: "Just a cool team",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee 1",
+            name: "Base volunteer 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -34,11 +34,11 @@ describe("DestroyTeam", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_1@example.com",
+            email: "volunteer_1@example.com",
             additionalInfo: "no more info",
           },
           {
-            name: "Base employee 2",
+            name: "Base volunteer 2",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -47,13 +47,13 @@ describe("DestroyTeam", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_2@example.com",
+            email: "volunteer_2@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
 
@@ -97,8 +97,8 @@ describe("DestroyTeam", () => {
   });
 
   after(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
   });
 });

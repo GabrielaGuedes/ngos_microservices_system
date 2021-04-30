@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const teams = require("../../models/teams");
 const areas = require("../../models/areas");
-const teamEmployees = require("../../models/team-employees");
-const areaEmployees = require("../../models/area-employees");
-const UpdateEmployeeOrganizer = require("../../interactors/update-employee-organizer");
+const teamVolunteers = require("../../models/team-volunteers");
+const areaVolunteers = require("../../models/area-volunteers");
+const UpdateVolunteerOrganizer = require("../../interactors/update-volunteer-organizer");
 require("dotenv/config");
 require("../../config/db-connection");
 
@@ -14,13 +14,13 @@ const { expect } = chai;
 
 const teamsCreated = [];
 const areasCreated = [];
-let employeeCreatedWithArea = {};
+let volunteerCreatedWithArea = {};
 
-describe("UpdateEmployeeOrganizer", () => {
+describe("UpdateVolunteerOrganizer", () => {
   beforeEach(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
@@ -48,9 +48,9 @@ describe("UpdateEmployeeOrganizer", () => {
         description: "Area 2 not so cool",
       })
     );
-    employeeCreatedWithArea = await employees.Model.create(
+    volunteerCreatedWithArea = await volunteers.Model.create(
       {
-        name: "Employee Created",
+        name: "Volunteer Created",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -59,13 +59,13 @@ describe("UpdateEmployeeOrganizer", () => {
         birthDate: "1990-01-01",
         hireDate: "2020-01-01",
         phone: 5511999999999,
-        email: "employee_created@example.com",
+        email: "volunteer_created@example.com",
         additionalInfo: "no more info",
         areas: [
           {
             name: "Existent Area",
             description: "Very cool",
-            areaEmployees: {},
+            areaVolunteers: {},
           },
         ],
       },
@@ -76,14 +76,14 @@ describe("UpdateEmployeeOrganizer", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("updates the employee with new teams and areas", async () => {
+    it("updates the volunteer with new teams and areas", async () => {
       const teamIds = teamsCreated.map((team) => team.id);
       const areaIds = areasCreated.map((area) => area.id);
-      const newName = "New name for employee";
+      const newName = "New name for volunteer";
       const newAdditionalInfo = "Another info";
       const context = {
-        employee: employeeCreatedWithArea,
-        employeeInfo: {
+        volunteer: volunteerCreatedWithArea,
+        volunteerInfo: {
           name: newName,
           additionalInfo: newAdditionalInfo,
         },
@@ -91,27 +91,27 @@ describe("UpdateEmployeeOrganizer", () => {
         areaIds,
       };
 
-      const res = await UpdateEmployeeOrganizer.run(context);
-      const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
-      const areasRelationFromDatabase = await areaEmployees.Model.findAll();
-      const employeesFromDatabase = await employees.Model.findAll({
+      const res = await UpdateVolunteerOrganizer.run(context);
+      const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
+      const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
+      const volunteersFromDatabase = await volunteers.Model.findAll({
         include: [areas.Model, teams.Model],
       });
 
-      expect(res.employee.dataValues).to.have.own.property("teamIds");
-      expect(res.employee.dataValues).to.have.own.property("areaIds");
-      expect(employeesFromDatabase.length).to.eq(1);
-      expect(employeesFromDatabase[0].name).to.eq(newName);
-      expect(employeesFromDatabase[0].additionalInfo).to.eq(newAdditionalInfo);
-      expect(res.employee.dataValues.teamIds).to.have.same.members(teamIds);
-      expect(res.employee.dataValues.areaIds).to.have.same.members(areaIds);
+      expect(res.volunteer.dataValues).to.have.own.property("teamIds");
+      expect(res.volunteer.dataValues).to.have.own.property("areaIds");
+      expect(volunteersFromDatabase.length).to.eq(1);
+      expect(volunteersFromDatabase[0].name).to.eq(newName);
+      expect(volunteersFromDatabase[0].additionalInfo).to.eq(newAdditionalInfo);
+      expect(res.volunteer.dataValues.teamIds).to.have.same.members(teamIds);
+      expect(res.volunteer.dataValues.areaIds).to.have.same.members(areaIds);
       expect(teamsRelationFromDatabase.length).to.eq(teamIds.length);
       expect(areasRelationFromDatabase.length).to.eq(areaIds.length);
       expect(
-        employeesFromDatabase[0].areas.map((area) => area.id)
+        volunteersFromDatabase[0].areas.map((area) => area.id)
       ).to.have.same.members(areaIds);
       expect(
-        employeesFromDatabase[0].teams.map((team) => team.id)
+        volunteersFromDatabase[0].teams.map((team) => team.id)
       ).to.have.same.members(teamIds);
     });
   });
@@ -120,11 +120,11 @@ describe("UpdateEmployeeOrganizer", () => {
     it("doesn't update the areas", async () => {
       const teamIds = teamsCreated.map((team) => team.id + 6);
       const areaIds = areasCreated.map((area) => area.id);
-      const newName = "New name for employee";
+      const newName = "New name for volunteer";
       const newAdditionalInfo = "Another info";
       const context = {
-        employee: employeeCreatedWithArea,
-        employeeInfo: {
+        volunteer: volunteerCreatedWithArea,
+        volunteerInfo: {
           name: newName,
           additionalInfo: newAdditionalInfo,
         },
@@ -132,30 +132,30 @@ describe("UpdateEmployeeOrganizer", () => {
         areaIds,
       };
 
-      await UpdateEmployeeOrganizer.run(context).catch(async (err) => {
+      await UpdateVolunteerOrganizer.run(context).catch(async (err) => {
         expect(err).to.be.an("error");
-        const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
-        const areasRelationFromDatabase = await areaEmployees.Model.findAll();
-        const employeesFromDatabase = await employees.Model.findAll({
+        const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
+        const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
+        const volunteersFromDatabase = await volunteers.Model.findAll({
           include: areas.Model,
         });
 
-        expect(employeesFromDatabase.length).to.eq(1);
+        expect(volunteersFromDatabase.length).to.eq(1);
         expect(teamsRelationFromDatabase.length).to.eq(0);
         expect(areasRelationFromDatabase.length).to.eq(1);
         expect(
-          employeesFromDatabase[0].areas.map((area) => area.id)
+          volunteersFromDatabase[0].areas.map((area) => area.id)
         ).to.have.same.members(
-          employeeCreatedWithArea.areas.map((area) => area.id)
+          volunteerCreatedWithArea.areas.map((area) => area.id)
         );
       });
     });
   });
 
   after(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });

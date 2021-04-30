@@ -1,27 +1,27 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const RemoveAreasFromEmployee = require("../../interactors/remove-areas-from-employee");
-const employees = require("../../models/employees");
+const RemoveAreasFromVolunteer = require("../../interactors/remove-areas-from-volunteer");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeeCreatedWithAreas = {};
-let employeeCreatedWithoutAreas = {};
+let volunteerCreatedWithAreas = {};
+let volunteerCreatedWithoutAreas = {};
 
-describe("RemoveAreasFromEmployee", () => {
+describe("RemoveAreasFromVolunteer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
-    employeeCreatedWithAreas = await employees.Model.create(
+    volunteerCreatedWithAreas = await volunteers.Model.create(
       {
-        name: "Base employee",
+        name: "Base volunteer",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -48,8 +48,8 @@ describe("RemoveAreasFromEmployee", () => {
       }
     );
 
-    employeeCreatedWithoutAreas = await employees.Model.create({
-      name: "Base employee without area",
+    volunteerCreatedWithoutAreas = await volunteers.Model.create({
+      name: "Base volunteer without area",
       address: "Base Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -64,44 +64,44 @@ describe("RemoveAreasFromEmployee", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("remove areas from employee", async () => {
+    it("remove areas from volunteer", async () => {
       const context = {
-        id: employeeCreatedWithAreas.id,
+        id: volunteerCreatedWithAreas.id,
       };
 
-      const res = await RemoveAreasFromEmployee.run(context);
-      const relationsFromDatabase = await areaEmployees.Model.findAll();
-      const employeeFromDatabase = await employees.Model.findOne({
-        where: { email: employeeCreatedWithAreas.email },
+      const res = await RemoveAreasFromVolunteer.run(context);
+      const relationsFromDatabase = await areaVolunteers.Model.findAll();
+      const volunteerFromDatabase = await volunteers.Model.findOne({
+        where: { email: volunteerCreatedWithAreas.email },
         include: areas.Model,
       });
 
       expect(res.areaIds).to.eql([]);
       expect(relationsFromDatabase.length).to.eq(0);
-      expect(employeeFromDatabase.areas).to.eql([]);
+      expect(volunteerFromDatabase.areas).to.eql([]);
     });
   });
 
-  describe("When employee has no areas", () => {
+  describe("When volunteer has no areas", () => {
     it("just does nothing", async () => {
       const context = {
-        id: employeeCreatedWithoutAreas.id,
+        id: volunteerCreatedWithoutAreas.id,
       };
 
-      const res = await RemoveAreasFromEmployee.run(context);
-      const employeeFromDatabase = await employees.Model.findOne({
-        where: { email: employeeCreatedWithoutAreas.email },
+      const res = await RemoveAreasFromVolunteer.run(context);
+      const volunteerFromDatabase = await volunteers.Model.findOne({
+        where: { email: volunteerCreatedWithoutAreas.email },
         include: areas.Model,
       });
 
       expect(res.areaIds).to.eql([]);
-      expect(employeeFromDatabase.areas).to.eql([]);
+      expect(volunteerFromDatabase.areas).to.eql([]);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

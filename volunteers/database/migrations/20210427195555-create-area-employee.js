@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable("areaEmployees", {
+    queryInterface.createTable("areaVolunteers", {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -18,11 +18,11 @@ module.exports = {
         },
         allowNull: false,
       },
-      employeeId: {
+      volunteerId: {
         type: Sequelize.DataTypes.INTEGER,
         references: {
           model: {
-            tableName: "employees",
+            tableName: "volunteers",
             schema: "public",
           },
           key: "id",
@@ -39,5 +39,5 @@ module.exports = {
       },
     }),
 
-  down: async (queryInterface) => queryInterface.dropTable("areaEmployees"),
+  down: async (queryInterface) => queryInterface.dropTable("areaVolunteers"),
 };

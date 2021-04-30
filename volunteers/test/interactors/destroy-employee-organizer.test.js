@@ -1,33 +1,33 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const DestroyEmployeeOrganizer = require("../../interactors/destroy-employee-organizer");
-const employees = require("../../models/employees");
+const DestroyVolunteerOrganizer = require("../../interactors/destroy-volunteer-organizer");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
 const teams = require("../../models/teams");
-const areaEmployees = require("../../models/area-employees");
-const teamEmployees = require("../../models/team-employees");
+const areaVolunteers = require("../../models/area-volunteers");
+const teamVolunteers = require("../../models/team-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeeWithAreasAndTeams = {};
-let employeeWithAreas = {};
-let employeeWithTeams = {};
-let employeeWithNothing = {};
+let volunteerWithAreasAndTeams = {};
+let volunteerWithAreas = {};
+let volunteerWithTeams = {};
+let volunteerWithNothing = {};
 
-describe("DestroyEmployeeOrganizer", () => {
+describe("DestroyVolunteerOrganizer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
 
-    employeeWithAreasAndTeams = await employees.Model.create(
+    volunteerWithAreasAndTeams = await volunteers.Model.create(
       {
-        name: "Base employee With Areas and Teams",
+        name: "Base volunteer With Areas and Teams",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -64,9 +64,9 @@ describe("DestroyEmployeeOrganizer", () => {
       }
     );
 
-    employeeWithAreas = await employees.Model.create(
+    volunteerWithAreas = await volunteers.Model.create(
       {
-        name: "Base employee With Areas",
+        name: "Base volunteer With Areas",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -93,9 +93,9 @@ describe("DestroyEmployeeOrganizer", () => {
       }
     );
 
-    employeeWithTeams = await employees.Model.create(
+    volunteerWithTeams = await volunteers.Model.create(
       {
-        name: "Base employee With Teams",
+        name: "Base volunteer With Teams",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -122,8 +122,8 @@ describe("DestroyEmployeeOrganizer", () => {
       }
     );
 
-    employeeWithNothing = await employees.Model.create({
-      name: "Base employee with nothing",
+    volunteerWithNothing = await volunteers.Model.create({
+      name: "Base volunteer with nothing",
       address: "Base Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -137,21 +137,21 @@ describe("DestroyEmployeeOrganizer", () => {
     });
   });
 
-  describe("When employee has teams and areas", () => {
-    it("removes relations and destroys employee", async () => {
+  describe("When volunteer has teams and areas", () => {
+    it("removes relations and destroys volunteer", async () => {
       const context = {
-        id: employeeWithAreasAndTeams.id,
+        id: volunteerWithAreasAndTeams.id,
       };
 
-      const res = await DestroyEmployeeOrganizer.run(context);
-      const areaRelationsFromDatabase = await areaEmployees.Model.findAll({
-        where: { employeeId: employeeWithAreasAndTeams.id },
+      const res = await DestroyVolunteerOrganizer.run(context);
+      const areaRelationsFromDatabase = await areaVolunteers.Model.findAll({
+        where: { volunteerId: volunteerWithAreasAndTeams.id },
       });
-      const teamRelationsFromDatabase = await teamEmployees.Model.findAll({
-        where: { employeeId: employeeWithAreasAndTeams.id },
+      const teamRelationsFromDatabase = await teamVolunteers.Model.findAll({
+        where: { volunteerId: volunteerWithAreasAndTeams.id },
       });
-      const employeeFromDatabase = await employees.Model.findAll({
-        where: { email: employeeWithAreasAndTeams.email },
+      const volunteerFromDatabase = await volunteers.Model.findAll({
+        where: { email: volunteerWithAreasAndTeams.email },
       });
 
       expect(res.areaIds).to.eql([]);
@@ -159,72 +159,72 @@ describe("DestroyEmployeeOrganizer", () => {
       expect(res.success).to.eql(true);
       expect(areaRelationsFromDatabase.length).to.eq(0);
       expect(teamRelationsFromDatabase.length).to.eq(0);
-      expect(employeeFromDatabase).to.eql([]);
+      expect(volunteerFromDatabase).to.eql([]);
     });
   });
 
-  describe("When employee has teams", () => {
-    it("removes relations and destroys employee", async () => {
+  describe("When volunteer has teams", () => {
+    it("removes relations and destroys volunteer", async () => {
       const context = {
-        id: employeeWithTeams.id,
+        id: volunteerWithTeams.id,
       };
 
-      const res = await DestroyEmployeeOrganizer.run(context);
-      const teamRelationsFromDatabase = await teamEmployees.Model.findAll({
-        where: { employeeId: employeeWithTeams.id },
+      const res = await DestroyVolunteerOrganizer.run(context);
+      const teamRelationsFromDatabase = await teamVolunteers.Model.findAll({
+        where: { volunteerId: volunteerWithTeams.id },
       });
-      const employeeFromDatabase = await employees.Model.findAll({
-        where: { email: employeeWithTeams.email },
+      const volunteerFromDatabase = await volunteers.Model.findAll({
+        where: { email: volunteerWithTeams.email },
       });
 
       expect(res.teamIds).to.eql([]);
       expect(res.success).to.eql(true);
       expect(teamRelationsFromDatabase.length).to.eq(0);
-      expect(employeeFromDatabase).to.eql([]);
+      expect(volunteerFromDatabase).to.eql([]);
     });
   });
 
-  describe("When employee has areas", () => {
-    it("removes relations and destroys employee", async () => {
+  describe("When volunteer has areas", () => {
+    it("removes relations and destroys volunteer", async () => {
       const context = {
-        id: employeeWithAreas.id,
+        id: volunteerWithAreas.id,
       };
 
-      const res = await DestroyEmployeeOrganizer.run(context);
-      const areaRelationsFromDatabase = await areaEmployees.Model.findAll({
-        where: { employeeId: employeeWithAreas.id },
+      const res = await DestroyVolunteerOrganizer.run(context);
+      const areaRelationsFromDatabase = await areaVolunteers.Model.findAll({
+        where: { volunteerId: volunteerWithAreas.id },
       });
-      const employeeFromDatabase = await employees.Model.findAll({
-        where: { email: employeeWithAreas.email },
+      const volunteerFromDatabase = await volunteers.Model.findAll({
+        where: { email: volunteerWithAreas.email },
       });
 
       expect(res.areaIds).to.eql([]);
       expect(res.success).to.eql(true);
       expect(areaRelationsFromDatabase.length).to.eq(0);
-      expect(employeeFromDatabase).to.eql([]);
+      expect(volunteerFromDatabase).to.eql([]);
     });
   });
 
-  describe("When employee has nothing", () => {
-    it("destroys employee", async () => {
+  describe("When volunteer has nothing", () => {
+    it("destroys volunteer", async () => {
       const context = {
-        id: employeeWithNothing.id,
+        id: volunteerWithNothing.id,
       };
 
-      const res = await DestroyEmployeeOrganizer.run(context);
-      const employeeFromDatabase = await employees.Model.findAll({
-        where: { email: employeeWithNothing.email },
+      const res = await DestroyVolunteerOrganizer.run(context);
+      const volunteerFromDatabase = await volunteers.Model.findAll({
+        where: { email: volunteerWithNothing.email },
       });
 
       expect(res.success).to.eql(true);
-      expect(employeeFromDatabase).to.eql([]);
+      expect(volunteerFromDatabase).to.eql([]);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await teamEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
   });

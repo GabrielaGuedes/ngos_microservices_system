@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 const DestroyArea = require("../../interactors/destroy-area");
 require("dotenv/config");
 require("../../config/db-connection");
@@ -15,17 +15,17 @@ let areaToBeDestroyed = {};
 
 describe("DestroyArea", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
     areaWithRelation = await areas.Model.create(
       {
         name: "Area with relations",
         description: "Just a cool area",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee 1",
+            name: "Base volunteer 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -34,11 +34,11 @@ describe("DestroyArea", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_1@example.com",
+            email: "volunteer_1@example.com",
             additionalInfo: "no more info",
           },
           {
-            name: "Base employee 2",
+            name: "Base volunteer 2",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -47,13 +47,13 @@ describe("DestroyArea", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_2@example.com",
+            email: "volunteer_2@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
 
@@ -97,8 +97,8 @@ describe("DestroyArea", () => {
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

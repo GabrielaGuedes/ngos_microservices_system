@@ -1,31 +1,31 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const RemoveEmployeesFromTeam = require("../../interactors/remove-employees-from-team");
+const RemoveVolunteersFromTeam = require("../../interactors/remove-volunteers-from-team");
 const teams = require("../../models/teams");
-const employees = require("../../models/employees");
-const teamEmployees = require("../../models/team-employees");
+const volunteers = require("../../models/volunteers");
+const teamVolunteers = require("../../models/team-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let teamCreatedWithEmployees = {};
-let teamCreatedWithoutEmployees = {};
+let teamCreatedWithVolunteers = {};
+let teamCreatedWithoutVolunteers = {};
 
-describe("RemoveEmployeesFromTeam", () => {
+describe("RemoveVolunteersFromTeam", () => {
   beforeEach(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
 
-    teamCreatedWithEmployees = await teams.Model.create(
+    teamCreatedWithVolunteers = await teams.Model.create(
       {
-        name: "Team with employees",
+        name: "Team with volunteers",
         description: "Just a cool team",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee 1",
+            name: "Base volunteer 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -34,11 +34,11 @@ describe("RemoveEmployeesFromTeam", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_1@example.com",
+            email: "volunteer_1@example.com",
             additionalInfo: "no more info",
           },
           {
-            name: "Base employee 2",
+            name: "Base volunteer 2",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -47,61 +47,61 @@ describe("RemoveEmployeesFromTeam", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_2@example.com",
+            email: "volunteer_2@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
 
-    teamCreatedWithoutEmployees = await teams.Model.create({
-      name: "Team without employees",
+    teamCreatedWithoutVolunteers = await teams.Model.create({
+      name: "Team without volunteers",
       description: "no more info",
     });
   });
 
   describe("When context passed is correct", () => {
-    it("remove employees from team", async () => {
+    it("remove volunteers from team", async () => {
       const context = {
-        id: teamCreatedWithEmployees.id,
+        id: teamCreatedWithVolunteers.id,
       };
 
-      const res = await RemoveEmployeesFromTeam.run(context);
-      const relationsFromDatabase = await teamEmployees.Model.findAll();
+      const res = await RemoveVolunteersFromTeam.run(context);
+      const relationsFromDatabase = await teamVolunteers.Model.findAll();
       const teamFromDatabase = await teams.Model.findOne({
-        where: { name: teamCreatedWithEmployees.name },
-        include: employees.Model,
+        where: { name: teamCreatedWithVolunteers.name },
+        include: volunteers.Model,
       });
 
-      expect(res.employeeIds).to.eql([]);
+      expect(res.volunteerIds).to.eql([]);
       expect(relationsFromDatabase.length).to.eq(0);
-      expect(teamFromDatabase.employees).to.eql([]);
+      expect(teamFromDatabase.volunteers).to.eql([]);
     });
   });
 
-  describe("When team has no employees", () => {
+  describe("When team has no volunteers", () => {
     it("just does nothing", async () => {
       const context = {
-        id: teamCreatedWithoutEmployees.id,
+        id: teamCreatedWithoutVolunteers.id,
       };
 
-      const res = await RemoveEmployeesFromTeam.run(context);
+      const res = await RemoveVolunteersFromTeam.run(context);
       const teamFromDatabase = await teams.Model.findOne({
-        where: { name: teamCreatedWithoutEmployees.name },
-        include: employees.Model,
+        where: { name: teamCreatedWithoutVolunteers.name },
+        include: volunteers.Model,
       });
 
-      expect(res.employeeIds).to.eql([]);
-      expect(teamFromDatabase.employees).to.eql([]);
+      expect(res.volunteerIds).to.eql([]);
+      expect(teamFromDatabase.volunteers).to.eql([]);
     });
   });
 
   after(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
   });
 });

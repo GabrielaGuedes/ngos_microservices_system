@@ -1,31 +1,31 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const RemoveEmployeesFromArea = require("../../interactors/remove-employees-from-area");
+const RemoveVolunteersFromArea = require("../../interactors/remove-volunteers-from-area");
 const areas = require("../../models/areas");
-const employees = require("../../models/employees");
-const areaEmployees = require("../../models/area-employees");
+const volunteers = require("../../models/volunteers");
+const areaVolunteers = require("../../models/area-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let areaCreatedWithEmployees = {};
-let areaCreatedWithoutEmployees = {};
+let areaCreatedWithVolunteers = {};
+let areaCreatedWithoutVolunteers = {};
 
-describe("RemoveEmployeesFromArea", () => {
+describe("RemoveVolunteersFromArea", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
 
-    areaCreatedWithEmployees = await areas.Model.create(
+    areaCreatedWithVolunteers = await areas.Model.create(
       {
-        name: "Area with employees",
+        name: "Area with volunteers",
         description: "Just a cool area",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee 1",
+            name: "Base volunteer 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -34,11 +34,11 @@ describe("RemoveEmployeesFromArea", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_1@example.com",
+            email: "volunteer_1@example.com",
             additionalInfo: "no more info",
           },
           {
-            name: "Base employee 2",
+            name: "Base volunteer 2",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -47,61 +47,61 @@ describe("RemoveEmployeesFromArea", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_2@example.com",
+            email: "volunteer_2@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
 
-    areaCreatedWithoutEmployees = await areas.Model.create({
-      name: "Area without employees",
+    areaCreatedWithoutVolunteers = await areas.Model.create({
+      name: "Area without volunteers",
       description: "no more info",
     });
   });
 
   describe("When context passed is correct", () => {
-    it("remove employees from area", async () => {
+    it("remove volunteers from area", async () => {
       const context = {
-        id: areaCreatedWithEmployees.id,
+        id: areaCreatedWithVolunteers.id,
       };
 
-      const res = await RemoveEmployeesFromArea.run(context);
-      const relationsFromDatabase = await areaEmployees.Model.findAll();
+      const res = await RemoveVolunteersFromArea.run(context);
+      const relationsFromDatabase = await areaVolunteers.Model.findAll();
       const areaFromDatabase = await areas.Model.findOne({
-        where: { name: areaCreatedWithEmployees.name },
-        include: employees.Model,
+        where: { name: areaCreatedWithVolunteers.name },
+        include: volunteers.Model,
       });
 
-      expect(res.employeeIds).to.eql([]);
+      expect(res.volunteerIds).to.eql([]);
       expect(relationsFromDatabase.length).to.eq(0);
-      expect(areaFromDatabase.employees).to.eql([]);
+      expect(areaFromDatabase.volunteers).to.eql([]);
     });
   });
 
-  describe("When area has no employees", () => {
+  describe("When area has no volunteers", () => {
     it("just does nothing", async () => {
       const context = {
-        id: areaCreatedWithoutEmployees.id,
+        id: areaCreatedWithoutVolunteers.id,
       };
 
-      const res = await RemoveEmployeesFromArea.run(context);
+      const res = await RemoveVolunteersFromArea.run(context);
       const areaFromDatabase = await areas.Model.findOne({
-        where: { name: areaCreatedWithoutEmployees.name },
-        include: employees.Model,
+        where: { name: areaCreatedWithoutVolunteers.name },
+        include: volunteers.Model,
       });
 
-      expect(res.employeeIds).to.eql([]);
-      expect(areaFromDatabase.employees).to.eql([]);
+      expect(res.volunteerIds).to.eql([]);
+      expect(areaFromDatabase.volunteers).to.eql([]);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
   });
 });

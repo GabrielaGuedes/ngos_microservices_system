@@ -2,26 +2,26 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const SetAreas = require("../../interactors/set-areas");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employee = {};
+let volunteer = {};
 let areasCreated = [];
 
 describe("SetAreas", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
     const newAreas = [];
-    employee = await employees.Model.create({
-      name: "Base employee",
+    volunteer = await volunteers.Model.create({
+      name: "Base volunteer",
       address: "Base Street, 24",
       city: "Sao Paulo",
       state: "SP",
@@ -49,17 +49,17 @@ describe("SetAreas", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("adds areas to employee", async () => {
+    it("adds areas to volunteer", async () => {
       const context = {
-        employee,
+        volunteer,
         areaIds: [areasCreated[0].id],
       };
 
       const res = await SetAreas.run(context);
-      const relationsFromDatabase = await areaEmployees.Model.findAll();
+      const relationsFromDatabase = await areaVolunteers.Model.findAll();
 
-      expect(res.employee.dataValues).to.have.own.property("areaIds");
-      expect(res.employee.dataValues.areaIds).to.have.same.members([
+      expect(res.volunteer.dataValues).to.have.own.property("areaIds");
+      expect(res.volunteer.dataValues.areaIds).to.have.same.members([
         areasCreated[0].id,
       ]);
       expect(relationsFromDatabase.length).to.eq(1);
@@ -69,15 +69,15 @@ describe("SetAreas", () => {
   describe("When adding more than 1 area", () => {
     it("add all the areas", async () => {
       const context = {
-        employee,
+        volunteer,
         areaIds: areasCreated.map((area) => area.id),
       };
 
       const res = await SetAreas.run(context);
-      const relationsFromDatabase = await areaEmployees.Model.findAll();
+      const relationsFromDatabase = await areaVolunteers.Model.findAll();
 
-      expect(res.employee.dataValues).to.have.own.property("areaIds");
-      expect(res.employee.dataValues.areaIds).to.have.same.members(
+      expect(res.volunteer.dataValues).to.have.own.property("areaIds");
+      expect(res.volunteer.dataValues.areaIds).to.have.same.members(
         areasCreated.map((area) => area.id)
       );
       expect(relationsFromDatabase.length).to.eq(areasCreated.length);
@@ -87,22 +87,22 @@ describe("SetAreas", () => {
   describe("When array is empty", () => {
     it("doesn't add areas", async () => {
       const context = {
-        employee,
+        volunteer,
         areaIds: [],
       };
 
       const res = await SetAreas.run(context);
-      const relationsFromDatabase = await areaEmployees.Model.findAll();
+      const relationsFromDatabase = await areaVolunteers.Model.findAll();
 
-      expect(res.employee.dataValues).to.have.own.property("areaIds");
-      expect(res.employee.dataValues.areaIds).to.have.same.members([]);
+      expect(res.volunteer.dataValues).to.have.own.property("areaIds");
+      expect(res.volunteer.dataValues.areaIds).to.have.same.members([]);
       expect(relationsFromDatabase.length).to.eq(0);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

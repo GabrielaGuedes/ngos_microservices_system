@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const teams = require("../../models/teams");
 const areas = require("../../models/areas");
-const teamEmployees = require("../../models/team-employees");
-const areaEmployees = require("../../models/area-employees");
-const CreateEmployeeOrganizer = require("../../interactors/create-employee-organizer");
+const teamVolunteers = require("../../models/team-volunteers");
+const areaVolunteers = require("../../models/area-volunteers");
+const CreateVolunteerOrganizer = require("../../interactors/create-volunteer-organizer");
 require("dotenv/config");
 require("../../config/db-connection");
 
@@ -15,8 +15,8 @@ const { expect } = chai;
 const teamsCreated = [];
 const areasCreated = [];
 
-const employeeInfo = {
-  name: "Base employee",
+const volunteerInfo = {
+  name: "Base volunteer",
   address: "Base Street, 24",
   city: "Sao Paulo",
   state: "SP",
@@ -25,15 +25,15 @@ const employeeInfo = {
   birthDate: "1990-01-01",
   hireDate: "2020-01-01",
   phone: 5511999999999,
-  email: "create_employee_organizer@example.com",
+  email: "create_volunteer_organizer@example.com",
   additionalInfo: "no more info",
 };
 
-describe("CreateEmployeeOrganizer", () => {
+describe("CreateVolunteerOrganizer", () => {
   beforeEach(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
@@ -64,48 +64,48 @@ describe("CreateEmployeeOrganizer", () => {
   });
 
   describe("When context passed is correct", () => {
-    it("creates employee with teams and areas", async () => {
+    it("creates volunteer with teams and areas", async () => {
       const teamIds = teamsCreated.map((team) => team.id);
       const areaIds = areasCreated.map((area) => area.id);
       const context = {
-        employeeInfo,
+        volunteerInfo,
         teamIds,
         areaIds,
       };
 
-      const res = await CreateEmployeeOrganizer.run(context);
-      const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
-      const areasRelationFromDatabase = await areaEmployees.Model.findAll();
-      const employeesFromDatabase = await employees.Model.findAll();
+      const res = await CreateVolunteerOrganizer.run(context);
+      const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
+      const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
+      const volunteersFromDatabase = await volunteers.Model.findAll();
 
-      expect(res.employee.dataValues).to.have.own.property("teamIds");
-      expect(res.employee.dataValues).to.have.own.property("areaIds");
-      expect(employeesFromDatabase.length).to.eq(1);
-      expect(res.employee.id).to.eq(employeesFromDatabase[0].id);
-      expect(res.employee.dataValues.teamIds).to.have.same.members(teamIds);
-      expect(res.employee.dataValues.areaIds).to.have.same.members(areaIds);
+      expect(res.volunteer.dataValues).to.have.own.property("teamIds");
+      expect(res.volunteer.dataValues).to.have.own.property("areaIds");
+      expect(volunteersFromDatabase.length).to.eq(1);
+      expect(res.volunteer.id).to.eq(volunteersFromDatabase[0].id);
+      expect(res.volunteer.dataValues.teamIds).to.have.same.members(teamIds);
+      expect(res.volunteer.dataValues.areaIds).to.have.same.members(areaIds);
       expect(teamsRelationFromDatabase.length).to.eq(teamIds.length);
       expect(areasRelationFromDatabase.length).to.eq(areaIds.length);
     });
   });
 
   describe("When teamIds doesn't exist", () => {
-    it("doesn't create employee", async () => {
+    it("doesn't create volunteer", async () => {
       const teamIds = teamsCreated.map((team) => team.id + 6);
       const areaIds = areasCreated.map((area) => area.id);
       const context = {
-        employeeInfo,
+        volunteerInfo,
         teamIds,
         areaIds,
       };
 
-      await CreateEmployeeOrganizer.run(context).catch(async (err) => {
+      await CreateVolunteerOrganizer.run(context).catch(async (err) => {
         expect(err).to.be.an("error");
-        const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
-        const areasRelationFromDatabase = await areaEmployees.Model.findAll();
-        const employeesFromDatabase = await employees.Model.findAll();
+        const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
+        const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
+        const volunteersFromDatabase = await volunteers.Model.findAll();
 
-        expect(employeesFromDatabase.length).to.eq(0);
+        expect(volunteersFromDatabase.length).to.eq(0);
         expect(teamsRelationFromDatabase.length).to.eq(0);
         expect(areasRelationFromDatabase.length).to.eq(0);
       });
@@ -113,22 +113,22 @@ describe("CreateEmployeeOrganizer", () => {
   });
 
   describe("When areaIds doesn't exist", () => {
-    it("doesn't create employee", async () => {
+    it("doesn't create volunteer", async () => {
       const teamIds = teamsCreated.map((team) => team.id);
       const areaIds = areasCreated.map((area) => area.id + 6);
       const context = {
-        employeeInfo,
+        volunteerInfo,
         teamIds,
         areaIds,
       };
 
-      await CreateEmployeeOrganizer.run(context).catch(async (err) => {
+      await CreateVolunteerOrganizer.run(context).catch(async (err) => {
         expect(err).to.be.an("error");
-        const teamsRelationFromDatabase = await teamEmployees.Model.findAll();
-        const areasRelationFromDatabase = await areaEmployees.Model.findAll();
-        const employeesFromDatabase = await employees.Model.findAll();
+        const teamsRelationFromDatabase = await teamVolunteers.Model.findAll();
+        const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
+        const volunteersFromDatabase = await volunteers.Model.findAll();
 
-        expect(employeesFromDatabase.length).to.eq(0);
+        expect(volunteersFromDatabase.length).to.eq(0);
         expect(teamsRelationFromDatabase.length).to.eq(0);
         expect(areasRelationFromDatabase.length).to.eq(0);
       });
@@ -136,9 +136,9 @@ describe("CreateEmployeeOrganizer", () => {
   });
 
   after(async () => {
-    await teamEmployees.Model.destroy({ where: {} });
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await teamVolunteers.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await teams.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });

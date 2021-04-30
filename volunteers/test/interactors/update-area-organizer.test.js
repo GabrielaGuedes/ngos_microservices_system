@@ -1,28 +1,28 @@
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
 const chai = require("chai");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const areas = require("../../models/areas");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 const UpdateAreaOrganizer = require("../../interactors/update-area-organizer");
 require("dotenv/config");
 require("../../config/db-connection");
 
 const { expect } = chai;
 
-let employeesCreated = [];
-let areaCreatedWithEmployees = {};
+let volunteersCreated = [];
+let areaCreatedWithVolunteers = {};
 
 describe("UpdateAreaOrganizer", () => {
   beforeEach(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
 
-    const newEmployees = [];
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee 1",
+    const newVolunteers = [];
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer 1",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -35,9 +35,9 @@ describe("UpdateAreaOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    newEmployees.push(
-      await employees.Model.create({
-        name: "Base employee",
+    newVolunteers.push(
+      await volunteers.Model.create({
+        name: "Base volunteer",
         address: "Base Street, 24",
         city: "Sao Paulo",
         state: "SP",
@@ -50,14 +50,14 @@ describe("UpdateAreaOrganizer", () => {
         additionalInfo: "no more info",
       })
     );
-    employeesCreated = newEmployees;
-    areaCreatedWithEmployees = await areas.Model.create(
+    volunteersCreated = newVolunteers;
+    areaCreatedWithVolunteers = await areas.Model.create(
       {
         name: "Area 1",
         description: "Area 1 very cool",
-        employees: [
+        volunteers: [
           {
-            name: "Base employee For area 1",
+            name: "Base volunteer For area 1",
             address: "Base Street, 24",
             city: "Sao Paulo",
             state: "SP",
@@ -66,49 +66,51 @@ describe("UpdateAreaOrganizer", () => {
             birthDate: "1990-01-01",
             hireDate: "2020-01-01",
             phone: 5511999999999,
-            email: "employee_for_area_1@example.com",
+            email: "volunteer_for_area_1@example.com",
             additionalInfo: "no more info",
           },
         ],
       },
       {
-        include: employees.Model,
+        include: volunteers.Model,
       }
     );
   });
 
   describe("When context passed is correct", () => {
-    it("updates the area with new employees", async () => {
-      const employeeIds = employeesCreated.map((employee) => employee.id);
+    it("updates the area with new volunteers", async () => {
+      const volunteerIds = volunteersCreated.map((volunteer) => volunteer.id);
       const newDescription = "Brand new description here";
       const context = {
-        area: areaCreatedWithEmployees,
+        area: areaCreatedWithVolunteers,
         areaInfo: {
           description: newDescription,
         },
-        employeeIds,
+        volunteerIds,
       };
 
       const res = await UpdateAreaOrganizer.run(context);
-      const areasRelationFromDatabase = await areaEmployees.Model.findAll();
+      const areasRelationFromDatabase = await areaVolunteers.Model.findAll();
       const areasFromDatabase = await areas.Model.findAll({
-        include: employees.Model,
+        include: volunteers.Model,
       });
 
-      expect(res.area.dataValues).to.have.own.property("employeeIds");
+      expect(res.area.dataValues).to.have.own.property("volunteerIds");
       expect(areasFromDatabase.length).to.eq(1);
       expect(areasFromDatabase[0].description).to.eq(newDescription);
-      expect(res.area.dataValues.employeeIds).to.have.same.members(employeeIds);
-      expect(areasRelationFromDatabase.length).to.eq(employeeIds.length);
+      expect(res.area.dataValues.volunteerIds).to.have.same.members(
+        volunteerIds
+      );
+      expect(areasRelationFromDatabase.length).to.eq(volunteerIds.length);
       expect(
-        areasFromDatabase[0].employees.map((emp) => emp.id)
-      ).to.have.same.members(employeeIds);
+        areasFromDatabase[0].volunteers.map((emp) => emp.id)
+      ).to.have.same.members(volunteerIds);
     });
   });
 
   after(async () => {
-    await areaEmployees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areaVolunteers.Model.destroy({ where: {} });
+    await volunteers.Model.destroy({ where: {} });
     await areas.Model.destroy({ where: {} });
   });
 });

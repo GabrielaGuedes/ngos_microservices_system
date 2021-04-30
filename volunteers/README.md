@@ -1,6 +1,6 @@
-# Employees
+# Volunteers
 
-Microservice to manage employees from the organization, separating them in teams and areas. Only the admins can use it.
+Microservice to manage volunteers from the organization, separating them in teams and areas. Only the admins can use it.
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
@@ -14,15 +14,15 @@ To run it, use the `docker-compose.yml` file in the main folder from the project
 
 ## Routes
 
-Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (employees, areas and teams).
+Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (volunteers, areas and teams).
 
-### GET /api/employees/
+### GET /api/volunteers/
 
-Lists all employees sorted by name.
+Lists all volunteers sorted by name.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `occupation`, `city`, `state`, `areaId` or `teamId` using query string params (e.g. `/api/employees/?state=SP&areaId=1`)
+You can filter by `occupation`, `city`, `state`, `areaId` or `teamId` using query string params (e.g. `/api/volunteers/?state=SP&areaId=1`)
 
 When request is done correctly, returns success (200). Example response:
 
@@ -51,10 +51,10 @@ When request is done correctly, returns success (200). Example response:
         "description": "toptoptoptotpotpotp",
         "createdAt": "2021-04-30T13:59:44.678Z",
         "updatedAt": "2021-04-30T13:59:44.678Z",
-        "teamEmployees": {
+        "teamVolunteers": {
           "createdAt": "2021-04-30T14:01:29.555Z",
           "updatedAt": "2021-04-30T14:01:29.555Z",
-          "employeeId": 121,
+          "volunteerId": 121,
           "teamId": 4
         }
       }
@@ -67,9 +67,9 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ---
 
-### GET /api/employees/:id
+### GET /api/volunteers/:id
 
-Gets employee with id passed
+Gets volunteer with id passed
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -99,10 +99,10 @@ When request is done correctly, returns success (200). Example response:
       "description": "toptoptoptotpotpotp",
       "createdAt": "2021-04-30T13:59:44.678Z",
       "updatedAt": "2021-04-30T13:59:44.678Z",
-      "teamEmployees": {
+      "teamVolunteers": {
         "createdAt": "2021-04-30T14:01:29.555Z",
         "updatedAt": "2021-04-30T14:01:29.555Z",
-        "employeeId": 121,
+        "volunteerId": 121,
         "teamId": 4
       }
     }
@@ -114,9 +114,9 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ---
 
-### POST /api/employees/
+### POST /api/volunteers/
 
-Creates a new employee.
+Creates a new volunteer.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -183,9 +183,9 @@ When token is missing, returns unauthorized (401). When there is an error with t
 
 ---
 
-### PUT /api/employees/:id
+### PUT /api/volunteers/:id
 
-Updates the employee from the id passed.
+Updates the volunteer from the id passed.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -252,9 +252,9 @@ When token is missing, returns unauthorized (401). When there is an error with t
 
 ---
 
-### DELETE /api/employees/:id
+### DELETE /api/volunteers/:id
 
-Deletes the employee from the id passed.
+Deletes the volunteer from the id passed.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -276,7 +276,7 @@ Lists all areas sorted by name.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `employeeId` using query string params (e.g. `/api/employees/?employeeId=1`)
+You can filter by `volunteerId` using query string params (e.g. `/api/volunteers/?volunteerId=1`)
 
 When request is done correctly, returns success (200). Example response:
 
@@ -288,7 +288,7 @@ When request is done correctly, returns success (200). Example response:
     "description": " qualquer coisa",
     "createdAt": "2021-04-27T21:53:29.429Z",
     "updatedAt": "2021-04-27T23:30:26.612Z",
-    "employees": [
+    "volunteers": [
       {
         "id": 1,
         "name": "Test",
@@ -304,10 +304,10 @@ When request is done correctly, returns success (200). Example response:
         "additionalInfo": "Top demais",
         "createdAt": "2021-04-27T21:41:02.046Z",
         "updatedAt": "2021-04-27T21:41:02.046Z",
-        "areaEmployees": {
+        "areaVolunteers": {
           "createdAt": "2021-04-27T21:53:29.445Z",
           "updatedAt": "2021-04-27T21:53:29.445Z",
-          "employeeId": 1,
+          "volunteerId": 1,
           "areaId": 2
         }
       }
@@ -335,7 +335,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "qualquer coisa",
   "createdAt": "2021-04-27T21:53:29.429Z",
   "updatedAt": "2021-04-27T23:30:26.612Z",
-  "employees": [
+  "volunteers": [
     {
       "id": 1,
       "name": "Test",
@@ -351,10 +351,10 @@ When request is done correctly, returns success (200). Example response:
       "additionalInfo": "Top demais",
       "createdAt": "2021-04-27T21:41:02.046Z",
       "updatedAt": "2021-04-27T21:41:02.046Z",
-      "areaEmployees": {
+      "areaVolunteers": {
         "createdAt": "2021-04-27T21:53:29.445Z",
         "updatedAt": "2021-04-27T21:53:29.445Z",
-        "employeeId": 1,
+        "volunteerId": 1,
         "areaId": 2
       }
     }
@@ -376,7 +376,7 @@ Params:
 
 - name: string, must be unique
 - description: string, optional
-- employeeIds: array, required but can be empty (`[]`)
+- volunteerIds: array, required but can be empty (`[]`)
 
 Example body:
 
@@ -384,7 +384,7 @@ Example body:
 {
   "name": "Area for docs",
   "description": "this is a great area",
-  "employeeIds": [8, 9, 10]
+  "volunteerIds": [8, 9, 10]
 }
 ```
 
@@ -397,7 +397,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "this is a great area",
   "updatedAt": "2021-04-30T18:56:07.300Z",
   "createdAt": "2021-04-30T18:56:07.300Z",
-  "employeeIds": [8, 9, 10]
+  "volunteerIds": [8, 9, 10]
 }
 ```
 
@@ -415,7 +415,7 @@ It is necessary to pass all the params (that are mandatory). Params:
 
 - name: string, must be unique
 - description: string, optional
-- employeeIds: array, required but can be empty (`[]`)
+- volunteerIds: array, required but can be empty (`[]`)
 
 Example body:
 
@@ -423,7 +423,7 @@ Example body:
 {
   "name": "Area for docs",
   "description": "Updated: this is not a great area",
-  "employeeIds": [8, 9]
+  "volunteerIds": [8, 9]
 }
 ```
 
@@ -436,7 +436,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "Updated: this is not a great area",
   "createdAt": "2021-04-30T18:56:07.300Z",
   "updatedAt": "2021-04-30T18:58:18.624Z",
-  "employeeIds": [8, 9]
+  "volunteerIds": [8, 9]
 }
 ```
 
@@ -468,7 +468,7 @@ Lists all teams sorted by name.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `employeeId` using query string params (e.g. `/api/employees/?employeeId=1`)
+You can filter by `volunteerId` using query string params (e.g. `/api/volunteers/?volunteerId=1`)
 
 When request is done correctly, returns success (200). Example response:
 
@@ -480,7 +480,7 @@ When request is done correctly, returns success (200). Example response:
     "description": " qualquer coisa",
     "createdAt": "2021-04-27T21:53:29.429Z",
     "updatedAt": "2021-04-27T23:30:26.612Z",
-    "employees": [
+    "volunteers": [
       {
         "id": 1,
         "name": "Test",
@@ -496,10 +496,10 @@ When request is done correctly, returns success (200). Example response:
         "additionalInfo": "Top demais",
         "createdAt": "2021-04-27T21:41:02.046Z",
         "updatedAt": "2021-04-27T21:41:02.046Z",
-        "teamEmployees": {
+        "teamVolunteers": {
           "createdAt": "2021-04-27T21:53:29.445Z",
           "updatedAt": "2021-04-27T21:53:29.445Z",
-          "employeeId": 1,
+          "volunteerId": 1,
           "teamId": 2
         }
       }
@@ -527,7 +527,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "qualquer coisa",
   "createdAt": "2021-04-27T21:53:29.429Z",
   "updatedAt": "2021-04-27T23:30:26.612Z",
-  "employees": [
+  "volunteers": [
     {
       "id": 1,
       "name": "Test",
@@ -543,10 +543,10 @@ When request is done correctly, returns success (200). Example response:
       "additionalInfo": "Top demais",
       "createdAt": "2021-04-27T21:41:02.046Z",
       "updatedAt": "2021-04-27T21:41:02.046Z",
-      "teamEmployees": {
+      "teamVolunteers": {
         "createdAt": "2021-04-27T21:53:29.445Z",
         "updatedAt": "2021-04-27T21:53:29.445Z",
-        "employeeId": 1,
+        "volunteerId": 1,
         "teamId": 2
       }
     }
@@ -568,7 +568,7 @@ Params:
 
 - name: string, must be unique
 - description: string, optional
-- employeeIds: array, required but can be empty (`[]`)
+- volunteerIds: array, required but can be empty (`[]`)
 
 Example body:
 
@@ -576,7 +576,7 @@ Example body:
 {
   "name": "Area for docs",
   "description": "this is a great team",
-  "employeeIds": [8, 9, 10]
+  "volunteerIds": [8, 9, 10]
 }
 ```
 
@@ -589,7 +589,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "this is a great team",
   "updatedAt": "2021-04-30T18:56:07.300Z",
   "createdAt": "2021-04-30T18:56:07.300Z",
-  "employeeIds": [8, 9, 10]
+  "volunteerIds": [8, 9, 10]
 }
 ```
 
@@ -607,7 +607,7 @@ It is necessary to pass all the params (that are mandatory). Params:
 
 - name: string, must be unique
 - description: string, optional
-- employeeIds: array, required but can be empty (`[]`)
+- volunteerIds: array, required but can be empty (`[]`)
 
 Example body:
 
@@ -615,7 +615,7 @@ Example body:
 {
   "name": "Area for docs",
   "description": "Updated: this is not a great team",
-  "employeeIds": [8, 9]
+  "volunteerIds": [8, 9]
 }
 ```
 
@@ -628,7 +628,7 @@ When request is done correctly, returns success (200). Example response:
   "description": "Updated: this is not a great team",
   "createdAt": "2021-04-30T18:56:07.300Z",
   "updatedAt": "2021-04-30T18:58:18.624Z",
-  "employeeIds": [8, 9]
+  "volunteerIds": [8, 9]
 }
 ```
 
@@ -668,7 +668,7 @@ The tests that need token, it is necessary to have the authentication service ru
 For the the first run, it is necessary to run the migrations on the test database:
 
 ```
-$ npx sequelize-cli db:migrate --url 'postgres://username:password@host/employees_test'
+$ npx sequelize-cli db:migrate --url 'postgres://username:password@host/volunteers_test'
 ```
 
 Then, you can just run:

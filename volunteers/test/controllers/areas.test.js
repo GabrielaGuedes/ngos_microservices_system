@@ -3,9 +3,9 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const areaEmployees = require("../../models/area-employees");
+const areaVolunteers = require("../../models/area-volunteers");
 const Area = require("../../models/areas");
-const employees = require("../../models/employees");
+const volunteers = require("../../models/volunteers");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
 require("../../index");
 
@@ -18,8 +18,8 @@ let areas = [];
 let token = "";
 
 const setTokenAndAreas = async () => {
-  await areaEmployees.Model.destroy({ where: {} });
-  await employees.Model.destroy({ where: {} });
+  await areaVolunteers.Model.destroy({ where: {} });
+  await volunteers.Model.destroy({ where: {} });
   await Area.Model.destroy({ where: {} });
 
   const areasArray = [];
@@ -30,7 +30,7 @@ const setTokenAndAreas = async () => {
       {
         name: "Area 1",
         description: "We like to drink water",
-        employees: [
+        volunteers: [
           {
             name: "Example for area",
             address: "Any street, 123",
@@ -60,7 +60,7 @@ const setTokenAndAreas = async () => {
         ],
       },
       {
-        include: [employees.Model],
+        include: [volunteers.Model],
       }
     ).then((res) => res)
   );
@@ -98,8 +98,8 @@ const setTokenAndAreas = async () => {
 };
 
 const cleanTable = async () => {
-  await areaEmployees.Model.destroy({ where: {} });
-  await employees.Model.destroy({ where: {} });
+  await areaVolunteers.Model.destroy({ where: {} });
+  await volunteers.Model.destroy({ where: {} });
   await Area.Model.destroy({ where: {} });
 };
 
@@ -217,19 +217,19 @@ describe("/GET :id Areas", () => {
     });
   });
 
-  describe("When token is valid filtered by employee", () => {
+  describe("When token is valid filtered by volunteer", () => {
     it("returns only first area", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/areas/")
-        .query({ employeeId: areas[0].employees[0].id })
+        .query({ volunteerId: areas[0].volunteers[0].id })
         .set("x-access-token", token);
 
       res.should.have.status(200);
       res.body.should.be.a("array");
       expect(res.body.length).to.eq(1);
-      expect(res.body[0].employees.map((emp) => emp.id)).to.have.same.members(
-        areas[0].employees.map((emp) => emp.id)
+      expect(res.body[0].volunteers.map((emp) => emp.id)).to.have.same.members(
+        areas[0].volunteers.map((emp) => emp.id)
       );
     });
   });
@@ -247,7 +247,7 @@ describe("/POST Areas", () => {
   const baseAreaInfo = {
     name: "Area 7",
     description: "We like to dance with water",
-    employeeIds: [],
+    volunteerIds: [],
   };
 
   describe("When token is valid and body is correct", () => {
@@ -362,7 +362,7 @@ describe("/PUT :id Areas", () => {
     baseAreaInfo = {
       name: areas[1].name,
       description: areas[1].description,
-      employeeIds: [],
+      volunteerIds: [],
     };
     done();
   });
@@ -466,7 +466,7 @@ describe("/PUT :id Areas", () => {
       const areaInfo = {
         name: areas[0].name,
         description: "We like to drink juice5",
-        employeeIds: [],
+        volunteerIds: [],
       };
 
       const res = await chai
