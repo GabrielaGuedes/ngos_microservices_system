@@ -4,12 +4,6 @@ Microservice to manage volunteers from the organization, separating them in team
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
-It is also necessary to run the migrations, using the [Sequelize](https://sequelize.org/):
-
-```
-$ npx sequelize-cli db:migrate
-```
-
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
 ## Routes
@@ -639,12 +633,6 @@ The tests that need token, it is necessary to have the authentication service ru
   email: "test@example.com",
   password: "password1234"
 }
-```
-
-For the the first run, it is necessary to run the migrations on the test database:
-
-```
-$ npx sequelize-cli db:migrate --url 'postgres://username:password@host/volunteers_test'
 ```
 
 Then, you can just run:
