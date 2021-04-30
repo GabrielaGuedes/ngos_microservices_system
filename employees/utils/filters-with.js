@@ -14,7 +14,19 @@ const filterEmployeesWithTeamId = (employees, teamId) => {
   );
 };
 
+const filterArrayWithEmployeeId = (array, employeeId) => {
+  if (!employeeId) return array;
+
+  return array.filter(
+    (a) =>
+      a.employees.findIndex(
+        (employee) => employee.id.toString() === employeeId
+      ) !== -1
+  );
+};
+
 module.exports = {
   filterEmployeesWithAreaId,
   filterEmployeesWithTeamId,
+  filterArrayWithEmployeeId,
 };

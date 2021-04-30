@@ -13,7 +13,6 @@ const jsonSchema = {
       type: "string",
     },
   },
-  additionalProperties: false,
 };
 
 const Team = database.define(

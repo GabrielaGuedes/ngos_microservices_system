@@ -3,7 +3,9 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const areaEmployees = require("../../models/area-employees");
 const Area = require("../../models/areas");
+const employees = require("../../models/employees");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
 require("../../index");
 
@@ -16,16 +18,51 @@ let areas = [];
 let token = "";
 
 const setTokenAndAreas = async () => {
-  token = await getTokenForTests();
-  await Area.Model.destroy({
-    where: {},
-  });
+  await areaEmployees.Model.destroy({ where: {} });
+  await employees.Model.destroy({ where: {} });
+  await Area.Model.destroy({ where: {} });
+
   const areasArray = [];
+  token = await getTokenForTests();
+
   areasArray.push(
-    await Area.Model.create({
-      name: "Area 1",
-      description: "We like to drink water",
-    }).then((res) => res)
+    await Area.Model.create(
+      {
+        name: "Area 1",
+        description: "We like to drink water",
+        employees: [
+          {
+            name: "Example for area",
+            address: "Any street, 123",
+            city: "Sao Paulo",
+            state: "SP",
+            country: "Brazil",
+            occupation: "Software Engineer",
+            birthDate: "1990-01-01",
+            hireDate: "2020-01-01",
+            phone: 5511999999999,
+            email: "example_for_area@test.com",
+            additionalInfo: "I like to drink water",
+          },
+          {
+            name: "Another example for area",
+            address: "Any street, 123",
+            city: "Sao Paulo",
+            state: "SP",
+            country: "Brazil",
+            occupation: "Software Engineer",
+            birthDate: "1990-01-01",
+            hireDate: "2020-01-01",
+            phone: 5511999999999,
+            email: "another_example_for_area@test.com",
+            additionalInfo: "I like to drink water",
+          },
+        ],
+      },
+      {
+        include: [employees.Model],
+      }
+    ).then((res) => res)
   );
   areasArray.push(
     await Area.Model.create({
@@ -61,9 +98,9 @@ const setTokenAndAreas = async () => {
 };
 
 const cleanTable = async () => {
-  await Area.Model.destroy({
-    where: {},
-  });
+  await areaEmployees.Model.destroy({ where: {} });
+  await employees.Model.destroy({ where: {} });
+  await Area.Model.destroy({ where: {} });
 };
 
 describe("/GET Areas", () => {
@@ -180,6 +217,23 @@ describe("/GET :id Areas", () => {
     });
   });
 
+  describe("When token is valid filtered by employee", () => {
+    it("returns only first area", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/areas/")
+        .query({ employeeId: areas[0].employees[0].id })
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.should.be.a("array");
+      expect(res.body.length).to.eq(1);
+      expect(res.body[0].employees.map((emp) => emp.id)).to.have.same.members(
+        areas[0].employees.map((emp) => emp.id)
+      );
+    });
+  });
+
   after(async () => {
     await cleanTable();
   });
@@ -193,6 +247,7 @@ describe("/POST Areas", () => {
   const baseAreaInfo = {
     name: "Area 7",
     description: "We like to dance with water",
+    employeeIds: [],
   };
 
   describe("When token is valid and body is correct", () => {
@@ -213,9 +268,9 @@ describe("/POST Areas", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(areaFromDatabase.id);
-      expect(res.body.name).to.eq(areaInfo.name);
-      expect(res.body.description).to.eq(areaInfo.description);
+      expect(res.body.area.id).to.eq(areaFromDatabase.id);
+      expect(res.body.area.name).to.eq(areaInfo.name);
+      expect(res.body.area.description).to.eq(areaInfo.description);
     });
   });
 
@@ -292,25 +347,6 @@ describe("/POST Areas", () => {
     });
   });
 
-  describe("When token is valid but there is additional property in body", () => {
-    it("returns error", async () => {
-      const areaInfo = {
-        ...baseAreaInfo,
-        name: `5${baseAreaInfo.name}`,
-        otherPropertyHere: "malicious content",
-      };
-
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/areas/")
-        .set("x-access-token", token)
-        .send(areaInfo);
-
-      res.should.have.status(400);
-      expect(res.error.text).to.include("additional");
-    });
-  });
-
   after(async () => {
     await cleanTable();
   });
@@ -326,6 +362,7 @@ describe("/PUT :id Areas", () => {
     baseAreaInfo = {
       name: areas[1].name,
       description: areas[1].description,
+      employeeIds: [],
     };
     done();
   });
@@ -348,9 +385,9 @@ describe("/PUT :id Areas", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.id).to.eq(areaFromDatabase.id);
-      expect(res.body.description).to.eq(areaInfo.description);
-      expect(res.body.name).to.eq(areaInfo.name);
+      expect(res.body.area.id).to.eq(areaFromDatabase.id);
+      expect(res.body.area.description).to.eq(areaInfo.description);
+      expect(res.body.area.name).to.eq(areaInfo.name);
     });
   });
 
@@ -429,6 +466,7 @@ describe("/PUT :id Areas", () => {
       const areaInfo = {
         name: areas[0].name,
         description: "We like to drink juice5",
+        employeeIds: [],
       };
 
       const res = await chai
@@ -512,7 +550,7 @@ describe("/DELETE :id Areas", () => {
 
   describe("When token is valid and id doesn't exist", () => {
     it("returns error", async () => {
-      const { id } = 200;
+      const id = areas[2].id + 500;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
