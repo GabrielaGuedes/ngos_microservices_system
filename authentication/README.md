@@ -20,10 +20,10 @@ Required params:
 
 When body is passed correctly, returns success (200). Example response:
 
-```
+```json
 {
-  auth: true
-  token: "19029219aaa1ui12kja109292sj10s2i1k"
+  "auth": true,
+  "token": "19029219aaa1ui12kja109292sj10s2i1k"
 }
 ```
 
@@ -42,10 +42,10 @@ Required params:
 
 When body is passed correctly, returns successs (200). Example response:
 
-```
+```json
 {
-  auth: true
-  token: "19029219aaa1ui12kja109292sj10s2i1k"
+  "auth": true,
+  "token": "19029219aaa1ui12kja109292sj10s2i1k"
 }
 ```
 
@@ -68,9 +68,9 @@ Required body params:
 
 When body is passed correctly, returns successs (200). Example response:
 
-```
+```json
 {
-  message: "Success!"
+  "message": "Success!"
 }
 ```
 
@@ -94,11 +94,11 @@ Required body params:
 
 When body is passed correctly, returns successs (200). Example response:
 
-```
+```json
 {
-  message: "Success!",
-  email: "example@test.com",
-  name: "Example Name"
+  "message": "Success!",
+  "email": "example@test.com",
+  "name": "Example Name"
 }
 ```
 

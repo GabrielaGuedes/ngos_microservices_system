@@ -31,10 +31,10 @@ Params:
 
 When body is passed correctly, returns success (200). Example response:
 
-```
+```json
 {
-  donationId: "12022306",
-  donatorId: "2558745012"
+  "donationId": "12022306",
+  "donatorId": "2558745012"
 }
 ```
 
@@ -58,7 +58,7 @@ The authentication token needs to be passed in the header field `x-access-token`
 
 When body is passed correctly, returns success (200). Example response:
 
-```
+```json
 {
   "donations": [
     {
@@ -98,7 +98,7 @@ The authentication token needs to be passed in the header field `x-access-token`
 
 When body is passed correctly, returns success (200). Example response:
 
-```
+```json
 [
   {
     "_id": "6084a92ea0bc999088f4afe6",
