@@ -46,6 +46,21 @@ services:
     ports:
       - "4000:4000"
 
+  volunteers_server:
+    container_name: NGO_VOLUNTEERS
+    build: "./volunteers"
+    volumes:
+      - ./volunteers:/volunteers
+      - ./volunteers/node_modules:/volunteers/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_db
+    links:
+      - postgres_db
+    ports:
+      - "5000:5000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
@@ -60,7 +75,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: employees,employees_test
+      POSTGRES_MULTIPLE_DATABASES: employees,employees_test,volunteers,volunteers_test
     volumes:
       - ./pgdata:/docker-entrypoint-initdb.d
     ports:
