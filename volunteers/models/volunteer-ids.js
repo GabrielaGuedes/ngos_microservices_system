@@ -1,8 +1,8 @@
-const employeeIdsSchema = {
+const volunteerIdsSchema = {
   type: "object",
-  required: ["employeeIds"],
+  required: ["volunteerIds"],
   properties: {
-    employeeIds: {
+    volunteerIds: {
       type: "array",
       items: {
         type: "number",
@@ -12,5 +12,5 @@ const employeeIdsSchema = {
 };
 
 module.exports = {
-  jsonSchema: employeeIdsSchema,
+  jsonSchema: volunteerIdsSchema,
 };

@@ -2,21 +2,21 @@ const database = require("../config/db-connection");
 
 const jsonSchema = {
   type: "object",
-  id: "areaEmployee",
+  id: "areaVolunteer",
   properties: {
     areaId: {
       type: "Number",
     },
-    employeeId: {
+    volunteerId: {
       type: "Number",
     },
   },
   additionalProperties: false,
 };
 
-const AreaEmployee = database.define("areaEmployee", {});
+const AreaVolunteer = database.define("areaVolunteer", {});
 
 module.exports = {
-  Model: AreaEmployee,
+  Model: AreaVolunteer,
   jsonSchema,
 };

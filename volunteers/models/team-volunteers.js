@@ -2,21 +2,21 @@ const database = require("../config/db-connection");
 
 const jsonSchema = {
   type: "object",
-  id: "teamEmployee",
+  id: "teamVolunteer",
   properties: {
     teamId: {
       type: "Number",
     },
-    employeeId: {
+    volunteerId: {
       type: "Number",
     },
   },
   additionalProperties: false,
 };
 
-const TeamEmployee = database.define("teamEmployee", {});
+const TeamVolunteer = database.define("teamVolunteer", {});
 
 module.exports = {
-  Model: TeamEmployee,
+  Model: TeamVolunteer,
   jsonSchema,
 };

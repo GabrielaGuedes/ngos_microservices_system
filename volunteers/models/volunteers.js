@@ -5,7 +5,7 @@ const teams = require("./teams");
 
 const jsonSchema = {
   type: "object",
-  id: "employee",
+  id: "volunteer",
   required: [
     "name",
     "address",
@@ -59,20 +59,20 @@ const jsonSchema = {
   },
 };
 
-const Employee = database.define(
-  "employee",
-  Sequelizer.fromJsonSchema([jsonSchema], "employee", {
+const Volunteers = database.define(
+  "volunteer",
+  Sequelizer.fromJsonSchema([jsonSchema], "volunteer", {
     uniqueFields: ["email"],
   })
 );
 
-Employee.belongsToMany(areas.Model, { through: "areaEmployees" });
-areas.Model.belongsToMany(Employee, { through: "areaEmployees" });
+Volunteers.belongsToMany(areas.Model, { through: "areaVolunteerss" });
+areas.Model.belongsToMany(Volunteers, { through: "areaVolunteerss" });
 
-Employee.belongsToMany(teams.Model, { through: "teamEmployees" });
-teams.Model.belongsToMany(Employee, { through: "teamEmployees" });
+Volunteers.belongsToMany(teams.Model, { through: "teamVolunteerss" });
+teams.Model.belongsToMany(Volunteers, { through: "teamVolunteerss" });
 
 module.exports = {
-  Model: Employee,
+  Model: Volunteers,
   jsonSchema,
 };
