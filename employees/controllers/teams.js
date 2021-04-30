@@ -42,7 +42,7 @@ router.post(
     };
 
     await CreateTeamOrganizer.run(context)
-      .then((result) => res.json(result))
+      .then((result) => res.json(result.team))
       .catch((error) => res.status(500).json(error));
   }
 );
@@ -59,7 +59,7 @@ router.put(
     };
 
     await UpdateTeamOrganizer.run(context)
-      .then((result) => res.json(result))
+      .then((result) => res.json(result.team))
       .catch((error) => res.status(500).json(error));
   }
 );

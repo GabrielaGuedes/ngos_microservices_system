@@ -491,10 +491,10 @@ describe("/PUT :id Employees", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.employee.id).to.eq(employeeFromDatabase.id);
-      expect(res.body.employee.city).to.eq(employeeInfo.city);
-      expect(res.body.employee.phone).to.eq(employeeInfo.phone);
-      expect(res.body.employee.email).to.eq(employeeInfo.email);
+      expect(res.body.id).to.eq(employeeFromDatabase.id);
+      expect(res.body.city).to.eq(employeeInfo.city);
+      expect(res.body.phone).to.eq(employeeInfo.phone);
+      expect(res.body.email).to.eq(employeeInfo.email);
     });
   });
 

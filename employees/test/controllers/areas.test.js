@@ -268,9 +268,9 @@ describe("/POST Areas", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.area.id).to.eq(areaFromDatabase.id);
-      expect(res.body.area.name).to.eq(areaInfo.name);
-      expect(res.body.area.description).to.eq(areaInfo.description);
+      expect(res.body.id).to.eq(areaFromDatabase.id);
+      expect(res.body.name).to.eq(areaInfo.name);
+      expect(res.body.description).to.eq(areaInfo.description);
     });
   });
 
@@ -385,9 +385,9 @@ describe("/PUT :id Areas", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.area.id).to.eq(areaFromDatabase.id);
-      expect(res.body.area.description).to.eq(areaInfo.description);
-      expect(res.body.area.name).to.eq(areaInfo.name);
+      expect(res.body.id).to.eq(areaFromDatabase.id);
+      expect(res.body.description).to.eq(areaInfo.description);
+      expect(res.body.name).to.eq(areaInfo.name);
     });
   });
 

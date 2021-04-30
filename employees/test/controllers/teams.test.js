@@ -268,9 +268,9 @@ describe("/POST Teams", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.team.id).to.eq(teamFromDatabase.id);
-      expect(res.body.team.name).to.eq(teamInfo.name);
-      expect(res.body.team.description).to.eq(teamInfo.description);
+      expect(res.body.id).to.eq(teamFromDatabase.id);
+      expect(res.body.name).to.eq(teamInfo.name);
+      expect(res.body.description).to.eq(teamInfo.description);
     });
   });
 
@@ -385,9 +385,9 @@ describe("/PUT :id Teams", () => {
       });
 
       res.should.have.status(200);
-      expect(res.body.team.id).to.eq(teamFromDatabase.id);
-      expect(res.body.team.description).to.eq(teamInfo.description);
-      expect(res.body.team.name).to.eq(teamInfo.name);
+      expect(res.body.id).to.eq(teamFromDatabase.id);
+      expect(res.body.description).to.eq(teamInfo.description);
+      expect(res.body.name).to.eq(teamInfo.name);
     });
   });
 

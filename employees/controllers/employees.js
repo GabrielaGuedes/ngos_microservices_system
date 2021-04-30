@@ -90,7 +90,7 @@ router.put(
     };
 
     await UpdateEmployeeOrganizer.run(context)
-      .then((result) => res.json(result))
+      .then((result) => res.json(result.employee))
       .catch((error) => res.status(500).json(error));
   }
 );
