@@ -48,11 +48,11 @@ const Volunteers = database.define(
   })
 );
 
-Volunteers.belongsToMany(areas.Model, { through: "areaVolunteerss" });
-areas.Model.belongsToMany(Volunteers, { through: "areaVolunteerss" });
+Volunteers.belongsToMany(areas.Model, { through: "areaVolunteers" });
+areas.Model.belongsToMany(Volunteers, { through: "areaVolunteers" });
 
-Volunteers.belongsToMany(teams.Model, { through: "teamVolunteerss" });
-teams.Model.belongsToMany(Volunteers, { through: "teamVolunteerss" });
+Volunteers.belongsToMany(teams.Model, { through: "teamVolunteers" });
+teams.Model.belongsToMany(Volunteers, { through: "teamVolunteers" });
 
 module.exports = {
   Model: Volunteers,
