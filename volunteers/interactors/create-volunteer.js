@@ -1,12 +1,12 @@
 const Interactor = require("interactor");
-const Employee = require("../models/employees");
+const Volunteer = require("../models/volunteers");
 
-module.exports = class CreateEmployee extends Interactor {
+module.exports = class CreateVolunteer extends Interactor {
   // eslint-disable-next-line class-methods-use-this
   async run(context) {
-    return Employee.Model.create(context.employeeInfo)
+    return Volunteer.Model.create(context.volunteerInfo)
       .then((result) => {
-        context.employee = result;
+        context.volunteer = result;
       })
       .catch((err) => {
         context.error = err;
@@ -15,10 +15,10 @@ module.exports = class CreateEmployee extends Interactor {
   }
 
   async rollback() {
-    if (this.context.employee) {
-      await Employee.Model.destroy({
+    if (this.context.volunteer) {
+      await Volunteer.Model.destroy({
         where: {
-          id: this.context.employee.id,
+          id: this.context.volunteer.id,
         },
       });
     }

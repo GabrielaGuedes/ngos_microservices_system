@@ -1,10 +1,10 @@
 const Interactor = require("interactor");
 const UpdateArea = require("./update-area");
-const SetEmployeesForArea = require("./set-employees-for-area");
+const SetVolunteersForArea = require("./set-volunteers-for-area");
 
 module.exports = class UpdateAreaOrganizer extends Interactor {
   // eslint-disable-next-line class-methods-use-this
   organize() {
-    return [UpdateArea, SetEmployeesForArea];
+    return [UpdateArea, SetVolunteersForArea];
   }
 };

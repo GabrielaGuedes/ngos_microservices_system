@@ -2,13 +2,13 @@ const Interactor = require("interactor");
 
 module.exports = class SetTeams extends Interactor {
   async run(context) {
-    const oldTeams = await context.employee.getTeams();
+    const oldTeams = await context.volunteer.getTeams();
     this.oldTeamIds = oldTeams.map((area) => area.id);
 
-    return this.context.employee
+    return this.context.volunteer
       .setTeams(context.teamIds)
       .then(() => {
-        context.employee.dataValues.teamIds = context.teamIds;
+        context.volunteer.dataValues.teamIds = context.teamIds;
       })
       .catch((error) => {
         context.error = error;
@@ -17,6 +17,6 @@ module.exports = class SetTeams extends Interactor {
   }
 
   async rollback() {
-    await this.context.employee.setTeams(this.oldTeamIds);
+    await this.context.volunteer.setTeams(this.oldTeamIds);
   }
 };

@@ -1,15 +1,15 @@
 const Interactor = require("interactor");
 const areas = require("../models/areas");
 
-module.exports = class RemoveEmployeesFromArea extends Interactor {
+module.exports = class RemoveVolunteersFromArea extends Interactor {
   async run(context) {
     await this.saveArea();
-    await this.saveOldEmployeeIds();
+    await this.saveOldVolunteerIds();
 
     return this.area
-      .setEmployees([])
+      .setVolunteers([])
       .then(() => {
-        context.employeeIds = [];
+        context.volunteerIds = [];
       })
       .catch((error) => {
         context.error = error;
@@ -23,13 +23,13 @@ module.exports = class RemoveEmployeesFromArea extends Interactor {
     });
   }
 
-  async saveOldEmployeeIds() {
-    this.oldEmployeeIds = this.area.employees
-      ? this.area.employees.map((employee) => employee.id)
+  async saveOldVolunteerIds() {
+    this.oldVolunteerIds = this.area.volunteers
+      ? this.area.volunteers.map((volunteer) => volunteer.id)
       : [];
   }
 
   async rollback() {
-    await this.area.addEmployees(this.oldEmployeeIds);
+    await this.area.addVolunteers(this.oldVolunteerIds);
   }
 };

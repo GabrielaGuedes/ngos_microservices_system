@@ -1,9 +1,9 @@
 const Interactor = require("interactor");
-const employees = require("../models/employees");
+const volunteers = require("../models/volunteers");
 
-module.exports = class DestroyEmployee extends Interactor {
+module.exports = class DestroyVolunteer extends Interactor {
   async run(context) {
-    return employees.Model.destroy({ where: { id: this.context.id } })
+    return volunteers.Model.destroy({ where: { id: this.context.id } })
       .then(() => {
         context.success = true;
       })

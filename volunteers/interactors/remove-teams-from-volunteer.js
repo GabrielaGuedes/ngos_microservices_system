@@ -1,12 +1,12 @@
 const Interactor = require("interactor");
-const employees = require("../models/employees");
+const volunteers = require("../models/volunteers");
 
-module.exports = class RemoveTeamsFromEmployee extends Interactor {
+module.exports = class RemoveTeamsFromVolunteer extends Interactor {
   async run(context) {
-    await this.saveEmployee();
+    await this.saveVolunteer();
     await this.saveOldTeamIds();
 
-    return this.employee
+    return this.volunteer
       .setTeams([])
       .then(() => {
         context.teamIds = [];
@@ -17,19 +17,19 @@ module.exports = class RemoveTeamsFromEmployee extends Interactor {
       });
   }
 
-  async saveEmployee() {
-    this.employee = await employees.Model.findOne({
+  async saveVolunteer() {
+    this.volunteer = await volunteers.Model.findOne({
       where: { id: this.context.id },
     });
   }
 
   async saveOldTeamIds() {
-    this.oldTeamIds = this.employee.teams
-      ? this.employee.teams.map((team) => team.id)
+    this.oldTeamIds = this.volunteer.teams
+      ? this.volunteer.teams.map((team) => team.id)
       : [];
   }
 
   async rollback() {
-    await this.employee.addTeams(this.oldTeamIds);
+    await this.volunteer.addTeams(this.oldTeamIds);
   }
 };
