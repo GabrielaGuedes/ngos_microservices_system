@@ -4,12 +4,6 @@ Microservice to manage employees from the organization, separating them in teams
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
-It is also necessary to run the migrations, using the [Sequelize](https://sequelize.org/):
-
-```
-$ npx sequelize-cli db:migrate
-```
-
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
 ## Routes
