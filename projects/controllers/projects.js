@@ -10,7 +10,12 @@ const router = express.Router();
 const { validate } = new Validator();
 
 router.get("/", verifyJWT, async (req, res) => {
-  await Project.Model.findAll(projectsQueryFilters(req.query))
+  const query = {
+    order: [["startDate", req.query.startDateSort || "DESC"]],
+    ...projectsQueryFilters(req.query),
+  };
+
+  await Project.Model.findAll(query)
     .then((result) => res.json(result))
     .catch((error) => res.status(500).json(error));
 });
