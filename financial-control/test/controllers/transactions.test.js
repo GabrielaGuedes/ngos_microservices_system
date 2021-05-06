@@ -313,6 +313,10 @@ describe("/POST Transactions", () => {
       expect(res.error).to.not.eq(null);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/PUT :id Transactions", () => {
@@ -405,6 +409,10 @@ describe("/PUT :id Transactions", () => {
       expect(res.error).to.not.eq(null);
     });
   });
+
+  after(async () => {
+    await cleanTable();
+  });
 });
 
 describe("/DELETE :id Transactions", () => {
@@ -463,5 +471,9 @@ describe("/DELETE :id Transactions", () => {
       res.should.have.status(500);
       expect(res.error).to.not.eq(null);
     });
+  });
+
+  after(async () => {
+    await cleanTable();
   });
 });
