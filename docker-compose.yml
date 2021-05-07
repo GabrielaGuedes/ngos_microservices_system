@@ -76,6 +76,21 @@ services:
     ports:
       - "6000:6000"
 
+  financial_control_server:
+    container_name: NGO_FINANCIAL_CONTROL
+    build: "./financial-control"
+    volumes:
+      - ./financial-control:/financial-control
+      - ./financial-control/node_modules:/financial-control/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_db
+    links:
+      - postgres_db
+    ports:
+      - "7000:7000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
@@ -90,7 +105,7 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: employees,employees_test,volunteers,volunteers_test,projects,projects_test
+      POSTGRES_MULTIPLE_DATABASES: employees,employees_test,volunteers,volunteers_test,projects,projects_test, financial_control, financial_control_test
     volumes:
       - ./pgdata:/docker-entrypoint-initdb.d
     ports:
