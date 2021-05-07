@@ -23,9 +23,10 @@ router.get("/recurrent-transactions", verifyJWT, async (req, res) => {
     where: { recurrent: true, canceledAt: null },
   })
     .then((result) => {
-      const allIns = result.find((r) => r.kind === "IN").dataValues.totalValue;
-      const allOuts = result.find((r) => r.kind === "OUT").dataValues
-        .totalValue;
+      const inResult = result.find((r) => r.kind === "IN");
+      const outResult = result.find((r) => r.kind === "OUT");
+      const allIns = inResult ? inResult.dataValues.totalValue : 0;
+      const allOuts = outResult ? outResult.dataValues.totalValue : 0;
 
       return res.json({ currentValue: allIns - allOuts });
     })
