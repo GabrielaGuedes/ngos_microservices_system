@@ -38,6 +38,7 @@ const setTokenAndTransactions = async () => {
       origin: "Bills",
       kind: "OUT",
       recurrent: true,
+      canceledAt: "2021-03-03",
     })
   );
   transactionsArray.push(
@@ -90,8 +91,9 @@ describe("/GET Transactions grouped by origin", () => {
   });
 
   describe("When token is valid and has no filters", () => {
-    it("groups all the records by origin", async () => {
-      const groupedTransactions = groupBy(transactions, (t) => t.origin);
+    it("groups all the records by origin except those canceled", async () => {
+      const notCanceled = transactions.filter((t) => !t.canceledAt);
+      const groupedTransactions = groupBy(notCanceled, (t) => t.origin);
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/grouped-transactions/by-origin")
@@ -122,7 +124,7 @@ describe("/GET Transactions grouped by origin", () => {
     });
   });
 
-  describe("When token is valid and has IN filter", () => {
+  describe("When token is valid and has IN filter and showCanceled", () => {
     it("groups all the IN records by origin", async () => {
       const kind = "IN";
       const inTransactions = transactions.filter((t) => t.kind === kind);

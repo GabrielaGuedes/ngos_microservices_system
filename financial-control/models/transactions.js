@@ -26,6 +26,10 @@ const jsonSchema = {
     description: {
       type: "string",
     },
+    canceledAt: {
+      type: "string",
+      format: "date",
+    },
   },
 };
 

@@ -20,7 +20,7 @@ router.get("/recurrent-transactions", verifyJWT, async (req, res) => {
       [sequelize.fn("SUM", sequelize.col("value")), "totalValue"],
     ],
     group: ["kind"],
-    where: { recurrent: true },
+    where: { recurrent: true, canceledAt: null },
   })
     .then((result) => {
       const allIns = result.find((r) => r.kind === "IN").dataValues.totalValue;

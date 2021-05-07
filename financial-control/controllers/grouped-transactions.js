@@ -7,8 +7,9 @@ const Transaction = require("../models/transactions");
 const router = express.Router();
 
 router.get("/by-origin", verifyJWT, async (req, res) => {
-  const query = { where: {} };
+  const query = { where: { canceledAt: null } };
   if (req.query.kind) query.where.kind = req.query.kind;
+  if (req.query.showCanceled) delete query.where.canceledAt;
 
   await Transaction.Model.findAll({
     attributes: [

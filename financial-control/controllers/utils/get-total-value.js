@@ -1,11 +1,11 @@
-const monthsUntilNow = (stringDate) => {
+const monthsUntilEndDate = (stringStartDate, stringEndDate) => {
   let months;
-  const now = new Date();
-  const date = new Date(stringDate);
+  const endDate = stringEndDate ? new Date(stringEndDate) : new Date();
+  const date = new Date(stringStartDate);
 
-  months = (now.getFullYear() - date.getFullYear()) * 12;
+  months = (endDate.getFullYear() - date.getFullYear()) * 12;
   months -= date.getMonth();
-  months += now.getMonth();
+  months += endDate.getMonth();
   return months <= 0 ? 1 : months;
 };
 
@@ -14,7 +14,7 @@ exports.getTotalValue = (transactions) =>
     const value = t.kind === "IN" ? t.value : -t.value;
 
     if (t.recurrent) {
-      return monthsUntilNow(t.date) * value + sum;
+      return monthsUntilEndDate(t.date, t.canceledAt) * value + sum;
     }
 
     return value + sum;

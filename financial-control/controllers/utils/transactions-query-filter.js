@@ -21,16 +21,18 @@ const valueRangeFilter = (minValue, maxValue) => {
 };
 
 exports.transactionsQueryFilters = (queryParms) => {
-  const { origin, recurrent, minValue, maxValue } = queryParms;
+  const { origin, recurrent, minValue, maxValue, showCanceled } = queryParms;
 
   const query = {
     where: {
       ...valueRangeFilter(minValue, maxValue).where,
+      canceledAt: null,
     },
   };
 
   if (origin) query.where = { ...query.where, origin };
   if (recurrent) query.where = { ...query.where, recurrent };
+  if (showCanceled) delete query.where.canceledAt;
 
   return query;
 };

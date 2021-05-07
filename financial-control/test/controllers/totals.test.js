@@ -45,6 +45,7 @@ const setTokenAndTransactions = async () => {
       origin: "Bills",
       kind: "OUT",
       recurrent: true,
+      canceledAt: new Date(),
     })
   );
   transactionsArray.push(
@@ -63,6 +64,7 @@ const setTokenAndTransactions = async () => {
       origin: "Donation",
       kind: "IN",
       recurrent: true,
+      canceledAt: null,
     })
   );
   transactionsArray.push(
@@ -72,6 +74,16 @@ const setTokenAndTransactions = async () => {
       origin: "Great Event",
       kind: "IN",
       recurrent: false,
+    })
+  );
+  transactionsArray.push(
+    await Transaction.Model.create({
+      date: lastYear,
+      value: 2000.0,
+      origin: "Taxes",
+      kind: "OUT",
+      recurrent: true,
+      canceledAt: lastMonth,
     })
   );
   transactionsArray.push(
@@ -104,7 +116,8 @@ describe("/GET Totals/current-value", () => {
         transactions[2].value +
         transactions[3].value +
         transactions[4].value -
-        transactions[5].value * 12;
+        transactions[5].value * 11 -
+        transactions[6].value * 12;
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
@@ -141,7 +154,9 @@ describe("/GET Totals/recurrent-transactions", () => {
 
   describe("When token is valid", () => {
     it("returns the value expected by month", async () => {
-      const recurrentTransations = transactions.filter((t) => t.recurrent);
+      const recurrentTransations = transactions.filter(
+        (t) => t.recurrent && !t.canceledAt
+      );
       const groupedTransactions = groupBy(recurrentTransations, (t) => t.kind);
 
       const res = await chai

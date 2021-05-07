@@ -37,6 +37,7 @@ const setTokenAndTransactions = async () => {
       origin: "Bills",
       kind: "OUT",
       recurrent: true,
+      canceledAt: "2021-03-03",
     })
   );
   transactionsArray.push(
@@ -89,8 +90,9 @@ describe("/GET Transactions", () => {
   });
 
   describe("When token is valid", () => {
-    it("returns all transactions ordered by date desc", async () => {
+    it("returns all transactions not canceled ordered by date desc", async () => {
       const sortedTransactionsDates = transactions
+        .filter((t) => !t.canceledAt)
         .map((t) => t.date)
         .sort()
         .reverse();
@@ -101,7 +103,7 @@ describe("/GET Transactions", () => {
 
       res.should.have.status(200);
       res.body.should.be.a("array");
-      expect(res.body.length).to.eq(transactions.length);
+      expect(res.body.length).to.eq(sortedTransactionsDates.length);
       expect(res.body.map((t) => t.date)).to.eql(sortedTransactionsDates);
       expect(res.body[0].date).to.eql(sortedTransactionsDates[0]);
     });
@@ -121,8 +123,10 @@ describe("/GET Transactions", () => {
   });
 
   describe("When token is valid and filtered by recurrence", () => {
-    it("returns only recurrent transactions", async () => {
-      const filteredTransactions = transactions.filter((t) => t.recurrent);
+    it("returns only recurrent transactions not canceled", async () => {
+      const filteredTransactions = transactions.filter(
+        (t) => t.recurrent && !t.canceledAt
+      );
       const sortedFilteredTransactionsDates = filteredTransactions
         .map((t) => t.date)
         .sort()
@@ -144,7 +148,7 @@ describe("/GET Transactions", () => {
     });
   });
 
-  describe("When token is valid and filtered by value range", () => {
+  describe("When token is valid and filtered by value range and showCanceled", () => {
     it("returns all transactions in range", async () => {
       const minValue = 500.0;
       const maxValue = 2000.0;
@@ -159,7 +163,7 @@ describe("/GET Transactions", () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/transactions")
-        .query({ minValue, maxValue })
+        .query({ minValue, maxValue, showCanceled: true })
         .set("x-access-token", token);
 
       res.should.have.status(200);
