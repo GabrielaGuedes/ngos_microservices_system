@@ -91,6 +91,21 @@ services:
     ports:
       - "7000:7000"
 
+  marketing_server:
+    container_name: NGO_MARKETING
+    build: "./marketing"
+    volumes:
+      - ./marketing:/marketing
+      - ./marketing/node_modules:/marketing/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - postgres_db
+    links:
+      - postgres_db
+    ports:
+      - "8000:8000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
@@ -105,7 +120,11 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: employees,employees_test,volunteers,volunteers_test,projects,projects_test, financial_control, financial_control_test
+      POSTGRES_MULTIPLE_DATABASES: employees, employees_test,
+        volunteers, volunteers_test,
+        projects, projects_test,
+        financial_control, financial_control_test,
+        marketing, marketing_test
     volumes:
       - ./pgdata:/docker-entrypoint-initdb.d
     ports:
