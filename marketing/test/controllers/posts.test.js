@@ -3,6 +3,7 @@
 process.env.NODE_ENV = "test";
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const fs = require("fs");
 const Post = require("../../models/posts");
 const files = require("../../models/files");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
@@ -257,7 +258,8 @@ describe("/POST Posts", () => {
 
   const basePostInfo = {
     title: "G Example title",
-    texto: "I like to drink water",
+    text: "I like to drink water",
+    filePaths: ["path/to/file", "path/to/another/file"],
   };
 
   describe("When token is valid and body is correct", () => {
@@ -280,6 +282,9 @@ describe("/POST Posts", () => {
       res.should.have.status(200);
       expect(res.body.id).to.eq(postFromDatabase.id);
       expect(res.body.title).to.eq(postInfo.title);
+      expect(res.body.files.map((f) => f.path)).to.have.same.members(
+        basePostInfo.filePaths
+      );
     });
   });
 
@@ -349,28 +354,28 @@ describe("/POST Posts", () => {
 });
 
 describe("/PUT :id Posts", () => {
+  let basePostInfo = {};
+
   beforeEach(async () => {
     await cleanTables();
     await getTokenAndCreateRecords();
-  });
 
-  let basePostInfo = {};
-  before((done) => {
     basePostInfo = {
       title: `${posts[1].title}+1212`,
       text: posts[1].text,
-      postedAt: posts[1].postedAt,
+      postedAt: "2021-03-02",
       peopleReached: posts[1].peopleReached,
     };
-    done();
+    createdPost = await Post.Model.create(basePostInfo);
   });
 
   describe("When token is valid and body is correct", () => {
     it("updates the post and return it", async () => {
       const postInfo = {
         ...basePostInfo,
-        text: "Salvador",
+        text: "Salvador0",
         peopleReached: 10000000,
+        filePaths: ["path/to/file"],
       };
 
       const res = await chai
@@ -380,7 +385,7 @@ describe("/PUT :id Posts", () => {
         .send(postInfo);
 
       const postFromDatabase = await Post.Model.findOne({
-        where: { title: postInfo.title },
+        where: { text: postInfo.text },
       });
 
       res.should.have.status(200);
@@ -388,6 +393,9 @@ describe("/PUT :id Posts", () => {
       expect(res.body.text).to.eq(postInfo.text);
       expect(res.body.peopleReached).to.eq(postInfo.peopleReached);
       expect(res.body.title).to.eq(postInfo.title);
+      expect(res.body.files.map((f) => f.path)).to.have.same.members(
+        postInfo.filePaths
+      );
     });
   });
 
@@ -397,6 +405,7 @@ describe("/PUT :id Posts", () => {
         ...basePostInfo,
         text: "Salvador2",
         peopleReached: 5511966666662,
+        filePaths: [],
       };
 
       const res = await chai
@@ -422,6 +431,7 @@ describe("/PUT :id Posts", () => {
         ...basePostInfo,
         text: "Salvador3",
         peopleReached: 5511966666663,
+        filePaths: [],
       };
 
       const res = await chai
@@ -447,6 +457,7 @@ describe("/PUT :id Posts", () => {
         ...basePostInfo,
         text: "Salvador4",
         peopleReached: 5511966666664,
+        filePaths: [],
       };
       delete postInfo.title;
 
@@ -457,36 +468,10 @@ describe("/PUT :id Posts", () => {
         .send(postInfo);
 
       const postFromDatabase = await Post.Model.findOne({
-        where: { title: postInfo.title },
+        where: { title: basePostInfo.title },
       });
 
       res.should.have.status(400);
-      expect(res.error.text).to.include("title");
-      expect(postFromDatabase.text).to.not.eq(postInfo.text);
-      expect(postFromDatabase.peopleReached).to.not.eq(postInfo.peopleReached);
-    });
-  });
-
-  describe("When token is valid but the title is already being used", () => {
-    it("returns error", async () => {
-      const postInfo = {
-        ...basePostInfo,
-        text: "Salvador5",
-        peopleReached: 5511966666665,
-        title: posts[2].title,
-      };
-
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .put(`/api/posts/${posts[1].id}`)
-        .set("x-access-token", token)
-        .send(postInfo);
-
-      const postFromDatabase = await Post.Model.findOne({
-        where: { title: posts[1].title },
-      });
-
-      res.should.have.status(500);
       expect(res.error.text).to.include("title");
       expect(postFromDatabase.text).to.not.eq(postInfo.text);
       expect(postFromDatabase.peopleReached).to.not.eq(postInfo.peopleReached);
@@ -515,7 +500,6 @@ describe("/DELETE :id Posts", () => {
 
       const postFromDatabase = await Post.Model.findByPk(id);
 
-      console.log(res.error.error);
       res.should.have.status(200);
       expect(res.body.message).to.include("Destroyed");
       expect(postFromDatabase).to.eq(null);

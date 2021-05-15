@@ -1,14 +1,13 @@
 const express = require("express");
 const { Validator } = require("express-json-validator-middleware");
-const multer = require("multer");
 const verifyJWT = require("../middleware/verify-jwt");
 
 const files = require("../models/files");
 const Post = require("../models/posts");
 const { postsQueryFilter } = require("./utils/posts-query-filter");
-const { storage, fileFilter } = require("./utils/file-storage-helper");
 const UpdatePostOrganizer = require("../interactors/update-post-organizer");
 const DestroyPostOrganizer = require("../interactors/destroy-post-organizer");
+const filePaths = require("../models/file-paths");
 
 const router = express.Router();
 const { validate } = new Validator();
@@ -43,56 +42,34 @@ router.get("/:id", verifyJWT, async (req, res) => {
 
 router.post(
   "/",
-  validate({ body: Post.jsonSchema }),
+  validate({ body: { allOf: [Post.jsonSchema, filePaths.jsonSchema] } }),
   verifyJWT,
   async (req, res) => {
-    const upload = multer({ storage, fileFilter }).array("multiple_images", 10);
-
-    await upload(req, res, async (err) => {
-      if (req.fileValidationError) {
-        return res.send(req.fileValidationError);
+    await Post.Model.create(
+      { ...req.body, files: req.body.filePaths.map((f) => ({ path: f })) },
+      {
+        include: [files.Model],
       }
-      if (err) {
-        return res.send(err);
-      }
-
-      return Post.Model.create(
-        { ...req.body, files: req.files.map((f) => ({ path: f.path })) },
-        {
-          include: [files.Model],
-        }
-      )
-        .then((result) => res.json(result))
-        .catch((error) => res.status(500).json(error));
-    });
+    )
+      .then((result) => res.json(result))
+      .catch((error) => res.status(500).json(error));
   }
 );
 
 router.put(
   "/:id",
-  validate({ body: Post.jsonSchema }),
+  validate({ body: { allOf: [Post.jsonSchema, filePaths.jsonSchema] } }),
   verifyJWT,
   async (req, res) => {
-    const upload = multer({ storage, fileFilter }).array("multiple_images", 10);
+    const context = {
+      id: req.params.id,
+      postInfo: req.body,
+      filePaths: req.body.filePaths.map((f) => ({ path: f })),
+    };
 
-    await upload(req, res, async (err) => {
-      if (req.fileValidationError) {
-        return res.send(req.fileValidationError);
-      }
-      if (err) {
-        return res.send(err);
-      }
-
-      const context = {
-        id: req.params.id,
-        postInfo: req.body,
-        filePaths: req.files.map((f) => ({ path: f.path })),
-      };
-
-      return UpdatePostOrganizer.run(context)
-        .then((result) => res.json(result.post))
-        .catch((error) => res.status(500).json(error));
-    });
+    await UpdatePostOrganizer.run(context)
+      .then((result) => res.json(result.post))
+      .catch((error) => res.status(500).json(error));
   }
 );
 

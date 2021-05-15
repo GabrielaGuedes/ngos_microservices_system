@@ -4,7 +4,7 @@ const database = require("../config/db-connection");
 const jsonSchema = {
   type: "object",
   id: "file",
-  required: ["path", "postId"],
+  required: [],
   properties: {
     path: {
       type: "string",
