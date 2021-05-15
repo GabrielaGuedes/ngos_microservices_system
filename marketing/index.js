@@ -12,6 +12,7 @@ process.on("uncaughtException", (err) => {
 });
 const app = express();
 
+app.use(express.static("./public-files"));
 app.use(express.json());
 app.use(cors());
 app.use("/", routes);
