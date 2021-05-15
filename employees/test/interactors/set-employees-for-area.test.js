@@ -112,6 +112,6 @@ describe("SetEmployeesForArea", () => {
   after(async () => {
     await areaEmployees.Model.destroy({ where: {} });
     await employees.Model.destroy({ where: {} });
-    await employees.Model.destroy({ where: {} });
+    await areas.Model.destroy({ where: {} });
   });
 });
