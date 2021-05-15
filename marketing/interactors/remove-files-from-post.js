@@ -7,7 +7,7 @@ module.exports = class RemoveFilesFromPost extends Interactor {
     await this.savePost();
     await this.saveOldFiles();
 
-    return files.Model.destroy({ where: { postId: this.post.id } })
+    return files.Model.destroy({ where: { postId: this.context.post.id } })
       .then(() => {
         context.fileIds = [];
       })
@@ -18,16 +18,16 @@ module.exports = class RemoveFilesFromPost extends Interactor {
   }
 
   async savePost() {
-    this.post = await posts.Model.findOne({
+    this.context.post = await posts.Model.findOne({
       where: { id: this.context.id },
     });
   }
 
   async saveOldFiles() {
-    this.oldFiles = this.post.files;
+    this.context.oldFiles = this.context.post.files;
   }
 
   async rollback() {
-    await this.post.addFiles(this.oldFiles);
+    await this.context.post.addFiles(this.context.oldFiles);
   }
 };
