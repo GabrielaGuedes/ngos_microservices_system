@@ -105,3 +105,6 @@ dist
 
 # database files
 data/
+
+marketing/public-files/
+marketing/test/public-files/
