@@ -10,7 +10,7 @@ To run it, use the `docker-compose.yml` file in the main folder from the project
 
 You can check the full description of each one below the table.
 
-| Endpoint                                | Only Admin | Response                                                      | Headers        | Filters                                             | Description                                                              |
+| Endpoint                                | Only Admin | Request Fields                                                | Headers        | Filters                                             | Description                                                              |
 | --------------------------------------- | ---------- | ------------------------------------------------------------- | -------------- | --------------------------------------------------- | ------------------------------------------------------------------------ |
 | GET /api/transactions                   | True       | -                                                             | x-access-token | origin, recurrent, showCanceled, minValue, maxValue | Returns all transactions                                                 |
 | GET /api/transactions/:id               | True       | -                                                             | x-access-token | -                                                   | Returns the transaction with the id                                      |
