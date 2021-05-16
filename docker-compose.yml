@@ -106,6 +106,21 @@ services:
     ports:
       - "8000:8000"
 
+  reports_server:
+    container_name: NGO_REPORTS
+    build: "./reports"
+    volumes:
+      - ./reports:/reports
+      - ./reports/node_modules:/reports/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    ports:
+      - "9000:9000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
