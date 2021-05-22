@@ -121,6 +121,21 @@ services:
     ports:
       - "9000:9000"
 
+  invoices_server:
+    container_name: NGO_INVOICES
+    build: "./invoices"
+    volumes:
+      - ./invoices:/invoices
+      - ./invoices/node_modules:/invoices/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    ports:
+      - "10000:10000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
