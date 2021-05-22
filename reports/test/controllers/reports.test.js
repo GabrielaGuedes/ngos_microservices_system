@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 process.env.NODE_ENV = "test";
-process.env.FINANCIAL_SERVER_URL = "http://localhost:7000";
-process.env.LOGIN_URL = "http://localhost:2000/api/login";
+process.env.FINANCIAL_SERVER_URL = `http://localhost:${process.env.FINANCIAL_SERVER_PORT}`;
+process.env.LOGIN_URL = `http://localhost:${process.env.AUTHENTICATION_PORT}/api/login`;
 const mongoose = require("mongoose");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
@@ -82,7 +82,7 @@ describe("/GET charts", () => {
   });
 });
 
-describe("/POST export", () => {
+describe("/GET export", () => {
   before(async () => {
     await Config.Model.remove({});
 
@@ -98,7 +98,7 @@ describe("/POST export", () => {
     it("returns the sheet file", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reports/export");
+        .get("/api/reports/export");
 
       res.should.have.status(200);
       expect(res.type).to.eq(
@@ -122,7 +122,7 @@ describe("/POST export", () => {
     it("returns forbidden", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .post("/api/reports/export");
+        .get("/api/reports/export");
 
       res.should.have.status(403);
       expect(res.error.text).to.include("Not");

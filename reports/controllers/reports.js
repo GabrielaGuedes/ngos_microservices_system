@@ -14,7 +14,7 @@ router.get("/charts", verifyCharts, async (req, res) => {
     .catch((err) => res.status(500).json(err));
 });
 
-router.post("/export", verifyExport, async (req, res) => {
+router.get("/export", verifyExport, async (req, res) => {
   await getAuthorizedRequest(
     `${process.env.FINANCIAL_SERVER_URL}/api/transactions/?showCanceled=true`
   )
