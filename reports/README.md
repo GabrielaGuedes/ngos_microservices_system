@@ -1,6 +1,6 @@
 # Reports
 
-Microservice to make donations using credit card (through [PagSeguro](https://dev.pagseguro.uol.com.br/v4.0/)). The admin can see the donations and the donators.
+Microservice to do exports (in `.xlsx`) and get data from financial-control (the transactions grouped by origin). The admin can choose to allow or not the exports or the data. **The default configuration is both allowed**.
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
@@ -8,51 +8,18 @@ To run it, use the `docker-compose.yml` file in the main folder from the project
 
 ## Routes
 
-### POST /api/donations/charge-credit-card
+You can check the full description of each one below the table.
 
-Used to create a credit card charge.
+| Endpoint                | Only Admin | Request fields           | Headers        | Filters                                 | Description                                                                      |
+| ----------------------- | ---------- | ------------------------ | -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
+| GET /api/configs        | True       | -                        | x-access-token | -                                       | Returns the current config                                                       |
+| POST /api/configs/      | True       | allowExport, allowCharts | x-access-token | Updates the permissions for the reports |
+| GET /api/reports/charts | False      | -                        |                | -                                       | Returns all the transactions from the financial-control server grouped by origin |
+| GET /api/reports/export | True       | -                        |                | -                                       | Returns all the transactions in a `.xlsx` file                                   |
 
-Params:
+### GET /api/configs/
 
-- creditCardNumber: number
-- cvv: number
-- donatedValue: number, the minimum is 1.0
-- expireMonth: string, format `MM`
-- expireYear: string, format `YYYY`
-- name: string, name of the donator
-- birthDate: date, format `yyyy-mm-ddThh:mm:ss+00:00`
-- occupation: string, optional
-- motivation: string, optional
-- city: string
-- state: string, preferable just the code (like `SP`)
-- country: string
-- email: string, unique
-- phone: number, optional
-
-When body is passed correctly, returns success (200). Example response:
-
-```json
-{
-  "donationId": "12022306",
-  "donatorId": "2558745012"
-}
-```
-
-When there is a required param missing, returns a bad request error (400). When the email is already being used or there is another error, returns internal server error (500).
-
----
-
-### GET /api/donations/
-
-Used to check donations done
-
-Query string optional params:
-
-- paid: it can be `true` or `false`. If not passed, returns all the donations. When it is true, returns only paid donations. When it is false, returns only not paid donations
-- source: currently, there is only 1 source, `CREDIT_CARD`
-- minValue: float
-- maxValue: float
-- sortBy: string, can be sorted by any of the fields: `status`, `updatedAt`, `amount`, `donatorEmail`, `source`
+Get the current config for the reports.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -60,20 +27,53 @@ When body is passed correctly, returns success (200). Example response:
 
 ```json
 {
-  "donations": [
-    {
-      "_id": "6084a92e9ebb06005ee61955",
-      "donationId": "CHAR_5291ADCC-DA3E-4C39-B5E6-6715875A694D",
-      "status": "PAID",
-      "amount": 50.02,
-      "donatorEmail": "teste@example.com",
-      "source": "CREDIT_CARD",
-      "createdAt": "2021-04-24T23:26:38.533Z",
-      "updatedAt": "2021-04-24T23:26:38.533Z",
-      "__v": 0
-    }
-  ],
-  "total": 50.02
+  "current": true,
+  "_id": "60a97f2fa1ca5cd59769c861",
+  "__v": 0,
+  "allowCharts": true,
+  "allowExport": false,
+  "createdAt": "2021-05-22T22:01:19.704Z",
+  "updatedAt": "2021-05-22T22:01:19.704Z"
+}
+```
+
+If there isn't any config set, returns an empty object.
+
+When token is missing, returns unauthorized (401). When token is incorrect or there was an error, returns internal server error (500).
+
+---
+
+### POST /api/configs/
+
+Creates/updates a current config for permissions
+
+Params:
+
+- allowExport: boolean, optional. This allows everyone to download the sheet with all the transactions
+- allowCharts: boolean, optional. This allows everyone to have access to all transactions grouped by origin.
+
+The authentication token needs to be passed in the header field `x-access-token`.
+
+Example request:
+
+```json
+{
+  "allowExport": false,
+  "allowCharts": true
+}
+```
+
+When body is passed correctly, returns success (200). Example response:
+
+```json
+{
+  "current": true,
+  "_id": "60a97f2fa1ca5cd59769c861",
+  "__v": 0,
+  "allowCharts": true,
+  "allowExport": false,
+  "createdAt": "2021-05-22T22:01:19.704Z",
+  "updatedAt": "2021-05-22T22:01:19.704Z"
 }
 ```
 
@@ -81,45 +81,55 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ---
 
-### GET /api/donators/
+### GET /api/reports/charts
 
-Used to check the donators
+Returns all the transactions (including the canceled ones) grouped by origin. It comes from the financial-control server, by the route `/api/grouped-transactions/by-origin/?showCanceled=true`.
 
-Query string optional params:
-
-- city: string
-- state: string
-- country: string
-- minValue: float
-- maxValue: float
-- sortBy: string, can be sorted by any of the fields: `name`, `birthDate`, `occupation`, `motivation`, `city`, `state`, `country`, `email`, `phone`, `donatedValue`, `updatedAt`
-
-The authentication token needs to be passed in the header field `x-access-token`.
-
-When body is passed correctly, returns success (200). Example response:
+When the charts are allowed by the admin, returns success (200). Example response:
 
 ```json
 [
   {
-    "_id": "6084a92ea0bc999088f4afe6",
-    "email": "teste@example.com",
-    "__v": 0,
-    "birthDate": "2018-11-13T20:20:39.000Z",
-    "city": "São Paulo",
-    "country": "Brasil",
-    "createdAt": "2021-04-24T23:26:38.540Z",
-    "donatedValue": 50.02,
-    "motivation": "pq eu quis",
-    "name": "Example name",
-    "occupation": "Software Engineer",
-    "phone": 5511999999999,
-    "state": "SP",
-    "updatedAt": "2021-04-24T23:26:38.540Z"
+    "origin": "Donation",
+    "totalValue": 300
+  },
+  {
+    "origin": "Bill",
+    "totalValue": 300.52
   }
 ]
 ```
 
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
+When the charts aren't allowed, returns forbidden (403). Example response:
+
+```json
+{
+  "message": "Not allowed",
+  "err": null
+}
+```
+
+When there was an error, returns internal server error (500).
+
+---
+
+### GET /api/reports/export
+
+Returns all the transactions (including the canceled ones) in a sheet (`.xlsx` file). It comes from the financial-control server, by the route `/api/transactions/?showCanceled=true`.
+
+When the export is allowed by the admin, returns success (200). Example sheet:
+![Sheet Image](./documentation-media/sheet.png)
+
+When the export isn't allowed, returns forbidden (403). Example response:
+
+```json
+{
+  "message": "Not allowed",
+  "err": null
+}
+```
+
+When there was an error, returns internal server error (500).
 
 ---
 
@@ -127,10 +137,10 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 The tests that need token, it is necessary to have the authentication service running and have the following user/password registered:
 
-```
+```json
 {
-  email: "test@example.com",
-  password: "password1234"
+  "email": "test@example.com",
+  "password": "password1234"
 }
 ```
 
