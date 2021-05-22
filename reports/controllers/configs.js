@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const express = require("express");
 const { Validator } = require("express-json-validator-middleware");
 const verifyJWT = require("../middleware/verify-jwt");

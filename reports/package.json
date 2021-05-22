@@ -25,6 +25,7 @@
     "mongoose": "^5.12.3",
     "mongoose-schema-jsonschema": "^1.4.4",
     "mongoose-unique-validator": "^2.0.3",
+    "node-excel-export": "^1.4.4",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
