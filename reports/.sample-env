@@ -1,4 +1,4 @@
-DB_CONNECTION=mongodb://mongo_db:27017/donations
+DB_CONNECTION=mongodb://mongo_db:27017/reports
 TEST_DB_CONNECTION=mongodb://localhost:27017/testDB
 TEST_DB=testDB
 
