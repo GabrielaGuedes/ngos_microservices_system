@@ -136,6 +136,21 @@ services:
     ports:
       - "10000:10000"
 
+  settings_server:
+    container_name: NGO_SETTINGS
+    build: "./settings"
+    volumes:
+      - ./settings:/settings
+      - ./settings/node_modules:/settings/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - mongo_db
+    links:
+      - mongo_db
+    ports:
+      - "11000:11000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
