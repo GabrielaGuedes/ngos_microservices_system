@@ -1,79 +1,68 @@
 # Invoices
 
-Microservice to do exports (in `.xlsx`) and get data from financial-control (the transactions grouped by origin). The admin can choose to allow or not the exports or the data. **The default configuration is both allowed**.
+Microservice to manage donated invoices. Only admins can use it
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
-To run it, use the `docker-compose.yml` file in the main folder from the project.
+To run it, use the `docker-compose.yml` file in the main folder from the invoice.
 
 ## Routes
 
 You can check the full description of each one below the table.
 
-| Endpoint                | Only Admin | Request fields           | Headers        | Filters                                 | Description                                                                      |
-| ----------------------- | ---------- | ------------------------ | -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
-| GET /api/configs        | True       | -                        | x-access-token | -                                       | Returns the current config                                                       |
-| POST /api/configs/      | True       | allowExport, allowCharts | x-access-token | Updates the permissions for the reports |
-| GET /api/reports/charts | False      | -                        |                | -                                       | Returns all the transactions from the financial-control server grouped by origin |
-| GET /api/reports/export | True       | -                        |                | -                                       | Returns all the transactions in a `.xlsx` file                                   |
+| Endpoint                 | Only Admin | Request Fields                          | Headers        | Filters          | Description                     |
+| ------------------------ | ---------- | --------------------------------------- | -------------- | ---------------- | ------------------------------- |
+| GET /api/invoices        | True       | -                                       | x-access-token | minDate, maxDate | Returns all invoices            |
+| GET /api/invoices/:id    | True       | -                                       | x-access-token | -                | Returns the invoice with the id |
+| POST /api/invoices/      | True       | donationDate, donatorEmail, donatorName |
+| PUT /api/invoices/       | True       | donationDate, donatorEmail, donatorName | x-access-token | -                | Updates the invoice             |
+| DELETE /api/invoices/:id | True       | -                                       | x-access-token | -                | Deletes the invoice             |
 
-### GET /api/configs/
+### GET /api/invoices/
 
-Get the current config for the reports.
+Lists all the invoices.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-When body is passed correctly, returns success (200). Example response:
+You can filter by `minDate` or `maxDate` using query string params (e.g. `/api/invoices/?maxDate=2020-01-01`)
+
+When request is done correctly, returns success (200). Example response:
 
 ```json
-{
-  "current": true,
-  "_id": "60a97f2fa1ca5cd59769c861",
-  "__v": 0,
-  "allowCharts": true,
-  "allowExport": false,
-  "createdAt": "2021-05-22T22:01:19.704Z",
-  "updatedAt": "2021-05-22T22:01:19.704Z"
-}
+[
+  {
+    "_id": "60a9a2b90fb6eb072b843e1b",
+    "donationDate": "2021-01-01T22:00:00.700Z",
+    "donatorName": "Example for docs",
+    "donatorEmail": "example@docs.com",
+    "createdAt": "2021-05-23T00:32:57.700Z",
+    "updatedAt": "2021-05-23T00:32:57.700Z",
+    "__v": 0
+  }
+]
 ```
 
-If there isn't any config set, returns an empty object.
-
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error, returns internal server error (500).
+When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
 
 ---
 
-### POST /api/configs/
+### GET /api/invoices/:id
 
-Creates/updates a current config for permissions
-
-Params:
-
-- allowExport: boolean, optional. This allows everyone to download the sheet with all the transactions
-- allowCharts: boolean, optional. This allows everyone to have access to all transactions grouped by origin.
+Gets invoice with id passed
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-Example request:
+When request is done correctly, returns success (200). Example response:
 
 ```json
 {
-  "allowExport": false,
-  "allowCharts": true
-}
-```
-
-When body is passed correctly, returns success (200). Example response:
-
-```json
-{
-  "current": true,
-  "_id": "60a97f2fa1ca5cd59769c861",
-  "__v": 0,
-  "allowCharts": true,
-  "allowExport": false,
-  "createdAt": "2021-05-22T22:01:19.704Z",
-  "updatedAt": "2021-05-22T22:01:19.704Z"
+  "_id": "60a9a2b90fb6eb072b843e1b",
+  "donationDate": "2021-01-01T22:00:00.700Z",
+  "donatorName": "Example for docs",
+  "donatorEmail": "example@docs.com",
+  "createdAt": "2021-05-23T00:32:57.700Z",
+  "updatedAt": "2021-05-23T00:32:57.700Z",
+  "__v": 0
 }
 ```
 
@@ -81,55 +70,101 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ---
 
-### GET /api/reports/charts
+### POST /api/invoices/
 
-Returns all the transactions (including the canceled ones) grouped by origin. It comes from the financial-control server, by the route `/api/grouped-transactions/by-origin/?showCanceled=true`.
+Creates a new invoice.
 
-When the charts are allowed by the admin, returns success (200). Example response:
+The authentication token needs to be passed in the header field `x-access-token`.
 
-```json
-[
-  {
-    "origin": "Donation",
-    "totalValue": 300
-  },
-  {
-    "origin": "Bill",
-    "totalValue": 300.52
-  }
-]
-```
+Params:
 
-When the charts aren't allowed, returns forbidden (403). Example response:
+- donationDate: date, format `yyyy-mm-ddThh:mm:ss.sssZ`
+- donatorName: string
+- donatorEmail: string
+
+Example body:
 
 ```json
 {
-  "message": "Not allowed",
-  "err": null
+  "donationDate": "2021-01-01T22:00:00.700Z",
+  "donatorName": "Example for docs",
+  "donatorEmail": "example@docs.com"
 }
 ```
 
-When there was an error, returns internal server error (500).
+When request is done correctly, returns success (200). Example response:
+
+```json
+{
+  "_id": "60a9a2b90fb6eb072b843e1b",
+  "donationDate": "2021-01-01T22:00:00.700Z",
+  "donatorName": "Example for docs",
+  "donatorEmail": "example@docs.com",
+  "createdAt": "2021-05-23T00:32:57.700Z",
+  "updatedAt": "2021-05-23T00:32:57.700Z",
+  "__v": 0
+}
+```
+
+When token is missing, returns unauthorized (401). When there is an error with the request body, returns bad request (400). When token is incorrect or there was an error with the params passed, returns internal server error (500).
 
 ---
 
-### GET /api/reports/export
+### PUT /api/invoices/:id
 
-Returns all the transactions (including the canceled ones) in a sheet (`.xlsx` file). It comes from the financial-control server, by the route `/api/transactions/?showCanceled=true`.
+Updates the invoice from the id passed.
 
-When the export is allowed by the admin, returns success (200). Example sheet:
-![Sheet Image](./documentation-media/sheet.png)
+The authentication token needs to be passed in the header field `x-access-token`.
 
-When the export isn't allowed, returns forbidden (403). Example response:
+It is necessary to pass all the params (that are mandatory). Params:
+
+- donationDate: date, format `yyyy-mm-ddThh:mm:ss.sssZ`
+- donatorName: string
+- donatorEmail: string
+
+Example body:
 
 ```json
 {
-  "message": "Not allowed",
-  "err": null
+  "donationDate": "2021-01-01T22:00:00.700Z",
+  "donatorName": "Updated Example for docs",
+  "donatorEmail": "example@docs.com"
 }
 ```
 
-When there was an error, returns internal server error (500).
+When request is done correctly, returns success (200). Example response:
+
+```json
+{
+  "_id": "60a9a2b90fb6eb072b843e1b",
+  "donationDate": "2021-01-01T22:00:00.700Z",
+  "donatorName": "Updated Example for docs",
+  "donatorEmail": "example@docs.com",
+  "createdAt": "2021-05-23T00:32:57.700Z",
+  "updatedAt": "2021-05-23T00:35:56.588Z",
+  "__v": 0
+}
+```
+
+When token is missing, returns unauthorized (401). When there is an error with the request body, returns bad request (400). When token is incorrect or there was an error with the params passed, returns internal server error (500).
+
+---
+
+### DELETE /api/invoices/:id
+
+Deletes the invoice from the id passed.
+
+The authentication token needs to be passed in the header field `x-access-token`.
+
+When request is done correctly, returns success (200). Example response:
+
+```json
+{
+  "message": "Destroyed!"
+}
+```
+
+When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
 
 ---
 
@@ -137,10 +172,10 @@ When there was an error, returns internal server error (500).
 
 The tests that need token, it is necessary to have the authentication service running and have the following user/password registered:
 
-```json
+```
 {
-  "email": "test@example.com",
-  "password": "password1234"
+  email: "test@example.com",
+  password: "password1234"
 }
 ```
 
