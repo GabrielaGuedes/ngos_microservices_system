@@ -49,8 +49,8 @@ describe("/GET charts", () => {
       res.should.have.status(200);
       res.body.should.be.a("array");
       expect(res.body.length).to.eq(groupedTransactions.body.length);
-      expect(res.body[0].totalValue).to.eql(
-        groupedTransactions.body[0].totalValue
+      expect(res.body[0] && res.body[0].totalValue).to.eql(
+        res.body[0] && groupedTransactions.body[0].totalValue
       );
     });
   });
