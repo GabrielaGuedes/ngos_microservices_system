@@ -1,6 +1,31 @@
 # Settings
 
-Microservice to manage donated invoices. Only admins can use it
+Microservice to activate/deactivate services and details settings.
+The default value for services is:
+
+```json
+{
+  "donations": true,
+  "employees": true,
+  "financialControl": true,
+  "invoices": true,
+  "marketing": true,
+  "projects": true,
+  "reports": true,
+  "volunteers": true
+}
+```
+
+The default value for details settings is:
+
+```json
+{
+  "name": "ONG",
+  "mainColor": "#00b2b5",
+  "backgroundColor": "#f0ffff",
+  "fontsColor": "#000000"
+}
+```
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
@@ -10,45 +35,16 @@ To run it, use the `docker-compose.yml` file in the main folder from the invoice
 
 You can check the full description of each one below the table.
 
-| Endpoint                 | Only Admin | Request Fields                          | Headers        | Filters          | Description                     |
-| ------------------------ | ---------- | --------------------------------------- | -------------- | ---------------- | ------------------------------- |
-| GET /api/invoices        | True       | -                                       | x-access-token | minDate, maxDate | Returns all invoices            |
-| GET /api/invoices/:id    | True       | -                                       | x-access-token | -                | Returns the invoice with the id |
-| POST /api/invoices/      | True       | donationDate, donatorEmail, donatorName |
-| PUT /api/invoices/       | True       | donationDate, donatorEmail, donatorName | x-access-token | -                | Updates the invoice             |
-| DELETE /api/invoices/:id | True       | -                                       | x-access-token | -                | Deletes the invoice             |
+| Endpoint            | Only Admin | Request Fields                                                                               | Headers        | Filters | Description                              |
+| ------------------- | ---------- | -------------------------------------------------------------------------------------------- | -------------- | ------- | ---------------------------------------- |
+| GET /api/services   | True       | -                                                                                            | x-access-token | -       | Returns the current service config       |
+| POST /api/services/ | True       | donations, eemployees, financialControl, invoices, marketing, projects, reports, volunteeers | x-access-token | -       | Updates the permissions for the services |
+| GET /api/details    | True       | -                                                                                            | x-access-token | -       | Returns the current details config       |
+| POST /api/details/  | True       | name, mainColor, backgroundColor, fontsColor                                                 | x-access-token | -       | Updates the details configs              |
 
-### GET /api/invoices/
+### GET /api/services/
 
-Lists all the invoices.
-
-The authentication token needs to be passed in the header field `x-access-token`.
-
-You can filter by `minDate` or `maxDate` using query string params (e.g. `/api/invoices/?maxDate=2020-01-01`)
-
-When request is done correctly, returns success (200). Example response:
-
-```json
-[
-  {
-    "_id": "60a9a2b90fb6eb072b843e1b",
-    "donationDate": "2021-01-01T22:00:00.700Z",
-    "donatorName": "Example for docs",
-    "donatorEmail": "example@docs.com",
-    "createdAt": "2021-05-23T00:32:57.700Z",
-    "updatedAt": "2021-05-23T00:32:57.700Z",
-    "__v": 0
-  }
-]
-```
-
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
-
----
-
-### GET /api/invoices/:id
-
-Gets invoice with id passed
+Returns the current service config. If there isn't a current config on the database, returns the default value.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -56,39 +52,45 @@ When request is done correctly, returns success (200). Example response:
 
 ```json
 {
-  "_id": "60a9a2b90fb6eb072b843e1b",
-  "donationDate": "2021-01-01T22:00:00.700Z",
-  "donatorName": "Example for docs",
-  "donatorEmail": "example@docs.com",
-  "createdAt": "2021-05-23T00:32:57.700Z",
-  "updatedAt": "2021-05-23T00:32:57.700Z",
-  "__v": 0
+  "donations": true,
+  "employees": true,
+  "financialControl": true,
+  "invoices": true,
+  "marketing": true,
+  "projects": true,
+  "reports": true,
+  "volunteers": true
 }
 ```
 
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
+When token is missing, returns unauthorized (401). When token is incorrect or there was an error, returns internal server error (500).
 
 ---
 
-### POST /api/invoices/
+### POST /api/services/
 
-Creates a new invoice.
+Upserts the current config for the services.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
 Params:
 
-- donationDate: date, format `yyyy-mm-ddThh:mm:ss.sssZ`
-- donatorName: string
-- donatorEmail: string
+- donations: boolean, optional
+- employees: boolean, optional
+- financialControl: boolean, optional
+- invoices: boolean, optional
+- marketing: boolean, optional
+- projects: boolean, optional
+- reports: boolean, optional
+- volunteers: boolean, optional
 
 Example body:
 
 ```json
 {
-  "donationDate": "2021-01-01T22:00:00.700Z",
-  "donatorName": "Example for docs",
-  "donatorEmail": "example@docs.com"
+  "donations": false,
+  "employees": true,
+  "financialControl": false
 }
 ```
 
@@ -96,13 +98,19 @@ When request is done correctly, returns success (200). Example response:
 
 ```json
 {
-  "_id": "60a9a2b90fb6eb072b843e1b",
-  "donationDate": "2021-01-01T22:00:00.700Z",
-  "donatorName": "Example for docs",
-  "donatorEmail": "example@docs.com",
-  "createdAt": "2021-05-23T00:32:57.700Z",
-  "updatedAt": "2021-05-23T00:32:57.700Z",
-  "__v": 0
+  "current": true,
+  "donations": false,
+  "employees": true,
+  "financialControl": false,
+  "invoices": true,
+  "marketing": true,
+  "projects": true,
+  "reports": true,
+  "volunteers": true,
+  "_id": "60b24ea94354b56dffd5f73c",
+  "__v": 0,
+  "createdAt": "2021-05-29T14:24:41.703Z",
+  "updatedAt": "2021-05-29T14:24:41.703Z"
 }
 ```
 
@@ -110,25 +118,46 @@ When token is missing, returns unauthorized (401). When there is an error with t
 
 ---
 
-### PUT /api/invoices/:id
+### GET /api/details/
 
-Updates the invoice from the id passed.
+Returns the current details config. If there isn't a current config on the database, returns the default value.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-It is necessary to pass all the params (that are mandatory). Params:
+When request is done correctly, returns success (200). Example response:
 
-- donationDate: date, format `yyyy-mm-ddThh:mm:ss.sssZ`
-- donatorName: string
-- donatorEmail: string
+```json
+{
+  "name": "ONG",
+  "mainColor": "#00b2b5",
+  "backgroundColor": "#f0ffff",
+  "fontsColor": "#000000"
+}
+```
+
+When token is missing, returns unauthorized (401). When token is incorrect or there was an error, returns internal server error (500).
+
+---
+
+### POST /api/details/
+
+Upserts the current config for the details.
+
+The authentication token needs to be passed in the header field `x-access-token`.
+
+Params:
+
+- name: string, optional
+- mainColor: string, must be a hex (`#00b2b5`), optional
+- backgroundColor: string, must be a hex (`#00b2b5`), optional
+- fontsColor: string, must be a hex (`#00b2b5`), optional
 
 Example body:
 
 ```json
 {
-  "donationDate": "2021-01-01T22:00:00.700Z",
-  "donatorName": "Updated Example for docs",
-  "donatorEmail": "example@docs.com"
+  "name": "New ONG",
+  "fontsColor": "#0a0a0a"
 }
 ```
 
@@ -136,35 +165,19 @@ When request is done correctly, returns success (200). Example response:
 
 ```json
 {
-  "_id": "60a9a2b90fb6eb072b843e1b",
-  "donationDate": "2021-01-01T22:00:00.700Z",
-  "donatorName": "Updated Example for docs",
-  "donatorEmail": "example@docs.com",
-  "createdAt": "2021-05-23T00:32:57.700Z",
-  "updatedAt": "2021-05-23T00:35:56.588Z",
-  "__v": 0
+  "current": true,
+  "name": "New ONG",
+  "mainColor": "#00b2b5",
+  "backgroundColor": "#f0ffff",
+  "fontsColor": "#0a0a0a",
+  "_id": "60b24ffd4354b56dffd5f7cc",
+  "__v": 0,
+  "createdAt": "2021-05-29T14:30:21.652Z",
+  "updatedAt": "2021-05-29T14:30:21.652Z"
 }
 ```
 
 When token is missing, returns unauthorized (401). When there is an error with the request body, returns bad request (400). When token is incorrect or there was an error with the params passed, returns internal server error (500).
-
----
-
-### DELETE /api/invoices/:id
-
-Deletes the invoice from the id passed.
-
-The authentication token needs to be passed in the header field `x-access-token`.
-
-When request is done correctly, returns success (200). Example response:
-
-```json
-{
-  "message": "Destroyed!"
-}
-```
-
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error with the params passed, returns internal server error (500).
 
 ---
 
