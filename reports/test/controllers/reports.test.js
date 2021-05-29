@@ -3,11 +3,13 @@
 process.env.NODE_ENV = "test";
 process.env.FINANCIAL_SERVER_URL = `http://localhost:${process.env.FINANCIAL_SERVER_PORT}`;
 process.env.LOGIN_URL = `http://localhost:${process.env.AUTHENTICATION_PORT}/api/login`;
+process.env.SERVICES_SETTINGS_URL = `http://localhost:${process.env.SETTINGS_SERVER_PORT}/api/services`;
 const mongoose = require("mongoose");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const Config = require("../../models/configs");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
+const { authorizedRequest } = require("../../utils/requests");
 require("../../config/db");
 require("../../index");
 
@@ -50,6 +52,29 @@ describe("/GET charts", () => {
       expect(res.body[0].totalValue).to.eql(
         groupedTransactions.body[0].totalValue
       );
+    });
+  });
+
+  describe("When financial server is disabled", () => {
+    before(async () => {
+      await authorizedRequest(process.env.SERVICES_SETTINGS_URL, "POST", {
+        financialControl: false,
+      });
+    });
+
+    it("returns unavailable", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/reports/charts");
+
+      res.should.have.status(503);
+      expect(res.body.message).to.include("unavailable");
+    });
+
+    after(async () => {
+      await authorizedRequest(process.env.SERVICES_SETTINGS_URL, "POST", {
+        financialControl: true,
+      });
     });
   });
 
@@ -104,6 +129,29 @@ describe("/GET export", () => {
       expect(res.type).to.eq(
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
+    });
+  });
+
+  describe("When financial server is disabled", () => {
+    before(async () => {
+      await authorizedRequest(process.env.SERVICES_SETTINGS_URL, "POST", {
+        financialControl: false,
+      });
+    });
+
+    it("returns unavailable", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/reports/export");
+
+      res.should.have.status(503);
+      expect(res.body.message).to.include("unavailable");
+    });
+
+    after(async () => {
+      await authorizedRequest(process.env.SERVICES_SETTINGS_URL, "POST", {
+        financialControl: true,
+      });
     });
   });
 

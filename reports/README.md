@@ -109,7 +109,7 @@ When the charts aren't allowed, returns forbidden (403). Example response:
 }
 ```
 
-When there was an error, returns internal server error (500).
+When there was an error, returns internal server error (500). When the server is not enabled, returns 503 "Service unavailable".
 
 ---
 
@@ -129,7 +129,7 @@ When the export isn't allowed, returns forbidden (403). Example response:
 }
 ```
 
-When there was an error, returns internal server error (500).
+When there was an error, returns internal server error (500). When the server is not enabled, returns 503 "Service unavailable".
 
 ---
 

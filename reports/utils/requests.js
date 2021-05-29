@@ -9,15 +9,21 @@ const loginParams = {
   }),
 };
 
-exports.getAuthorizedRequest = async (url) =>
+exports.authorizedRequest = async (url, method, body = {}) =>
   fetch(process.env.LOGIN_URL, loginParams)
     .then((result) => result.json())
     .then(async (result) => {
       if (!result.token) throw Error("Unauthorized");
 
-      const getParams = {
-        method: "GET",
-        headers: { "x-access-token": result.token },
+      const params = {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": result.token,
+        },
+        body: JSON.stringify(body),
       };
-      return fetch(url, getParams);
+      if (method === "GET") delete params.body;
+
+      return fetch(url, params);
     });
