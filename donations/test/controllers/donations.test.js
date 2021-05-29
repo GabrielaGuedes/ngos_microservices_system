@@ -2,6 +2,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 process.env.NODE_ENV = "test";
+process.env.LOGIN_URL = `http://localhost:${process.env.AUTHENTICATION_PORT}/api/login`;
+process.env.FINANCIAL_TRANSACTIONS_URL = `http://localhost:${process.env.FINANCIAL_PORT}/api/transactions`;
+process.env.SERVICES_SETTINGS_URL = `http://localhost:${process.env.SETTINGS_PORT}/api/services`;
 const mongoose = require("mongoose");
 const chai = require("chai");
 const chaiHttp = require("chai-http");

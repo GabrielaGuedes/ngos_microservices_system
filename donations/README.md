@@ -10,7 +10,7 @@ To run it, use the `docker-compose.yml` file in the main folder from the project
 
 ### POST /api/donations/charge-credit-card
 
-Used to create a credit card charge.
+Used to create a credit card charge. It also create a transaction, in the Financial Control service, if it is enabled.
 
 Params:
 
