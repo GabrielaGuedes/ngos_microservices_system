@@ -1,5 +1,6 @@
 const mongoose = require("mongoose-schema-jsonschema")();
 const uniqueValidator = require("mongoose-unique-validator");
+const { servicesDefault } = require("../utils/default-values");
 
 const { Schema } = mongoose;
 
@@ -17,42 +18,42 @@ const serviceSchema = new Schema(
     donations: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.donations,
     },
     employees: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.employees,
     },
     financialControl: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.financialControl,
     },
     invoices: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.invoices,
     },
     marketing: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.marketing,
     },
     projects: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.projects,
     },
     reports: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.reports,
     },
     volunteers: {
       type: Boolean,
       required: false,
-      default: true,
+      default: servicesDefault.volunteers,
     },
   },
   { timestamps: true }

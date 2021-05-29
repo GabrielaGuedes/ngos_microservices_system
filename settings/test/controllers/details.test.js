@@ -6,6 +6,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const Detail = require("../../models/details");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
+const { detailsDefault } = require("../../utils/default-values");
 require("../../config/db");
 require("../../index");
 
@@ -17,20 +18,13 @@ chai.use(chaiHttp);
 let token = "";
 let detail = {};
 
-const defaultValues = {
-  name: "ONG",
-  mainColor: "#00b2b5",
-  backgroundColor: "#f0ffff",
-  fontsColor: "#000000",
-};
-
 describe("/GET details", () => {
   before(async () => {
     await Detail.Model.remove({});
 
     token = await getTokenForTests();
 
-    detail = await new Detail.Model(defaultValues).save().then((doc) => doc);
+    detail = await new Detail.Model(detailsDefault).save().then((doc) => doc);
   });
 
   describe("When token is correct", () => {
@@ -84,7 +78,7 @@ describe("/GET details", () => {
         .set("x-access-token", token);
 
       res.should.have.status(200);
-      expect(res.body).to.eql(defaultValues);
+      expect(res.body).to.eql(detailsDefault);
     });
   });
 
@@ -101,7 +95,7 @@ describe("/POST details", () => {
     token = await getTokenForTests();
 
     detail = await new Detail.Model({
-      ...defaultValues,
+      ...detailsDefault,
       name: "Another name for ONG",
     })
       .save()
@@ -123,12 +117,12 @@ describe("/POST details", () => {
 
       res.should.have.status(200);
       expect(res.body.name).to.eq(body.name);
-      expect(res.body.mainColor).to.eq(defaultValues.mainColor);
-      expect(res.body.backgroundColor).to.eq(defaultValues.backgroundColor);
+      expect(res.body.mainColor).to.eq(detailsDefault.mainColor);
+      expect(res.body.backgroundColor).to.eq(detailsDefault.backgroundColor);
       expect(recordFromDatabase.name).to.eq(body.name);
-      expect(recordFromDatabase.mainColor).to.eq(defaultValues.mainColor);
+      expect(recordFromDatabase.mainColor).to.eq(detailsDefault.mainColor);
       expect(recordFromDatabase.backgroundColor).to.eq(
-        defaultValues.backgroundColor
+        detailsDefault.backgroundColor
       );
     });
   });
@@ -187,13 +181,13 @@ describe("/POST details", () => {
 
       res.should.have.status(200);
       expect(res.body.name).to.eq(body.name);
-      expect(res.body.backgroundColor).to.eq(defaultValues.backgroundColor);
-      expect(res.body.mainColor).to.eq(defaultValues.mainColor);
+      expect(res.body.backgroundColor).to.eq(detailsDefault.backgroundColor);
+      expect(res.body.mainColor).to.eq(detailsDefault.mainColor);
       expect(recordFromDatabase.name).to.eq(body.name);
       expect(recordFromDatabase.backgroundColor).to.eq(
-        defaultValues.backgroundColor
+        detailsDefault.backgroundColor
       );
-      expect(recordFromDatabase.mainColor).to.eq(defaultValues.mainColor);
+      expect(recordFromDatabase.mainColor).to.eq(detailsDefault.mainColor);
     });
   });
 

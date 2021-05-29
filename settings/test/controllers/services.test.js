@@ -6,6 +6,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const Service = require("../../models/services");
 const { getTokenForTests } = require("../../utils/get-token-for-tests");
+const { servicesDefault } = require("../../utils/default-values");
 require("../../config/db");
 require("../../index");
 
@@ -23,16 +24,7 @@ describe("/GET services", () => {
 
     token = await getTokenForTests();
 
-    service = await new Service.Model({
-      donations: false,
-      employees: true,
-      financialControl: true,
-      invoices: true,
-      marketing: true,
-      projects: true,
-      reports: true,
-      volunteers: true,
-    })
+    service = await new Service.Model(servicesDefault)
       .save()
       .then((doc) => doc);
   });
@@ -88,16 +80,7 @@ describe("/GET services", () => {
         .set("x-access-token", token);
 
       res.should.have.status(200);
-      expect(res.body).to.eql({
-        donations: true,
-        employees: true,
-        financialControl: true,
-        invoices: true,
-        marketing: true,
-        projects: true,
-        reports: true,
-        volunteers: true,
-      });
+      expect(res.body).to.eql(servicesDefault);
     });
   });
 
@@ -114,14 +97,8 @@ describe("/POST services", () => {
     token = await getTokenForTests();
 
     service = await new Service.Model({
+      ...servicesDefault,
       donations: false,
-      employees: true,
-      financialControl: true,
-      invoices: true,
-      marketing: true,
-      projects: true,
-      reports: true,
-      volunteers: true,
     })
       .save()
       .then((doc) => doc);
@@ -142,11 +119,11 @@ describe("/POST services", () => {
 
       res.should.have.status(200);
       expect(res.body.donations).to.eq(body.donations);
-      expect(res.body.employees).to.eq(true);
-      expect(res.body.volunteers).to.eq(true);
+      expect(res.body.employees).to.eq(servicesDefault.employees);
+      expect(res.body.volunteers).to.eq(servicesDefault.volunteers);
       expect(recordFromDatabase.donations).to.eq(body.donations);
-      expect(recordFromDatabase.employees).to.eq(true);
-      expect(recordFromDatabase.volunteers).to.eq(true);
+      expect(recordFromDatabase.employees).to.eq(servicesDefault.employees);
+      expect(recordFromDatabase.volunteers).to.eq(servicesDefault.volunteers);
     });
   });
 
@@ -204,11 +181,11 @@ describe("/POST services", () => {
 
       res.should.have.status(200);
       expect(res.body.donations).to.eq(body.donations);
-      expect(res.body.volunteers).to.eq(true);
-      expect(res.body.employees).to.eq(true);
+      expect(res.body.volunteers).to.eq(servicesDefault.volunteers);
+      expect(res.body.employees).to.eq(servicesDefault.employees);
       expect(recordFromDatabase.donations).to.eq(body.donations);
-      expect(recordFromDatabase.volunteers).to.eq(true);
-      expect(recordFromDatabase.employees).to.eq(true);
+      expect(recordFromDatabase.volunteers).to.eq(servicesDefault.volunteers);
+      expect(recordFromDatabase.employees).to.eq(servicesDefault.employees);
     });
   });
 

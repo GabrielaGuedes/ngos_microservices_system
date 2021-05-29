@@ -1,5 +1,6 @@
 const mongoose = require("mongoose-schema-jsonschema")();
 const uniqueValidator = require("mongoose-unique-validator");
+const { detailsDefault } = require("../utils/default-values");
 
 const { Schema } = mongoose;
 
@@ -17,22 +18,22 @@ const detailSchema = new Schema(
     name: {
       type: String,
       required: false,
-      default: "ONG",
+      default: detailsDefault.name,
     },
     mainColor: {
       type: String,
       required: false,
-      default: "#00b2b5",
+      default: detailsDefault.mainColor,
     },
     backgroundColor: {
       type: String,
       required: false,
-      default: "#f0ffff",
+      default: detailsDefault.backgroundColor,
     },
     fontsColor: {
       type: String,
       required: false,
-      default: "#000000",
+      default: detailsDefault.fontsColor,
     },
   },
   { timestamps: true }
