@@ -6,7 +6,21 @@ Before running this, pleashe check the `.sample-env` file and then create the `.
 
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
+![Diagram](./documentation-media/projects-diagram.png)
+
 ## Routes
+
+You can check the full description of each one below the table.
+
+| Endpoint                        | Only Admin | Request Fields                                                                                                                              | Headers        | Filters                                                                                                         | Description                                  |
+| ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| GET /api/projects               | True       | -                                                                                                                                           | x-access-token | status, minStartDate, maxStartDate, minCostDate, maxCostDate, minIncomeDate, maxIncomeDate, miIncome or maxCost | Returns all projects                         |
+| GET /api/projects/:id           | True       | -                                                                                                                                           | x-access-token | -                                                                                                               | Returns the project with the id              |
+| POST /api/projects/             | True       | name, startDate, endDate, incomeDate, costDate, expectedIncome, expectedCost, description, target, status, responsibleArea, responsibleTeam | x-access-token | -                                                                                                               | Creates a new project                        |
+| PUT /api/projects/              | True       | name, startDate, endDate, incomeDate, costDate, expectedIncome, expectedCost, description, target, status, responsibleArea, responsibleTeam | x-access-token | -                                                                                                               | Updates the project                          |
+| DELETE /api/projects/:id        | True       | -                                                                                                                                           | x-access-token | -                                                                                                               | Deletes the project                          |
+| GET /api/total-expected/income/ | True       | -                                                                                                                                           | x-access-token | status, minStartDate, maxStartDate, minCostDate, maxCostDate, minIncomeDate, maxIncomeDate, miIncome, maxCost   | Returns the sum of the total income expected |
+| GET /api/total-expected/cost/   | True       | -                                                                                                                                           | x-access-token | status, minStartDate, maxStartDate, minCostDate, maxCostDate, minIncomeDate, maxIncomeDate, miIncome, maxCost   | Returns the sum of the total cost expected   |
 
 ### GET /api/projects/
 
@@ -14,7 +28,7 @@ Lists all the projects sorted by startDate (DESC).
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/employees/?status=PENDING&maxCost=10`)
+You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/projects/?status=PENDING&maxCost=10`)
 
 When request is done correctly, returns success (200). Example response:
 
@@ -78,7 +92,7 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ### POST /api/projects/
 
-Creates a new employee.
+Creates a new project.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -221,7 +235,7 @@ Return the sum of the total income expected
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/employees/?status=PENDING&maxCost=10`).
+You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/total-expected/income/?status=PENDING&maxCost=10`).
 
 When request is done correctly, returns success (200). Example response:
 
@@ -239,7 +253,7 @@ Return the sum of the total cost expected
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
-You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/employees/?status=PENDING&maxCost=10`).
+You can filter by `status` (which can be `PENDING`, `FINISHED` or `CANCELED`), `minStartDate`, `maxStartDate`, `minCostDate`, `maxCostDate`, `minIncomeDate`, `maxIncomeDate`, `miIncome` or `maxCost` using query string params (e.g. `/api/total-expected/cost/?status=PENDING&maxCost=10`).
 
 When request is done correctly, returns success (200). Example response:
 

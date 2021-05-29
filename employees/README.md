@@ -6,9 +6,29 @@ Before running this, pleashe check the `.sample-env` file and then create the `.
 
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
+![Diagram](./documentation-media/employees-diagram.png)
+
 ## Routes
 
-Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (employees, areas and teams).
+Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (employees, areas and teams). You can check the full description of each one below the table.
+
+| Endpoint                  | Only Admin | Request Fields                                                                                                       | Headers        | Filters                                 | Description                      |
+| ------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------- | -------------- | --------------------------------------- | -------------------------------- |
+| GET /api/employees        | True       | -                                                                                                                    | x-access-token | occupation, city, state, areaId, teamId | Returns all employees            |
+| GET /api/employees/:id    | True       | -                                                                                                                    | x-access-token | -                                       | Returns the employee with the id |
+| POST /api/employees/      | True       | name, address, city, state, country, occupation, birthDate, hireDate, phone, email, additionalInfo, areaIds, teamIds | x-access-token | -                                       | Creates a new employee           |
+| PUT /api/employees/       | True       | name, address, city, state, country, occupation, birthDate, hireDate, phone, email, additionalInfo, areaIds, teamIds | x-access-token | -                                       | Updates the employee             |
+| DELETE /api/employees/:id | True       | -                                                                                                                    | x-access-token | -                                       | Deletes the employee             |
+| GET /api/areas            | True       | -                                                                                                                    | x-access-token | employeeId                              | Returns all the areas            |
+| GET /api/areas/:id        | True       | -                                                                                                                    | x-access-token | -                                       | Returns the area with id         |
+| POST /api/areas/          | True       | name, description, employeeIds                                                                                       | x-access-token | -                                       | Creates a new area               |
+| PUT /api/areas/           | True       | name, description, employeeIds                                                                                       | x-access-token | -                                       | Updates the area                 |
+| DELETE /api/areas/:id     | True       | -                                                                                                                    | x-access-token | -                                       | Deletes the area                 |
+| GET /api/teams            | True       | -                                                                                                                    | x-access-token | employeeId                              | Returns all the teams            |
+| GET /api/teams/:id        | True       | -                                                                                                                    | x-access-token | -                                       | Returns the team with id         |
+| POST /api/teams/          | True       | name, description, employeeIds                                                                                       | x-access-token | -                                       | Creates a new team               |
+| PUT /api/teams/           | True       | name, description, employeeIds                                                                                       | x-access-token | -                                       | Updates the team                 |
+| DELETE /api/teams/:id     | True       | -                                                                                                                    | x-access-token | -                                       | Deletes the team                 |
 
 ### GET /api/employees/
 

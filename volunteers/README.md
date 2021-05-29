@@ -6,9 +6,29 @@ Before running this, pleashe check the `.sample-env` file and then create the `.
 
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
+![Diagram](./documentation-media/volunteers-diagram.png)
+
 ## Routes
 
-Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (volunteers, areas and teams).
+Basically, there are 5 endpoints (get, get:id, post, put, delete) for each one of the entities (volunteers, areas and teams).You can check the full description of each one below the table.
+
+| Endpoint                   | Only Admin | Request Fields                                                                                 | Headers        | Filters                     | Description                       |
+| -------------------------- | ---------- | ---------------------------------------------------------------------------------------------- | -------------- | --------------------------- | --------------------------------- |
+| GET /api/volunteers        | True       | -                                                                                              | x-access-token | city, state, areaId, teamId | Returns all volunteers            |
+| GET /api/volunteers/:id    | True       | -                                                                                              | x-access-token | -                           | Returns the volunteer with the id |
+| POST /api/volunteers/      | True       | name, address, city, state, country, birthDate, phone, email, additionalInfo, areaIds, teamIds | x-access-token | -                           | Creates a new volunteer           |
+| PUT /api/volunteers/       | True       | name, address, city, state, country, birthDate, phone, email, additionalInfo, areaIds, teamIds | x-access-token | -                           | Updates the volunteer             |
+| DELETE /api/volunteers/:id | True       | -                                                                                              | x-access-token | -                           | Deletes the volunteer             |
+| GET /api/areas             | True       | -                                                                                              | x-access-token | volunteerId                 | Returns all the areas             |
+| GET /api/areas/:id         | True       | -                                                                                              | x-access-token | -                           | Returns the area with id          |
+| POST /api/areas/           | True       | name, description, volunteerIds                                                                | x-access-token | -                           | Creates a new area                |
+| PUT /api/areas/            | True       | name, description, volunteerIds                                                                | x-access-token | -                           | Updates the area                  |
+| DELETE /api/areas/:id      | True       | -                                                                                              | x-access-token | -                           | Deletes the area                  |
+| GET /api/teams             | True       | -                                                                                              | x-access-token | volunteerId                 | Returns all the teams             |
+| GET /api/teams/:id         | True       | -                                                                                              | x-access-token | -                           | Returns the team with id          |
+| POST /api/teams/           | True       | name, description, volunteerIds                                                                | x-access-token | -                           | Creates a new team                |
+| PUT /api/teams/            | True       | name, description, volunteerIds                                                                | x-access-token | -                           | Updates the team                  |
+| DELETE /api/teams/:id      | True       | -                                                                                              | x-access-token | -                           | Deletes the team                  |
 
 ### GET /api/volunteers/
 

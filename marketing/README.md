@@ -6,6 +6,8 @@ Before running this, please check the `.sample-env` file and then create the `.e
 
 To run it, use the `docker-compose.yml` file in the main folder from the project.
 
+![Diagram](./documentation-media/marketing-diagram.png)
+
 ## Routes
 
 You can check the full description of each one below the table.

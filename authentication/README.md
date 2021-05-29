@@ -8,6 +8,15 @@ The access token is valid up to 50 minutes.
 
 ## Routes
 
+You can check the full description of each one below the table.
+
+| Endpoint                   | Only Admin | Request Fields           | Headers        | Filters | Description                                    |
+| -------------------------- | ---------- | ------------------------ | -------------- | ------- | ---------------------------------------------- |
+| POST /api/signup           | False      | name, email, password    | -              | -       | Creates the first user. Can be used only once. |
+| POST /api/login            | False      | email, password          | -              | -       | Returns the authentication token               |
+| PUT /api/redefine-password | True       | oldPassword, newPassword | x-access-token | -       | Redefines the password for the logged user     |
+| POST /api/register-user    | True       | name, email, password    | x-access-token | -       | Creates a new user                             |
+
 ### POST /api/signup
 
 Used to sign up. It can be used only once due to security reasons. To register a new user after one has already signed up, check the `/api/register-user` route.

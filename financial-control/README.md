@@ -1,10 +1,12 @@
 # Financial Control
 
-Microservice to manage the finances from the organization. Only admins can use it.
+Microservice to manage the finances from the organization. Only admins can use it.It is possible to register all the transactions done, define goals and see grouped data.
 
 Before running this, pleashe check the `.sample-env` file and then create the `.env` file. The "SECRET" var needs to be the same as the one from the Authentication service.
 
 To run it, use the `docker-compose.yml` file in the main folder from the project.
+
+![Diagram](./documentation-media/financial-diagram.png)
 
 ## Routes
 
@@ -92,7 +94,7 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ### POST /api/transactions/
 
-Creates a new employee.
+Creates a new transaction.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 
@@ -265,7 +267,7 @@ When token is missing, returns unauthorized (401). When token is incorrect or th
 
 ### POST /api/goals/
 
-Creates a new employee.
+Creates a new goal.
 
 The authentication token needs to be passed in the header field `x-access-token`.
 

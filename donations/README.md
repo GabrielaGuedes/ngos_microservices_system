@@ -8,6 +8,14 @@ To run it, use the `docker-compose.yml` file in the main folder from the project
 
 ## Routes
 
+You can check the full description of each one below the table.
+
+| Endpoint                               | Only Admin | Request Fields                                                                                                                            | Headers        | Filters                                          | Description                                                              |
+| -------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------------------------------------------------ | ------------------------------------------------------------------------ |
+| POST /api/donations/charge-credit-card | False      | creditCardNumber, cvv, donatedValue, expireMonth, expireYear, name, birthDate, occupation, motivation, city, state, country, email, phone | -              | -                                                | Charges the credit card, create a donation, a donator and a transaction. |
+| GET /api/donations/                    | True       | -                                                                                                                                         | x-access-token | paid, source, minValue, maxValue, sortBy         | Returns the donations done                                               |
+| GET /api/donators/                     | True       | -                                                                                                                                         | x-access-token | city, state, country, minValue, maxValue, sortBy | Redefines the password for the logged user                               |
+
 ### POST /api/donations/charge-credit-card
 
 Used to create a credit card charge. It also create a transaction, in the Financial Control service, if it is enabled.
