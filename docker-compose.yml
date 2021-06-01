@@ -151,6 +151,17 @@ services:
     ports:
       - "11000:11000"
 
+  admin_front:
+    container_name: NGO_ADMIN_FRONT
+    build: "./admin-front"
+    volumes:
+      - "./admin-front:/admin-front"
+      - "./admin-front/node_modules:/admin-front/node_modules"
+    environment:
+      NODE_ENV: development
+    ports:
+      - "12000:12000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
