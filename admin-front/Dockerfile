@@ -1,12 +1,12 @@
-FROM node:13-alpine
+FROM node:alpine
 
 WORKDIR /admin-front
 
-COPY package.json .
+COPY package*.json ./
 
-RUN npm install --silent
+RUN npm install --quiet
 
-RUN npm install react-scripts@3.3.1 -g --silent
+RUN npm install react-scripts@3.3.1 -g --quiet
 
 COPY . . 
 

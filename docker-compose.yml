@@ -154,11 +154,13 @@ services:
   admin_front:
     container_name: NGO_ADMIN_FRONT
     build: "./admin-front"
+    stdin_open: true
     volumes:
       - "./admin-front:/admin-front"
       - "./admin-front/node_modules:/admin-front/node_modules"
     environment:
       NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
     ports:
       - "12000:12000"
 
