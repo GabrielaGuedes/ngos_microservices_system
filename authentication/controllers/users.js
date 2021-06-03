@@ -91,4 +91,11 @@ router.post(
   }
 );
 
+router.get("/can-self-register", async (req, res) => {
+  const user = await User.Model.findOne({});
+
+  if (!user) return res.status(200).json({ canSelfRegister: true });
+  return res.status(200).json({ canSelfRegister: false });
+});
+
 module.exports = router;

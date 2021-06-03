@@ -16,6 +16,7 @@ You can check the full description of each one below the table.
 | POST /api/login            | False      | email, password          | -              | -       | Returns the authentication token               |
 | PUT /api/redefine-password | True       | oldPassword, newPassword | x-access-token | -       | Redefines the password for the logged user     |
 | POST /api/register-user    | True       | name, email, password    | x-access-token | -       | Creates a new user                             |
+| GET /api/can-self-register | False      | -                        | -              | -       | Checks if the user can do a self registration  |
 
 ### POST /api/signup
 
@@ -112,6 +113,22 @@ When body is passed correctly, returns successs (200). Example response:
 ```
 
 When the token is not passed, returns unauthorized (401). When there is a missing param returns bad request (400). When token is invalid or there was a problem in creating the new user (e.g. the email is already being used), returns internal server error (500).
+
+---
+
+### GET /api/can-self-register
+
+Used to check if user can do a self registration. In other words, it returns `true` when there isn't any user registered and `false` when a user has already been registerd.
+
+When everything is ok, returns successs (200). Example response:
+
+```json
+{
+  "canSelfRegister": false
+}
+```
+
+When there was a problem, returns internal server error (500).
 
 ---
 

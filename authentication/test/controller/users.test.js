@@ -480,3 +480,44 @@ describe("/POST Register user", () => {
     done();
   });
 });
+
+describe("/GET Can self register", () => {
+  describe("When it already has a user", () => {
+    before(async () => {
+      await User.Model.deleteMany({});
+      await new User.Model({
+        name: "Example User",
+        email: "example@test.com",
+        password: "password1234",
+      }).save();
+    });
+
+    it("Returns false", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/can-self-register");
+
+      res.should.have.status(200);
+      expect(res.body.canSelfRegister).to.eq(false);
+    });
+  });
+  describe("When it doesnt have a user", () => {
+    before(async () => {
+      await User.Model.deleteMany({});
+    });
+
+    it("Returns true", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/can-self-register");
+
+      res.should.have.status(200);
+      expect(res.body.canSelfRegister).to.eq(true);
+    });
+  });
+
+  after((done) => {
+    mongoose.connection.dropDatabase(process.env.TEST_DB);
+    done();
+  });
+});
