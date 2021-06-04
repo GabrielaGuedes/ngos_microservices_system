@@ -16,3 +16,7 @@ code {
   font-family: tiltillium;
   src: url("./assets/fonts/tiltillium/TitilliumWeb-Regular.ttf");
 }
+
+* {
+  font-family: tiltillium;
+}

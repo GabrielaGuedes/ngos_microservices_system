@@ -12,7 +12,7 @@ export const getRequest = (url: string) => {
     if (result.status === 200 || result.status === 201) {
       return result.json();
     }
-    return { status: result.status, response: result.json() };
+    throw Error(result.status.toString());
   });
 };
 
@@ -33,7 +33,7 @@ export const postRequest = (url: string, body: {}, additionalHeaders = {}) => {
     if (result.status === 200 || result.status === 201) {
       return result.json();
     }
-    return { status: result.status, response: result.json() };
+    throw Error(result.status.toString());
   });
 };
 
@@ -54,7 +54,7 @@ export const putRequest = (url: string, body: {}, additionalHeaders = {}) => {
     if (result.status === 200 || result.status === 201) {
       return result.json();
     }
-    return { status: result.status, response: result.json() };
+    throw Error(result.status.toString());
   });
 };
 
@@ -73,6 +73,6 @@ export const deleteRequest = (url: string) => {
     if (result.status === 200 || result.status === 201) {
       return result.json();
     }
-    return { status: result.status, response: result.json() };
+    throw Error(result.status.toString());
   });
 };
