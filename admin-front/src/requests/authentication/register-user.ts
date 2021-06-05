@@ -1,13 +1,12 @@
 import { postRequest } from "../../utils/requests";
+import { AUTHENTICATION_ROUTES } from "./routes";
 import { INewUser, INewUserCreated } from "./types";
-
-const REGISTER_USER_ROUTE = "/register-user";
 
 export const registerUser = async (
   data: INewUser
 ): Promise<INewUserCreated> => {
   return await postRequest(
-    `${process.env.REACT_APP_AUTHENTICATION_SERVER_API}${REGISTER_USER_ROUTE}`,
+    `${process.env.REACT_APP_AUTHENTICATION_SERVER_API}${AUTHENTICATION_ROUTES.registerUser}`,
     data
   );
 };
