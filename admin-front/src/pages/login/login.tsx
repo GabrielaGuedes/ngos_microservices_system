@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LoginForm from "../../components/login/login-form";
+import SignupForm from "../../components/login/signup-form";
 import { canSelfRegister } from "../../requests/authentication/can-self-register";
 import { Title } from "../../ui-components/typography";
 import { LoginCard, LoginPageContainer } from "./login.style";
@@ -20,9 +21,7 @@ const Login: React.FC<ILogin> = () => {
   return (
     <LoginPageContainer>
       <Title>Nome da ONG</Title>
-      <LoginCard>
-        {isFirstUser ? <div>Signup form</div> : <LoginForm />}
-      </LoginCard>
+      <LoginCard>{isFirstUser ? <SignupForm /> : <LoginForm />}</LoginCard>
     </LoginPageContainer>
   );
 };

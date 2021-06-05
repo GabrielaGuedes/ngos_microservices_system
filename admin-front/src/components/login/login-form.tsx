@@ -22,10 +22,10 @@ const LoginForm: React.FC<ILoginForm> = () => {
         history.replace("/tuk");
       })
       .catch((result) => {
-        if (result.message === "400") {
+        if (result.message === "401") {
           errorToast("Senha incorreta.");
         } else {
-          errorToast();
+          errorToast("Email não encontrado");
         }
       });
   };
