@@ -35,12 +35,12 @@ To run it, use the `docker-compose.yml` file in the main folder from the invoice
 
 You can check the full description of each one below the table.
 
-| Endpoint            | Only Admin | Request Fields                                                                               | Headers        | Filters | Description                              |
-| ------------------- | ---------- | -------------------------------------------------------------------------------------------- | -------------- | ------- | ---------------------------------------- |
-| GET /api/services   | True       | -                                                                                            | x-access-token | -       | Returns the current service config       |
-| POST /api/services/ | True       | donations, eemployees, financialControl, invoices, marketing, projects, reports, volunteeers | x-access-token | -       | Updates the permissions for the services |
-| GET /api/details    | True       | -                                                                                            | x-access-token | -       | Returns the current details config       |
-| POST /api/details/  | True       | name, mainColor, backgroundColor, fontsColor                                                 | x-access-token | -       | Updates the details configs              |
+| Endpoint            | Only Admin | Request Fields                                                                              | Headers        | Filters | Description                              |
+| ------------------- | ---------- | ------------------------------------------------------------------------------------------- | -------------- | ------- | ---------------------------------------- |
+| GET /api/services   | True       | -                                                                                           | x-access-token | -       | Returns the current service config       |
+| POST /api/services/ | True       | donations, employees, financialControl, invoices, marketing, projects, reports, volunteeers | x-access-token | -       | Updates the permissions for the services |
+| GET /api/details    | False      | -                                                                                           | -              | -       | Returns the current details config       |
+| POST /api/details/  | True       | name, mainColor, backgroundColor, fontsColor                                                | x-access-token | -       | Updates the details configs              |
 
 ### GET /api/services/
 

@@ -27,7 +27,7 @@ describe("/GET details", () => {
     detail = await new Detail.Model(detailsDefault).save().then((doc) => doc);
   });
 
-  describe("When token is correct", () => {
+  describe("When everything is ok", () => {
     it("returns the current detail", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
@@ -38,31 +38,6 @@ describe("/GET details", () => {
       expect(res.body.name).to.eq(detail.name);
       expect(res.body.mainColor).to.eq(detail.mainColor);
       expect(res.body.backgroundColor).to.eq(detail.backgroundColor);
-    });
-  });
-
-  describe("When token is not passed", () => {
-    it("returns unauthorized", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/details/");
-
-      res.should.have.status(401);
-      expect(res.error.text).to.include("No");
-      expect(res.error.text).to.include("provided");
-    });
-  });
-
-  describe("When token is invalid", () => {
-    it("returns error", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/details/")
-        .set("x-access-token", "invalid token");
-
-      res.should.have.status(500);
-      res.body.should.not.be.a("array");
-      expect(res.error.text).to.include("Failed");
     });
   });
 

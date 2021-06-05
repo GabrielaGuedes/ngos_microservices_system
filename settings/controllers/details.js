@@ -6,7 +6,7 @@ const Detail = require("../models/details");
 const router = express.Router();
 const { validate } = new Validator();
 
-router.get("/", verifyJWT, async (req, res) => {
+router.get("/", async (req, res) => {
   await Detail.Model.findOne({ current: true }).exec((err, docs) => {
     if (err) return res.status(500).json(err);
 
