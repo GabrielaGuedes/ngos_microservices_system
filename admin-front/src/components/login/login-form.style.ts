@@ -7,7 +7,7 @@ export const LoginTitle = styled.div`
   font-size: ${FONT_SIZES.px30};
   font-weight: bold;
   color: ${COLORS.text};
-  margin-bottom: ${SPACES.px10};
+  margin-bottom: ${SPACES.px20};
 `;
 
 export const StyledForm = styled(Form)`
