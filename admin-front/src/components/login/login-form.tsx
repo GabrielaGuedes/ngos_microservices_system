@@ -6,6 +6,8 @@ import { login } from "../../requests/authentication/login";
 import { IUserCredentials } from "../../requests/authentication/types";
 import { Button } from "../../ui-components/buttons/buttons";
 import { LoginTitle, StyledForm } from "./login-form.style";
+import { Toaster } from "react-hot-toast";
+import { errorToast } from "../../ui-components/toasts/toasts";
 
 interface ILoginForm {}
 
@@ -20,18 +22,17 @@ const LoginForm: React.FC<ILoginForm> = () => {
         history.replace("/tuk");
       })
       .catch((result) => {
-        if (result.status !== "500") {
-          //TODO: add better toasts/alerts
-          alert("ops, senha incorreta");
+        if (result.message === "400") {
+          errorToast("Senha incorreta.");
         } else {
-          alert("ops, aconteceu um erro. Tente novamente");
+          errorToast();
         }
       });
   };
 
   return (
     <Fragment>
-      <LoginTitle>Login</LoginTitle>
+      <LoginTitle>Olá! Faça seu login.</LoginTitle>
       <StyledForm
         validate="blur"
         onSubmit={({ value }) => handleSubmit(value)}
@@ -54,6 +55,7 @@ const LoginForm: React.FC<ILoginForm> = () => {
           <Button type="submit">Entrar</Button>
         </Box>
       </StyledForm>
+      <Toaster />
     </Fragment>
   );
 };
