@@ -2,6 +2,7 @@ const express = require("express");
 const { Validator } = require("express-json-validator-middleware");
 const verifyJWT = require("../middleware/verify-jwt");
 const Service = require("../models/services");
+const { servicesDefault } = require("../utils/default-values");
 
 const router = express.Router();
 const { validate } = new Validator();
@@ -10,18 +11,7 @@ router.get("/", verifyJWT, async (req, res) => {
   await Service.Model.findOne({ current: true }).exec((err, docs) => {
     if (err) return res.status(500).json(err);
 
-    return res.json(
-      docs || {
-        donations: true,
-        employees: true,
-        financialControl: true,
-        invoices: true,
-        marketing: true,
-        projects: true,
-        reports: true,
-        volunteers: true,
-      }
-    );
+    return res.json(docs || servicesDefault);
   });
 });
 

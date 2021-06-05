@@ -20,10 +20,7 @@ The default value for details settings is:
 
 ```json
 {
-  "name": "ONG",
-  "mainColor": "#00b2b5",
-  "backgroundColor": "#f0ffff",
-  "fontsColor": "#000000"
+  "name": "ONG"
 }
 ```
 
@@ -40,7 +37,7 @@ You can check the full description of each one below the table.
 | GET /api/services   | True       | -                                                                                           | x-access-token | -       | Returns the current service config       |
 | POST /api/services/ | True       | donations, employees, financialControl, invoices, marketing, projects, reports, volunteeers | x-access-token | -       | Updates the permissions for the services |
 | GET /api/details    | False      | -                                                                                           | -              | -       | Returns the current details config       |
-| POST /api/details/  | True       | name, mainColor, backgroundColor, fontsColor                                                | x-access-token | -       | Updates the details configs              |
+| POST /api/details/  | True       | name                                                                                        | x-access-token | -       | Updates the details configs              |
 
 ### GET /api/services/
 
@@ -128,10 +125,7 @@ When request is done correctly, returns success (200). Example response:
 
 ```json
 {
-  "name": "ONG",
-  "mainColor": "#00b2b5",
-  "backgroundColor": "#f0ffff",
-  "fontsColor": "#000000"
+  "name": "ONG"
 }
 ```
 
@@ -148,16 +142,12 @@ The authentication token needs to be passed in the header field `x-access-token`
 Params:
 
 - name: string, optional
-- mainColor: string, must be a hex (`#00b2b5`), optional
-- backgroundColor: string, must be a hex (`#00b2b5`), optional
-- fontsColor: string, must be a hex (`#00b2b5`), optional
 
 Example body:
 
 ```json
 {
-  "name": "New ONG",
-  "fontsColor": "#0a0a0a"
+  "name": "New ONG"
 }
 ```
 
@@ -167,9 +157,6 @@ When request is done correctly, returns success (200). Example response:
 {
   "current": true,
   "name": "New ONG",
-  "mainColor": "#00b2b5",
-  "backgroundColor": "#f0ffff",
-  "fontsColor": "#0a0a0a",
   "_id": "60b24ffd4354b56dffd5f7cc",
   "__v": 0,
   "createdAt": "2021-05-29T14:30:21.652Z",

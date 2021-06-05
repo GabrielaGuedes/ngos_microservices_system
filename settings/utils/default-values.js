@@ -1,8 +1,5 @@
 exports.detailsDefault = {
   name: "ONG",
-  mainColor: "#00b2b5",
-  backgroundColor: "#f0ffff",
-  fontsColor: "#000000",
 };
 
 exports.servicesDefault = {

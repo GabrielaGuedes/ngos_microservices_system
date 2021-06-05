@@ -36,8 +36,6 @@ describe("/GET details", () => {
 
       res.should.have.status(200);
       expect(res.body.name).to.eq(detail.name);
-      expect(res.body.mainColor).to.eq(detail.mainColor);
-      expect(res.body.backgroundColor).to.eq(detail.backgroundColor);
     });
   });
 
@@ -92,13 +90,7 @@ describe("/POST details", () => {
 
       res.should.have.status(200);
       expect(res.body.name).to.eq(body.name);
-      expect(res.body.mainColor).to.eq(detailsDefault.mainColor);
-      expect(res.body.backgroundColor).to.eq(detailsDefault.backgroundColor);
       expect(recordFromDatabase.name).to.eq(body.name);
-      expect(recordFromDatabase.mainColor).to.eq(detailsDefault.mainColor);
-      expect(recordFromDatabase.backgroundColor).to.eq(
-        detailsDefault.backgroundColor
-      );
     });
   });
 
@@ -156,13 +148,7 @@ describe("/POST details", () => {
 
       res.should.have.status(200);
       expect(res.body.name).to.eq(body.name);
-      expect(res.body.backgroundColor).to.eq(detailsDefault.backgroundColor);
-      expect(res.body.mainColor).to.eq(detailsDefault.mainColor);
       expect(recordFromDatabase.name).to.eq(body.name);
-      expect(recordFromDatabase.backgroundColor).to.eq(
-        detailsDefault.backgroundColor
-      );
-      expect(recordFromDatabase.mainColor).to.eq(detailsDefault.mainColor);
     });
   });
 

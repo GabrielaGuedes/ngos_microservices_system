@@ -20,21 +20,6 @@ const detailSchema = new Schema(
       required: false,
       default: detailsDefault.name,
     },
-    mainColor: {
-      type: String,
-      required: false,
-      default: detailsDefault.mainColor,
-    },
-    backgroundColor: {
-      type: String,
-      required: false,
-      default: detailsDefault.backgroundColor,
-    },
-    fontsColor: {
-      type: String,
-      required: false,
-      default: detailsDefault.fontsColor,
-    },
   },
   { timestamps: true }
 );
