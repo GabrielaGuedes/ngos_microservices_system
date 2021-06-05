@@ -6,7 +6,6 @@ import { login } from "../../requests/authentication/login";
 import { IUserCredentials } from "../../requests/authentication/types";
 import { Button } from "../../ui-components/buttons/buttons";
 import { LoginTitle, StyledForm } from "./login-form.style";
-import { Toaster } from "react-hot-toast";
 import { errorToast } from "../../ui-components/toasts/toasts";
 
 interface ILoginForm {}
@@ -19,7 +18,7 @@ const LoginForm: React.FC<ILoginForm> = () => {
     login(values)
       .then((result) => {
         cookies.set("accessToken", result.token, { path: "/" });
-        history.replace("/tuk");
+        history.replace("/");
       })
       .catch((result) => {
         if (result.message === "401") {
@@ -55,7 +54,6 @@ const LoginForm: React.FC<ILoginForm> = () => {
           <Button type="submit">Entrar</Button>
         </Box>
       </StyledForm>
-      <Toaster />
     </Fragment>
   );
 };

@@ -20,3 +20,22 @@ export const Button = styled.button`
     background-color: ${COLORS.mainActive};
   }
 `;
+
+export const TextButton = styled.button`
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  padding: 4px 22px;
+  font-size: ${FONT_SIZES.px18};
+  background-color: transparent;
+  color: ${COLORS.main};
+  font-weight: bold;
+
+  :hover {
+    background-color: ${COLORS.mainTransparent};
+  }
+
+  :active {
+    background-color: ${COLORS.mainActiveTransparent};
+  }
+`;

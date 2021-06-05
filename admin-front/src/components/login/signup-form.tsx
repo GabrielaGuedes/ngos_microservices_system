@@ -1,6 +1,5 @@
 import { Box, FormField, TextInput } from "grommet";
 import React, { Fragment } from "react";
-import { Toaster } from "react-hot-toast";
 import { useHistory } from "react-router";
 import Cookies from "universal-cookie";
 import { signup } from "../../requests/authentication/signup";
@@ -31,7 +30,7 @@ const SignupForm: React.FC<ISignupForm> = () => {
     signup(values)
       .then((result) => {
         cookies.set("accessToken", result.token, { path: "/" });
-        history.replace("/tuk");
+        history.replace("/");
       })
       .catch(() => {
         errorToast();
@@ -81,7 +80,6 @@ const SignupForm: React.FC<ISignupForm> = () => {
           <Button type="submit">Cadastrar</Button>
         </Box>
       </StyledForm>
-      <Toaster />
     </Fragment>
   );
 };
