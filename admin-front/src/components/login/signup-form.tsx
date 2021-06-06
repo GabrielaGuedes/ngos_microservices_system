@@ -1,11 +1,10 @@
 import { Box, FormField, TextInput } from "grommet";
 import React, { Fragment } from "react";
-import { useHistory } from "react-router";
-import Cookies from "universal-cookie";
 import { signup } from "../../requests/authentication/signup";
 import { INewUser } from "../../requests/authentication/types";
 import { Button } from "../../ui-components/buttons/buttons";
 import { errorToast } from "../../ui-components/toasts/toasts";
+import { startSession } from "../../utils/session";
 import { LoginTitle, StyledForm } from "./login-form.style";
 
 interface ISignupForm {}
@@ -15,9 +14,6 @@ interface ISignupFormValues extends INewUser {
 }
 
 const SignupForm: React.FC<ISignupForm> = () => {
-  const cookies = new Cookies();
-  const history = useHistory();
-
   const [value, setValue] = React.useState<ISignupFormValues | any>({
     name: "",
     email: "",
@@ -29,8 +25,7 @@ const SignupForm: React.FC<ISignupForm> = () => {
     delete values.confirmPassword;
     signup(values)
       .then((result) => {
-        cookies.set("accessToken", result.token, { path: "/" });
-        history.replace("/");
+        startSession(result.token);
       })
       .catch(() => {
         errorToast();

@@ -15,6 +15,7 @@ import SidebarItem from "./sidebar-item";
 import SidebarItemWithDropdown from "./sidebar-item-with-dropdown";
 import HamburguerIcon from "../../ui-components/icons/hamburguer/hamburguer-icon";
 import { isMobile } from "../../utils/is-mobile";
+import { endSession } from "../../utils/session";
 
 interface ISidebar {}
 
@@ -35,6 +36,10 @@ const Sidebar: React.FC<ISidebar> = () => {
   const handleHamburguerClick = () => setIsOpen(!isOpen);
 
   const handleChangePage = () => setIsOpen(false);
+
+  const handleLogout = () => {
+    endSession();
+  };
 
   return (
     <Fragment>
@@ -132,7 +137,7 @@ const Sidebar: React.FC<ISidebar> = () => {
       </StyledSidebar>
       <ExitButtonContainer>
         {isMobile() && <HamburguerIcon onClick={handleHamburguerClick} />}
-        <TextButton>Sair</TextButton>
+        <TextButton onClick={handleLogout}>Sair</TextButton>
       </ExitButtonContainer>
     </Fragment>
   );

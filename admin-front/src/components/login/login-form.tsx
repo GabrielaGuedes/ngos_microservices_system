@@ -1,24 +1,19 @@
 import React, { Fragment } from "react";
-import Cookies from "universal-cookie";
-import { useHistory } from "react-router-dom";
 import { Box, FormField, TextInput } from "grommet";
 import { login } from "../../requests/authentication/login";
 import { IUserCredentials } from "../../requests/authentication/types";
 import { Button } from "../../ui-components/buttons/buttons";
 import { LoginTitle, StyledForm } from "./login-form.style";
 import { errorToast } from "../../ui-components/toasts/toasts";
+import { startSession } from "../../utils/session";
 
 interface ILoginForm {}
 
 const LoginForm: React.FC<ILoginForm> = () => {
-  const cookies = new Cookies();
-  const history = useHistory();
-
   const handleSubmit = (values: IUserCredentials | any) => {
     login(values)
       .then((result) => {
-        cookies.set("accessToken", result.token, { path: "/" });
-        history.replace("/");
+        startSession(result.token);
       })
       .catch((result) => {
         if (result.message === "401") {

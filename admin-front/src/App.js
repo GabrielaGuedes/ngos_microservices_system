@@ -8,6 +8,7 @@ import { COLORS } from "./ui-constants/colors";
 import Sidebar from "./components/sidebar/sidebar";
 import { Toaster } from "react-hot-toast";
 import { StyledPage } from "./App.style";
+import ProtectedRoute from "./components/routes/protected-route";
 
 function App() {
   return (
@@ -16,77 +17,77 @@ function App() {
       style={{ backgroundColor: COLORS.background, minHeight: "100vh" }}
     >
       <Switch>
-        <Route path="/" exact>
+        <ProtectedRoute path="/" exact>
           <Sidebar />
           <StyledPage>Pagina inicial</StyledPage>
-        </Route>
+        </ProtectedRoute>
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/donations">
+        <ProtectedRoute path="/donations">
           <Sidebar />
           <StyledPage>doações feitas</StyledPage>
-        </Route>
-        <Route path="/donators">
+        </ProtectedRoute>
+        <ProtectedRoute path="/donators">
           <Sidebar />
-          <StyledPage>doadore</StyledPage>
-        </Route>
-        <Route path="/employees" exact>
+          <StyledPage>doadores</StyledPage>
+        </ProtectedRoute>
+        <ProtectedRoute path="/employees" exact>
           <Sidebar />
           <StyledPage>funcionarios</StyledPage>
-        </Route>
-        <Route path="/employees/areas">
+        </ProtectedRoute>
+        <ProtectedRoute path="/employees/areas">
           <Sidebar />
           <StyledPage>Areas</StyledPage>
-        </Route>
-        <Route path="/employees/teams">
+        </ProtectedRoute>
+        <ProtectedRoute path="/employees/teams">
           <Sidebar />
           <StyledPage>Times</StyledPage>
-        </Route>
-        <Route path="/volunteers" exact>
+        </ProtectedRoute>
+        <ProtectedRoute path="/volunteers" exact>
           <Sidebar />
           <StyledPage>Voluntarios</StyledPage>
-        </Route>
-        <Route path="/volunteers/areas">
+        </ProtectedRoute>
+        <ProtectedRoute path="/volunteers/areas">
           <Sidebar />
           <StyledPage>Areas</StyledPage>
-        </Route>
-        <Route path="/volunteers/teams">
+        </ProtectedRoute>
+        <ProtectedRoute path="/volunteers/teams">
           <Sidebar />
           <StyledPage>Times</StyledPage>
-        </Route>
-        <Route path="/projects">
+        </ProtectedRoute>
+        <ProtectedRoute path="/projects">
           <Sidebar />
           <StyledPage>Projetos</StyledPage>
-        </Route>
-        <Route path="/financial-control" exact>
+        </ProtectedRoute>
+        <ProtectedRoute path="/financial-control" exact>
           <Sidebar />
           <StyledPage>Controle financeiro</StyledPage>
-        </Route>
-        <Route path="/financial-control/goals">
+        </ProtectedRoute>
+        <ProtectedRoute path="/financial-control/goals">
           <Sidebar />
           <StyledPage>Metas</StyledPage>
-        </Route>
-        <Route path="/marketing" exact>
+        </ProtectedRoute>
+        <ProtectedRoute path="/marketing" exact>
           <Sidebar />
           <StyledPage>Marketing</StyledPage>
-        </Route>
-        <Route path="/marketing/posted">
+        </ProtectedRoute>
+        <ProtectedRoute path="/marketing/posted">
           <Sidebar />
           <StyledPage>Postadas</StyledPage>
-        </Route>
-        <Route path="/reports">
+        </ProtectedRoute>
+        <ProtectedRoute path="/reports">
           <Sidebar />
           <StyledPage>relatórios</StyledPage>
-        </Route>
-        <Route path="/invoices">
+        </ProtectedRoute>
+        <ProtectedRoute path="/invoices">
           <Sidebar />
           <StyledPage>notas fiscais</StyledPage>
-        </Route>
-        <Route path="/settings">
+        </ProtectedRoute>
+        <ProtectedRoute path="/settings">
           <Sidebar />
           <StyledPage>configurações</StyledPage>
-        </Route>
+        </ProtectedRoute>
       </Switch>
       <Toaster />
     </Grommet>
