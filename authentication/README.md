@@ -4,7 +4,7 @@ Microservice used to manage the authentication for admins of the NGO system. Bef
 
 It uses the collection `users` from the Mongo database and stores timestamps, name, email and password (encrypted), just the basic for authentication.
 
-The access token is valid up to 50 minutes.
+The access token is valid up to 24 hours.
 
 ## Routes
 
