@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { BaseCard } from "../../ui-components/base-card/base-card";
-import { SPACES } from "../../ui-constants/sizes";
+import { SPACES, WIDTHS } from "../../ui-constants/sizes";
 
 export const LoginPageContainer = styled.div`
   text-align: center;
@@ -11,7 +11,7 @@ export const LoginCard = styled(BaseCard)`
   max-width: 600px;
   margin: 5% auto;
 
-  @media only screen and (min-width: 600px) {
+  @media only screen and (min-width: ${WIDTHS.mobileThreshold}) {
     padding-left: ${SPACES.px40};
     padding-right: ${SPACES.px40};
   }

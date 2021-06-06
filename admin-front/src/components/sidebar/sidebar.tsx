@@ -11,16 +11,17 @@ import {
   StyledSidebar,
   ExitButtonContainer,
 } from "./sidebar.style";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 import SidebarItem from "./sidebar-item";
 import SidebarItemWithDropdown from "./sidebar-item-with-dropdown";
+import HamburguerIcon from "../../ui-components/icons/hamburguer/hamburguer-icon";
+import { isMobile } from "../../utils/is-mobile";
 
 interface ISidebar {}
 
 const Sidebar: React.FC<ISidebar> = () => {
   const [name, setName] = useState<string>();
   const [services, setServices] = useState<IServicesConfig>();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getDetails()
@@ -31,11 +32,15 @@ const Sidebar: React.FC<ISidebar> = () => {
       .catch(() => errorToast());
   }, []);
 
+  const handleHamburguerClick = () => setIsOpen(!isOpen);
+
+  const handleChangePage = () => setIsOpen(false);
+
   return (
     <Fragment>
-      <StyledSidebar>
+      <StyledSidebar show={!isMobile() || isOpen}>
         <StyledLink to="/">
-          <SidebarHeader>{name}</SidebarHeader>
+          <SidebarHeader onClick={handleChangePage}>{name}</SidebarHeader>
         </StyledLink>
         {services?.donations && (
           <SidebarItemWithDropdown
@@ -45,6 +50,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             ]}
             emoji={EMOJIS.creditCard}
             label="Doações"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.employees && (
@@ -56,6 +62,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             ]}
             emoji={EMOJIS.shirt}
             label="Funcionários"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.volunteers && (
@@ -67,6 +74,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             ]}
             emoji={EMOJIS.volunteer}
             label="Voluntários"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.projects && (
@@ -74,6 +82,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             to="/projects"
             emoji={EMOJIS.calendar}
             label="Projetos"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.financialControl && (
@@ -84,6 +93,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             ]}
             emoji={EMOJIS.dollar}
             label="Controle Financeiro"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.marketing && (
@@ -94,6 +104,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             ]}
             emoji={EMOJIS.laptop}
             label="Marketing Digital"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.reports && (
@@ -101,6 +112,7 @@ const Sidebar: React.FC<ISidebar> = () => {
             to="/reports"
             emoji={EMOJIS.chart}
             label="Relatórios de Transparência"
+            onChangePage={handleChangePage}
           />
         )}
         {services?.invoices && (
@@ -108,12 +120,18 @@ const Sidebar: React.FC<ISidebar> = () => {
             to="/invoices"
             emoji={EMOJIS.invoice}
             label="Doações de notas fiscais"
+            onChangePage={handleChangePage}
           />
         )}
-        <SidebarItem to="/settings" emoji={EMOJIS.gear} label="Configurações" />
+        <SidebarItem
+          to="/settings"
+          emoji={EMOJIS.gear}
+          label="Configurações"
+          onChangePage={handleChangePage}
+        />
       </StyledSidebar>
       <ExitButtonContainer>
-        <FontAwesomeIcon icon={faBars} />
+        {isMobile() && <HamburguerIcon onClick={handleHamburguerClick} />}
         <TextButton>Sair</TextButton>
       </ExitButtonContainer>
     </Fragment>

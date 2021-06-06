@@ -1,25 +1,42 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useLocation } from "react-router";
 import { StyledLink } from "../../App.style";
 import { EmojiContainer, SidebarService } from "./sidebar-item.style";
 
 interface ISidebarItem {
-  to: string;
+  to?: string;
   emoji: string;
   label: string;
   active?: boolean;
+  onChangePage?: () => void;
 }
 
-const SidebarItem: React.FC<ISidebarItem> = ({ to, emoji, label, active }) => {
+const SidebarItem: React.FC<ISidebarItem> = ({
+  to,
+  emoji,
+  label,
+  active,
+  onChangePage,
+}) => {
   const location = useLocation();
 
+  const sidebarService = (
+    <SidebarService active={active || to === location.pathname}>
+      <EmojiContainer>{emoji}</EmojiContainer>
+      {` ${label}`}
+    </SidebarService>
+  );
+
   return (
-    <StyledLink to={to}>
-      <SidebarService active={active || to === location.pathname}>
-        <EmojiContainer>{emoji}</EmojiContainer>
-        {` ${label}`}
-      </SidebarService>
-    </StyledLink>
+    <Fragment>
+      {to ? (
+        <StyledLink to={to} onClick={onChangePage}>
+          {sidebarService}
+        </StyledLink>
+      ) : (
+        sidebarService
+      )}
+    </Fragment>
   );
 };
 

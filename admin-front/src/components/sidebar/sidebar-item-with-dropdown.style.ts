@@ -1,21 +1,29 @@
 import styled from "styled-components";
 import { COLORS } from "../../ui-constants/colors";
 import { SHADOWS } from "../../ui-constants/shadows";
-import { SPACES } from "../../ui-constants/sizes";
+import { SPACES, WIDTHS } from "../../ui-constants/sizes";
 
 export const ServiceWithDropdown = styled.div`
   display: block;
-  :hover .dropdown-container {
-    display: block;
+
+  @media only screen and (min-width: ${WIDTHS.mobileThreshold}) {
+    :hover .dropdown-container {
+      display: block;
+    }
   }
 `;
 
-export const DropdownContainer = styled.div`
-  display: none;
+export const DropdownContainer = styled.div<{ mobileShow?: boolean }>`
+  display: ${(props) => (props.mobileShow ? "block" : "none")};
   position: absolute;
   left: 100%;
   box-shadow: ${SHADOWS.sidebarDropdown};
   z-index: 1;
+
+  @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
+    position: static;
+    left: auto;
+  }
 `;
 
 export const DropdownItem = styled.div<{ active?: boolean }>`

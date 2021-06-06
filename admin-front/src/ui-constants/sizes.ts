@@ -14,10 +14,10 @@ export const FONT_SIZES = {
 
 export const RADIUS = {
   card: "50px",
-  input: "20px",
 };
 
 export const WIDTHS = {
   desktopSidebar: "20%",
   mobileSidebar: "60%",
+  mobileThreshold: "600px",
 };
