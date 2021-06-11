@@ -25,63 +25,63 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <ProtectedRoute path="/donations">
+        <ProtectedRoute servicePath path="/donations">
           <Sidebar />
           <StyledPage>doações feitas</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/donators">
+        <ProtectedRoute servicePath path="/donators">
           <Sidebar />
           <StyledPage>doadores</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/employees" exact>
+        <ProtectedRoute servicePath path="/employees" exact>
           <Sidebar />
           <StyledPage>funcionarios</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/employees/areas">
+        <ProtectedRoute servicePath path="/employees/areas">
           <Sidebar />
           <StyledPage>Areas</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/employees/teams">
+        <ProtectedRoute servicePath path="/employees/teams">
           <Sidebar />
           <StyledPage>Times</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/volunteers" exact>
+        <ProtectedRoute servicePath path="/volunteers" exact>
           <Sidebar />
           <StyledPage>Voluntarios</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/volunteers/areas">
+        <ProtectedRoute servicePath path="/volunteers/areas">
           <Sidebar />
           <StyledPage>Areas</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/volunteers/teams">
+        <ProtectedRoute servicePath path="/volunteers/teams">
           <Sidebar />
           <StyledPage>Times</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/projects">
+        <ProtectedRoute servicePath path="/projects">
           <Sidebar />
           <StyledPage>Projetos</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/financial-control" exact>
+        <ProtectedRoute servicePath path="/financial-control" exact>
           <Sidebar />
           <StyledPage>Controle financeiro</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/financial-control/goals">
+        <ProtectedRoute servicePath path="/financial-control/goals">
           <Sidebar />
           <StyledPage>Metas</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/marketing" exact>
+        <ProtectedRoute servicePath path="/marketing" exact>
           <Sidebar />
           <StyledPage>Marketing</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/marketing/posted">
+        <ProtectedRoute servicePath path="/marketing/posted">
           <Sidebar />
           <StyledPage>Postadas</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/reports">
+        <ProtectedRoute servicePath path="/reports">
           <Sidebar />
           <StyledPage>relatórios</StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute path="/invoices">
+        <ProtectedRoute servicePath path="/invoices">
           <Sidebar />
           <StyledPage>notas fiscais</StyledPage>
         </ProtectedRoute>
