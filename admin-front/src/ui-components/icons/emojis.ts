@@ -9,4 +9,5 @@ export const EMOJIS = {
   laptop: "💻",
   chart: "📊",
   invoice: "🧾",
+  happy: "😄",
 };

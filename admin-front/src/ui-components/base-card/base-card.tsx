@@ -1,9 +1,18 @@
-import styled from "styled-components";
-import { SHADOWS } from "../../ui-constants/shadows";
-import { RADIUS, SPACES } from "../../ui-constants/sizes";
+import React from "react";
+import { BaseCardStyled, CardTitle } from "./base-card.style";
 
-export const BaseCard = styled.div`
-  border-radius: ${RADIUS.card};
-  padding: ${SPACES.px20};
-  box-shadow: ${SHADOWS.card};
-`;
+interface IBaseCard {
+  title?: string;
+  children?: React.ReactNode;
+}
+
+const BaseCard: React.FC<IBaseCard> = ({ title, children }) => {
+  return (
+    <BaseCardStyled>
+      {title && <CardTitle>{title}</CardTitle>}
+      {children}
+    </BaseCardStyled>
+  );
+};
+
+export default BaseCard;

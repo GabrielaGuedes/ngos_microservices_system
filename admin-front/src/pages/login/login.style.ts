@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BaseCard } from "../../ui-components/base-card/base-card";
+import { BaseCardStyled } from "../../ui-components/base-card/base-card.style";
 import { SPACES, WIDTHS } from "../../ui-constants/sizes";
 
 export const LoginPageContainer = styled.div`
@@ -7,7 +7,7 @@ export const LoginPageContainer = styled.div`
   padding: ${SPACES.px40} ${SPACES.px40} 0px;
 `;
 
-export const LoginCard = styled(BaseCard)`
+export const LoginCard = styled(BaseCardStyled)`
   max-width: 600px;
   margin: 5% auto;
 

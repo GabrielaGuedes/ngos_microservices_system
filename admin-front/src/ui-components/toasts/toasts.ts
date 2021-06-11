@@ -17,3 +17,15 @@ export const errorToast = (
       boxShadow: SHADOWS.card,
     },
   });
+
+export const successToast = (message: string = "Salvo com succeso!") =>
+  toast(message, {
+    icon: EMOJIS.happy,
+    position: "bottom-center",
+    style: {
+      borderRadius: RADIUS.card,
+      background: COLORS.main,
+      color: "white",
+      boxShadow: SHADOWS.card,
+    },
+  });

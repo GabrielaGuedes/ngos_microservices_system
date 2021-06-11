@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { WIDTHS } from "./ui-constants/sizes";
+import { SPACES, WIDTHS } from "./ui-constants/sizes";
 
 export const StyledPage = styled.div`
   position: relative;
   left: ${WIDTHS.desktopSidebar};
+  padding: ${SPACES.px10};
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     left: auto;

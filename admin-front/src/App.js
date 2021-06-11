@@ -9,6 +9,7 @@ import Sidebar from "./components/sidebar/sidebar";
 import { Toaster } from "react-hot-toast";
 import { StyledPage } from "./App.style";
 import ProtectedRoute from "./components/routes/protected-route";
+import Settings from "./pages/settings/settings";
 
 function App() {
   return (
@@ -86,7 +87,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute path="/settings">
           <Sidebar />
-          <StyledPage>configurações</StyledPage>
+          <StyledPage>
+            <Settings />
+          </StyledPage>
         </ProtectedRoute>
       </Switch>
       <Toaster />

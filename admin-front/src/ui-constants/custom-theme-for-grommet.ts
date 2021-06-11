@@ -20,4 +20,22 @@ export const customThemeForGrommet = {
       color: COLORS.error,
     },
   },
+  tab: {
+    active: {
+      color: COLORS.main,
+    },
+    color: COLORS.text,
+    border: {
+      color: COLORS.text,
+      active: {
+        color: COLORS.main,
+      },
+      hover: {
+        color: COLORS.mainHover,
+      },
+    },
+    hover: {
+      color: COLORS.mainHover,
+    },
+  },
 };
