@@ -5,10 +5,11 @@ import { SPACES, WIDTHS } from "./ui-constants/sizes";
 export const StyledPage = styled.div`
   position: relative;
   left: ${WIDTHS.desktopSidebar};
-  padding: ${SPACES.px10};
+  padding: 0px ${SPACES.px30} ${SPACES.px30};
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     left: auto;
+    padding: ${SPACES.px10};
   }
 `;
 
