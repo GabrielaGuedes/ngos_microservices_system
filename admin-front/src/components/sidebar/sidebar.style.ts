@@ -7,9 +7,27 @@ export const StyledSidebar = styled.div<{ show?: boolean }>`
   height: 100%;
   width: ${WIDTHS.desktopSidebar};
   background-color: ${COLORS.main};
-  position: absolute;
+  position: fixed;
   box-shadow: ${SHADOWS.sidebar};
   display: ${(props) => (props.show ? "block" : "none")};
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${COLORS.text};
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${COLORS.textActive};
+  }
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     top: 50px;
