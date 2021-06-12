@@ -4,7 +4,7 @@ import { SHADOWS } from "../../ui-constants/shadows";
 import { FONT_SIZES, SPACES, WIDTHS } from "../../ui-constants/sizes";
 
 export const StyledSidebar = styled.div<{ show?: boolean }>`
-  height: calc(100% - 54px); // 54 due to ExitButtonContainer
+  height: 100%;
   width: ${WIDTHS.desktopSidebar};
   background-color: ${COLORS.main};
   position: fixed;
@@ -33,6 +33,7 @@ export const StyledSidebar = styled.div<{ show?: boolean }>`
     top: 50px;
     width: 100%;
     z-index: 1;
+    height: calc(100% - 54px); // 54 due to ExitButtonContainer
   }
 `;
 
