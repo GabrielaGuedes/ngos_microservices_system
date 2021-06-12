@@ -2,11 +2,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import { getServices } from "../../../requests/settings/get-services-config";
 import { IServicesConfig } from "../../../requests/settings/types";
 import { updateServicesConfig } from "../../../requests/settings/update-services-config";
+import BaseCard from "../../../ui-components/base-card/base-card";
 import { Button } from "../../../ui-components/buttons/buttons";
 import CheckBoxGroupField from "../../../ui-components/checkbox-group-field/checkbox-group-field";
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
 import { serviceMapper } from "../../../utils/service-mapper";
-import { ServicesCardStyled, ButtonContainer } from "./services-card.style";
+import { ButtonContainer, ServicesCardContainer } from "./services-card.style";
 
 interface IServicesCard {}
 
@@ -35,24 +36,26 @@ const ServicesCard: React.FC<IServicesCard> = () => {
   };
 
   return (
-    <ServicesCardStyled title="Serviços">
-      {services ? (
-        <Fragment>
-          <CheckBoxGroupField
-            value={services}
-            onChange={(value) => setServices(value)}
-            mapper={serviceMapper}
-          />
-          <ButtonContainer>
-            <Button type="submit" onClick={handleSave}>
-              Salvar
-            </Button>
-          </ButtonContainer>
-        </Fragment>
-      ) : (
-        <div> Carregando...</div>
-      )}
-    </ServicesCardStyled>
+    <ServicesCardContainer>
+      <BaseCard title="Serviços">
+        {services ? (
+          <Fragment>
+            <CheckBoxGroupField
+              value={services}
+              onChange={(value) => setServices(value)}
+              mapper={serviceMapper}
+            />
+            <ButtonContainer>
+              <Button type="submit" onClick={handleSave}>
+                Salvar
+              </Button>
+            </ButtonContainer>
+          </Fragment>
+        ) : (
+          <div> Carregando...</div>
+        )}
+      </BaseCard>
+    </ServicesCardContainer>
   );
 };
 
