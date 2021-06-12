@@ -20,7 +20,6 @@ const GeneralSettingsCard: React.FC<IGeneralSettingsCard> = () => {
   }, []);
 
   const handleSave = () => {
-    console.log(value);
     updateDetailsConfig(value as IDetailsConfig)
       .then(() => {
         successToast("Salvo com sucesso! Vamos recarregar a página...");

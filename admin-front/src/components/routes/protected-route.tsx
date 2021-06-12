@@ -24,7 +24,6 @@ const ProtectedRoute: React.FC<IProtectedRoute> = ({
     // TODO: improve this when refactoring the app.js
     if (servicePath) {
       isServicePathDisabled(path).then((disabled: boolean) => {
-        console.log("disabled: ", disabled);
         if (disabled) window.location.href = "/";
       });
     }

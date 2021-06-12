@@ -3,7 +3,6 @@ import { getServices } from "../requests/settings/get-services-config";
 const serviceFromPath = (path: string) => {
   const re = /([a-z]|-)+/g;
   const firstPath = (path.match(re) || [""])[0];
-  console.log(firstPath);
   return firstPath.replace("-", "");
 };
 
