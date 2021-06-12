@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import LoginForm from "../../components/login/login-form";
 import SignupForm from "../../components/login/signup-form";
 import { canSelfRegister } from "../../requests/authentication/can-self-register";
+import BaseCard from "../../ui-components/base-card/base-card";
 import { Title } from "../../ui-components/typography/typography";
-import { LoginCard, LoginPageContainer } from "./login.style";
+import { LoginCardContainer, LoginPageContainer } from "./login.style";
 
 interface ILogin {}
 
@@ -21,7 +22,9 @@ const Login: React.FC<ILogin> = () => {
   return (
     <LoginPageContainer>
       <Title>Nome da ONG</Title>
-      <LoginCard>{isFirstUser ? <SignupForm /> : <LoginForm />}</LoginCard>
+      <LoginCardContainer>
+        <BaseCard>{isFirstUser ? <SignupForm /> : <LoginForm />}</BaseCard>
+      </LoginCardContainer>
     </LoginPageContainer>
   );
 };

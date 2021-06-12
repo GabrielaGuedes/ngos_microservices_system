@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { COLORS } from "../../../ui-constants/colors";
-import { RADIUS, SPACES } from "../../../ui-constants/sizes";
+import { RADIUS } from "../../../ui-constants/sizes";
 
 export const HamburguerIconContainer = styled.div`
   background-color: ${COLORS.main};
@@ -14,9 +13,4 @@ export const HamburguerIconContainer = styled.div`
   :active {
     background-color: ${COLORS.mainActive};
   }
-`;
-
-export const FontAwesomeHamburguerIconStyled = styled(FontAwesomeIcon)`
-  padding-top: ${SPACES.px10};
-  color: white;
 `;

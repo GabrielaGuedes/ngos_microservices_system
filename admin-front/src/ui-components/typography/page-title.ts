@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { SPACES } from "../../ui-constants/sizes";
-import { Title } from "./typography";
+import { COLORS } from "../../ui-constants/colors";
+import { FONT_SIZES, SPACES } from "../../ui-constants/sizes";
 
-export const PageTitle = styled(Title)`
+export const PageTitle = styled.div`
+  font-size: ${FONT_SIZES.px40};
+  color: ${COLORS.text};
+  font-weight: bold;
   margin: 0px ${SPACES.px10} ${SPACES.px30};
 `;
