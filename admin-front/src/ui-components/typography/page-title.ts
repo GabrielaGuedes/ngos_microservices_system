@@ -7,4 +7,5 @@ export const PageTitle = styled.div`
   color: ${COLORS.text};
   font-weight: bold;
   margin: 0px ${SPACES.px10} ${SPACES.px30};
+  line-height: initial;
 `;

@@ -9,5 +9,6 @@ export const COLORS = {
   mainTransparent: "rgba(66, 151, 160, 0.2)",
   mainActiveTransparent: "rgba(46, 105, 112, 0.2)",
   coral: "#E57F84",
+  lightCoral: "#eca5a8",
   sienna: "#4A051C",
 };

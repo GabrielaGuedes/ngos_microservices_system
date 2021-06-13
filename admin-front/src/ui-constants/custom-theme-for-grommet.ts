@@ -1,3 +1,4 @@
+import SorteableIcon from "../ui-components/icons/sorteable/sorteable-icon";
 import { COLORS } from "./colors";
 
 export const customThemeForGrommet = {
@@ -36,6 +37,28 @@ export const customThemeForGrommet = {
     },
     hover: {
       color: COLORS.mainHover,
+    },
+  },
+  dataTable: {
+    header: {
+      color: "text-strong",
+      extend: ({ column, sort, sortable }: any) => `
+          ${
+            sortable &&
+            sort &&
+            sort.property !== column &&
+            `
+              :hover {
+                svg {
+                  opacity: 100%;
+                }
+              }
+            `
+          }
+         `,
+    },
+    icons: {
+      sortable: SorteableIcon,
     },
   },
 };

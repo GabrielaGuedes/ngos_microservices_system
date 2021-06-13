@@ -7,7 +7,6 @@ export const BaseCardStyled = styled.div`
   border-radius: ${RADIUS.card};
   padding: ${SPACES.px30};
   box-shadow: ${SHADOWS.card};
-  width: calc(100% - 2 * ${SPACES.px30} - ${WIDTHS.desktopSidebar});
   max-width: 800px;
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {

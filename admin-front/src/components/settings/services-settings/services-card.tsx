@@ -6,7 +6,7 @@ import BaseCard from "../../../ui-components/base-card/base-card";
 import { Button } from "../../../ui-components/buttons/buttons";
 import CheckBoxGroupField from "../../../ui-components/checkbox-group-field/checkbox-group-field";
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
-import { serviceMapper } from "../../../utils/service-mapper";
+import { serviceMapper } from "../../../utils/mappers/service-mapper";
 import { ButtonContainer, ServicesCardContainer } from "./services-card.style";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 

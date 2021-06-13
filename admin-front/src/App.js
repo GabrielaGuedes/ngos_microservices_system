@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import { StyledPage } from "./App.style";
 import ProtectedRoute from "./components/routes/protected-route";
 import Settings from "./pages/settings/settings";
+import Donations from "./pages/donations/donations/donations";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
         </Route>
         <ProtectedRoute servicePath path="/donations">
           <Sidebar />
-          <StyledPage>doações feitas</StyledPage>
+          <StyledPage>
+            <Donations />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/donators">
           <Sidebar />
