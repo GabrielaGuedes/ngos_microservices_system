@@ -495,6 +495,24 @@ describe("/GET Donations", () => {
     });
   });
 
+  describe("When token is passed correctly and there are no donations", () => {
+    before(async () => {
+      await Donation.Model.deleteMany({});
+    });
+
+    it("Returns the donations array empty", async () => {
+      const res = await chai
+        .request(`http://localhost:${process.env.TEST_PORT}`)
+        .get("/api/donations/")
+        .set("x-access-token", token);
+
+      res.should.have.status(200);
+      res.body.donations.should.be.a("array");
+      expect(res.body.donations.length).to.eq(0);
+      expect(res.body.total).to.eql(0);
+    });
+  });
+
   after((done) => {
     mongoose.connection.dropDatabase(process.env.TEST_DB);
     done();

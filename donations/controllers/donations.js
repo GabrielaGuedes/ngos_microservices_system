@@ -90,9 +90,10 @@ router.get("/", verifyJWT, async (req, res) => {
 
       return res.json({
         donations: docs,
-        total: docs
-          ? docs.map((doc) => doc.amount).reduce((total, doc) => total + doc)
-          : 0,
+        total:
+          docs && docs.length > 0
+            ? docs.map((doc) => doc.amount).reduce((total, doc) => total + doc)
+            : 0,
       });
     });
 });
