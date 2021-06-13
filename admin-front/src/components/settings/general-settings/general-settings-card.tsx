@@ -9,6 +9,7 @@ import { getDetails } from "../../../requests/settings/get-details-config";
 import { IDetailsConfig } from "../../../requests/settings/types";
 import { updateDetailsConfig } from "../../../requests/settings/update-details-config";
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
+import LoadingBox from "../../../ui-components/loading-box/loading-box";
 
 interface IGeneralSettingsCard {}
 
@@ -32,20 +33,24 @@ const GeneralSettingsCard: React.FC<IGeneralSettingsCard> = () => {
   return (
     <GeneralSettingsCardContainer>
       <BaseCard title="Geral">
-        <Form
-          validate="blur"
-          value={value}
-          onChange={(formValue) => setValue(formValue)}
-          onSubmit={() => handleSave()}
-          messages={{ required: "Obrigatório" }}
-        >
-          <FormField label="Nome da ONG" name="name" required>
-            <TextInput name="name" type="text" />
-          </FormField>
-          <Box direction="row" justify="end" margin={{ top: "medium" }}>
-            <Button type="submit">Salvar</Button>
-          </Box>
-        </Form>
+        {value ? (
+          <Form
+            validate="blur"
+            value={value}
+            onChange={(formValue) => setValue(formValue)}
+            onSubmit={() => handleSave()}
+            messages={{ required: "Obrigatório" }}
+          >
+            <FormField label="Nome da ONG" name="name" required>
+              <TextInput name="name" type="text" />
+            </FormField>
+            <Box direction="row" justify="end" margin={{ top: "medium" }}>
+              <Button type="submit">Salvar</Button>
+            </Box>
+          </Form>
+        ) : (
+          <LoadingBox pad="small" />
+        )}
       </BaseCard>
     </GeneralSettingsCardContainer>
   );

@@ -8,6 +8,7 @@ import CheckBoxGroupField from "../../../ui-components/checkbox-group-field/chec
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
 import { serviceMapper } from "../../../utils/service-mapper";
 import { ButtonContainer, ServicesCardContainer } from "./services-card.style";
+import LoadingBox from "../../../ui-components/loading-box/loading-box";
 
 interface IServicesCard {}
 
@@ -52,7 +53,7 @@ const ServicesCard: React.FC<IServicesCard> = () => {
             </ButtonContainer>
           </Fragment>
         ) : (
-          <div> Carregando...</div>
+          <LoadingBox pad="xlarge" />
         )}
       </BaseCard>
     </ServicesCardContainer>
