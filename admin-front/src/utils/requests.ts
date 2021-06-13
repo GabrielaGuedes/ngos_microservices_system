@@ -2,13 +2,16 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-export const getRequest = (url: string) => {
+export const getRequest = (url: string, filters?: {}) => {
   const headers = {
     "Content-Type": "application/json",
     "x-access-token": cookies.get("accessToken"),
   };
 
-  return fetch(url, { headers }).then((result) => {
+  const urlInstance = new URL(url);
+  urlInstance.search = new URLSearchParams(filters).toString();
+
+  return fetch(urlInstance.toString(), { headers }).then((result) => {
     if (result.status === 200 || result.status === 201) {
       return result.json();
     }
