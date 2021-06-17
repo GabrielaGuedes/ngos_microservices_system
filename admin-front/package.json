@@ -21,6 +21,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.0.0",
+    "react-modal": "^3.14.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-switch": "^6.0.0",
@@ -57,6 +58,7 @@
     "@types/lodash.invert": "^4.3.6",
     "@types/lodash.mapkeys": "^4.6.6",
     "@types/react": "^17.0.9",
+    "@types/react-modal": "^3.12.0",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.9"
   }

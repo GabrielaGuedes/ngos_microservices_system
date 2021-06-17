@@ -39,3 +39,22 @@ export const TextButton = styled.button`
     background-color: ${COLORS.mainActiveTransparent};
   }
 `;
+
+export const SecondaryButton = styled.button`
+  border: 2px solid ${COLORS.main};
+  border-radius: 18px;
+  cursor: pointer;
+  padding: 4px 22px;
+  font-size: ${FONT_SIZES.px18};
+  background-color: white;
+  color: ${COLORS.main};
+  font-weight: bold;
+
+  :hover {
+    background-color: ${COLORS.lightGray};
+  }
+
+  :active {
+    background-color: ${COLORS.gray};
+  }
+`;

@@ -11,4 +11,6 @@ export const COLORS = {
   coral: "#E57F84",
   lightCoral: "#eca5a8",
   sienna: "#4A051C",
+  lightGray: "#ededed",
+  gray: "#d4d4d4",
 };
