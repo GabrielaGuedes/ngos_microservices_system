@@ -12,7 +12,7 @@ export const StyledPage = styled.div`
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     left: auto;
     padding: ${SPACES.px10};
-    width: calc(100% - 2 * ${SPACES.px30});
+    width: calc(100% - 2 * ${SPACES.px10});
   }
 `;
 
