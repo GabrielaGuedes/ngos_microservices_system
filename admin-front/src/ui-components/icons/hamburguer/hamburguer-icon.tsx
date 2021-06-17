@@ -15,6 +15,7 @@ const HamburguerIcon: React.FC<IHamburguer> = ({ onClick }) => {
         icon={faBars}
         color="white"
         style={{ paddingTop: SPACES.px10 }}
+        cursor={onClick ? "pointer" : "auto"}
       />
     </HamburguerIconContainer>
   );
