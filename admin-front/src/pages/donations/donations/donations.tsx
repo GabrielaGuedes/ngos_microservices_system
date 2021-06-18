@@ -7,15 +7,19 @@ import { errorToast } from "../../../ui-components/toasts/toasts";
 import DonationsTable from "../../../components/donations/donations-table/donations-table";
 import { Button } from "../../../ui-components/buttons/buttons";
 import { InfosContainer, TotalDonated } from "./donations.style";
-import { IDonations } from "../../../requests/donations/types";
-import Modal from "../../../ui-components/modal/modal";
+import {
+  IDonations,
+  IDonationsFilters,
+} from "../../../requests/donations/types";
+import FiltersModal from "../../../components/donations/filters-modal/filters-modal";
 
 const Donations: React.FC = () => {
   const [donationsResult, setDonationsResult] = useState<IDonations>();
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
+  const [filters, setFilters] = useState<IDonationsFilters>({});
 
   useEffect(() => {
-    getDonations({ minValue: "50.02" })
+    getDonations({})
       .then((res) => setDonationsResult(res))
       .catch(() => errorToast());
   }, []);
@@ -24,22 +28,20 @@ const Donations: React.FC = () => {
     <Fragment>
       <PageTitle>Doações feitas</PageTitle>
       <InfosContainer>
+        <div>
+          <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
+          <FiltersModal
+            isOpen={filtersModalOpen}
+            setIsOpen={setFiltersModalOpen}
+            setDonations={setDonationsResult}
+            filters={filters}
+            setFilters={setFilters}
+          />
+        </div>
         <TotalDonated>
           Total dodado:{" "}
           <b>R$ {donationsResult?.total.toString().replace(".", ",")}</b>
         </TotalDonated>
-        <div>
-          <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
-          <Modal
-            isOpen={filtersModalOpen}
-            setIsOpen={setFiltersModalOpen}
-            title="Filtros"
-            confirmLabel="Aplicar"
-            footer
-          >
-            asdasd
-          </Modal>
-        </div>
       </InfosContainer>
       {donationsResult ? (
         <DonationsTable donations={donationsResult.donations} />

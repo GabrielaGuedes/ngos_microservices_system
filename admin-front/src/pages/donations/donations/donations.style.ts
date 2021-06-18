@@ -6,7 +6,6 @@ export const InfosContainer = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: ${SPACES.px20};
-  width: 80%;
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     width: 100%;

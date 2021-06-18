@@ -33,7 +33,7 @@ export interface IDonationsFilters {
   source?: string;
   minValue?: string;
   maxValue?: string;
-  sortBy?: "status" | "updatedAt" | "amount" | "donatorEmail" | "source";
+  sortBy?: "status" | "createdAt" | "amount" | "donatorEmail" | "source";
 }
 
 export interface IDonatorsFilters {

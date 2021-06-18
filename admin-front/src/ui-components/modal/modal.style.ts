@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { COLORS } from "../../ui-constants/colors";
-import { FONT_SIZES, RADIUS, SPACES } from "../../ui-constants/sizes";
+import { FONT_SIZES, RADIUS, SPACES, WIDTHS } from "../../ui-constants/sizes";
 import { isMobile } from "../../utils/is-mobile";
 
 const mobileStyles = {
@@ -26,6 +26,7 @@ export const customStyles = {
     borderRadius: RADIUS.card,
     backgroundColor: COLORS.background,
     borderColor: COLORS.main,
+    overflow: "hidden",
   },
 };
 
@@ -39,6 +40,34 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: ${SPACES.px10};
+`;
+
+export const ChildrenContainer = styled.div`
+  overflow-y: auto;
+  max-height: 500px;
+
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${COLORS.text};
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${COLORS.textActive};
+  }
+
+  @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
+    max-height: 400px;
+  }
 `;
 
 export const FooterContainer = styled.div`

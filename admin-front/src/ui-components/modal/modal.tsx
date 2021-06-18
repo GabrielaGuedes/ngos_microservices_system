@@ -1,6 +1,12 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { customStyles, Header, Title, FooterContainer } from "./modal.style";
+import {
+  customStyles,
+  Header,
+  Title,
+  FooterContainer,
+  ChildrenContainer,
+} from "./modal.style";
 import CloseIcon from "../../ui-components/icons/close/close-icon";
 import { ReactNode } from "react";
 import { Button, SecondaryButton } from "../buttons/buttons";
@@ -38,7 +44,7 @@ const Modal: React.FC<IModal> = ({
         <Title>{title}</Title>
         <CloseIcon onClick={() => setIsOpen(false)} />
       </Header>
-      {children}
+      <ChildrenContainer>{children}</ChildrenContainer>
       {footer && (
         <FooterContainer>
           <SecondaryButton
