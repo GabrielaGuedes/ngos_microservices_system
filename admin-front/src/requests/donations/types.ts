@@ -25,7 +25,7 @@ export interface IDonator {
   occupation: string;
   phone: string;
   state: string;
-  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IDonationsFilters {

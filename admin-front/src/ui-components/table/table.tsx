@@ -40,6 +40,7 @@ interface ITable {
     | "large"
     | "xlarge"
     | string;
+  rowDetails?: (row: any) => React.ReactElement;
 }
 
 const Table: React.FC<ITable> = ({
@@ -48,6 +49,7 @@ const Table: React.FC<ITable> = ({
   dataKeys,
   mapper,
   columnsSize,
+  rowDetails,
 }) => {
   const [sort, setSort] = React.useState({
     property: "name",
@@ -80,6 +82,8 @@ const Table: React.FC<ITable> = ({
             header: "horizontal",
           }}
           pad={isMobile() ? "xxsmall" : "small"}
+          size={isMobile() ? "" : "medium"}
+          rowDetails={rowDetails || null}
         />
         {data.length > 0 || <EmptyState />}
       </TableContainer>

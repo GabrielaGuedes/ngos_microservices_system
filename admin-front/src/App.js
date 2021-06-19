@@ -11,6 +11,7 @@ import { StyledPage } from "./App.style";
 import ProtectedRoute from "./components/routes/protected-route";
 import Settings from "./pages/settings/settings";
 import Donations from "./pages/donations/donations/donations";
+import Donators from "./pages/donations/donators/donators";
 
 function App() {
   return (
@@ -26,15 +27,17 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <ProtectedRoute servicePath path="/donations">
+        <ProtectedRoute servicePath path="/donations" exact>
           <Sidebar />
           <StyledPage>
             <Donations />
           </StyledPage>
         </ProtectedRoute>
-        <ProtectedRoute servicePath path="/donators">
+        <ProtectedRoute servicePath path="/donations/donators">
           <Sidebar />
-          <StyledPage>doadores</StyledPage>
+          <StyledPage>
+            <Donators />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/employees" exact>
           <Sidebar />

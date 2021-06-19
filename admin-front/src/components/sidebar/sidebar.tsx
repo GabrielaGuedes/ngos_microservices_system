@@ -51,7 +51,7 @@ const Sidebar: React.FC<ISidebar> = () => {
           <SidebarItemWithDropdown
             items={[
               { to: "/donations", label: "Doações feitas" },
-              { to: "/donators", label: "Doadores" },
+              { to: "/donations/donators", label: "Doadores" },
             ]}
             emoji={EMOJIS.creditCard}
             label="Doações"

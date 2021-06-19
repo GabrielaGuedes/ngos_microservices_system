@@ -1,7 +1,7 @@
 import React from "react";
-import { IDonation } from "../../../requests/donations/types";
-import Table from "../../../ui-components/table/table";
-import { sources, status } from "../../../utils/mappers/donations-mapper";
+import { IDonation } from "../../../../requests/donations/types";
+import Table from "../../../../ui-components/table/table";
+import { sources, status } from "../../../../utils/mappers/donations-mapper";
 
 interface IDonationsTable {
   donations: IDonation[];
