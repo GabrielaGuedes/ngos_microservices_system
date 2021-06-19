@@ -20,6 +20,7 @@ interface IModal {
   footer?: boolean;
   onConfirm?: () => void;
   confirmLabel?: string;
+  beforeClose?: () => void;
 }
 
 const Modal: React.FC<IModal> = ({
@@ -30,25 +31,31 @@ const Modal: React.FC<IModal> = ({
   footer,
   onConfirm,
   confirmLabel,
+  beforeClose,
 }) => {
+  const handleClose = () => {
+    beforeClose && beforeClose();
+    setIsOpen(false);
+  };
+
   return (
     <ReactModal
       isOpen={isOpen}
       shouldCloseOnEsc={true}
       shouldCloseOnOverlayClick={true}
-      onRequestClose={() => setIsOpen(false)}
+      onRequestClose={handleClose}
       ariaHideApp={false}
       style={customStyles}
     >
       <Header>
         <Title>{title}</Title>
-        <CloseIcon onClick={() => setIsOpen(false)} />
+        <CloseIcon onClick={handleClose} />
       </Header>
       <ChildrenContainer>{children}</ChildrenContainer>
       {footer && (
         <FooterContainer>
           <SecondaryButton
-            onClick={() => setIsOpen(false)}
+            onClick={handleClose}
             style={{ marginRight: SPACES.px4 }}
           >
             Cancelar

@@ -21,6 +21,20 @@ const Donators: React.FC = () => {
       .catch(() => errorToast());
   }, []);
 
+  const filtersAppliedInfo = () => {
+    const filtersApplied = Object.keys(filters).filter(
+      (key) => key !== "sortBy"
+    ).length;
+
+    if (filtersApplied === 0) return;
+
+    return (
+      <div style={{ textAlign: "right" }}>{`${filtersApplied} filtro${
+        filtersApplied > 1 ? "s" : ""
+      } aplicado${filtersApplied > 1 ? "s" : ""}`}</div>
+    );
+  };
+
   return (
     <Fragment>
       <PageTitle>Doadores</PageTitle>
@@ -34,6 +48,7 @@ const Donators: React.FC = () => {
           setFilters={setFilters}
         />
       </FilterButtonContainer>
+      {filtersAppliedInfo()}
       {donatorsResult ? (
         <DonationsTable donators={donatorsResult} />
       ) : (

@@ -1,5 +1,5 @@
 import { Form, FormField, TextInput, RadioButtonGroup } from "grommet";
-import React from "react";
+import React, { useState } from "react";
 import { getDonators } from "../../../../requests/donations/get-donators";
 import {
   IDonator,
@@ -24,9 +24,21 @@ const FiltersModal: React.FC<IFiltersModal> = ({
   filters,
   setFilters,
 }) => {
+  const [formValues, setFormValues] = useState<IDonatorsFilters>(filters);
+
+  const cleanEmptyFilters = (nextFilters: IDonatorsFilters) => {
+    const filtersInArray = Object.entries(nextFilters).filter(
+      (entry) => entry[1] !== ""
+    );
+    return Object.fromEntries(filtersInArray);
+  };
+
   const handleConfirm = () => {
-    getDonators(filters)
+    const cleanedFilters = cleanEmptyFilters(formValues);
+
+    getDonators(cleanedFilters)
       .then((res) => {
+        setFilters(cleanedFilters);
         setDonators(res);
         setIsOpen(false);
       })
@@ -41,11 +53,12 @@ const FiltersModal: React.FC<IFiltersModal> = ({
       confirmLabel="Aplicar"
       footer
       onConfirm={handleConfirm}
+      beforeClose={() => setFormValues(filters)}
     >
       <Form
         validate="blur"
-        value={filters}
-        onChange={(nextValue) => setFilters(nextValue)}
+        value={formValues}
+        onChange={(nextValue) => setFormValues(nextValue)}
       >
         <ValuesContainer>
           <ValueFieldContainer>

@@ -5,7 +5,7 @@ import {
   CheckBox,
   RadioButtonGroup,
 } from "grommet";
-import React from "react";
+import React, { useState } from "react";
 import { getDonations } from "../../../../requests/donations/get-donations";
 import {
   IDonations,
@@ -30,9 +30,21 @@ const FiltersModal: React.FC<IFiltersModal> = ({
   filters,
   setFilters,
 }) => {
+  const [formValues, setFormValues] = useState<IDonationsFilters>(filters);
+
+  const cleanEmptyFilters = (nextFilters: IDonationsFilters) => {
+    const filtersInArray = Object.entries(nextFilters).filter(
+      (entry) => entry[1] !== false && entry[1] !== ""
+    );
+    return Object.fromEntries(filtersInArray);
+  };
+
   const handleConfirm = () => {
-    getDonations(filters)
+    const cleanedFilters = cleanEmptyFilters(formValues);
+
+    getDonations(cleanedFilters)
       .then((res) => {
+        setFilters(cleanedFilters);
         setDonations(res);
         setIsOpen(false);
       })
@@ -47,11 +59,12 @@ const FiltersModal: React.FC<IFiltersModal> = ({
       confirmLabel="Aplicar"
       footer
       onConfirm={handleConfirm}
+      beforeClose={() => setFormValues(filters)}
     >
       <Form
         validate="blur"
-        value={filters}
-        onChange={(nextValue) => setFilters(nextValue)}
+        value={formValues}
+        onChange={(nextValue) => setFormValues(nextValue)}
       >
         <ValuesContainer>
           <ValueFieldContainer>
