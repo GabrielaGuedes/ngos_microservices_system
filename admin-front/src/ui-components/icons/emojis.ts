@@ -10,4 +10,6 @@ export const EMOJIS = {
   chart: "📊",
   invoice: "🧾",
   happy: "😄",
+  edit: "✏️",
+  trash: "🗑️",
 };

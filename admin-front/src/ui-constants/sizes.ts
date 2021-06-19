@@ -16,6 +16,7 @@ export const FONT_SIZES = {
 
 export const RADIUS = {
   card: "50px",
+  button: "18px",
 };
 
 export const WIDTHS = {

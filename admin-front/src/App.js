@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/routes/protected-route";
 import Settings from "./pages/settings/settings";
 import Donations from "./pages/donations/donations/donations";
 import Donators from "./pages/donations/donators/donators";
+import Employees from "./pages/employees/employees/employees";
 
 function App() {
   return (
@@ -41,7 +42,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/employees" exact>
           <Sidebar />
-          <StyledPage>funcionarios</StyledPage>
+          <StyledPage>
+            <Employees />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/employees/areas">
           <Sidebar />

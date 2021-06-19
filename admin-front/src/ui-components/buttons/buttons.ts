@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { COLORS } from "../../ui-constants/colors";
-import { FONT_SIZES } from "../../ui-constants/sizes";
+import { FONT_SIZES, RADIUS } from "../../ui-constants/sizes";
 
 export const Button = styled.button`
   border: 2px solid ${COLORS.mainHover};
-  border-radius: 18px;
+  border-radius: ${RADIUS.button};
   cursor: pointer;
   padding: 4px 22px;
   font-size: ${FONT_SIZES.px18};
@@ -23,7 +23,7 @@ export const Button = styled.button`
 
 export const TextButton = styled.button`
   border: none;
-  border-radius: 18px;
+  border-radius: ${RADIUS.button};
   cursor: pointer;
   padding: 4px 22px;
   font-size: ${FONT_SIZES.px18};
@@ -42,7 +42,7 @@ export const TextButton = styled.button`
 
 export const SecondaryButton = styled.button`
   border: 2px solid ${COLORS.main};
-  border-radius: 18px;
+  border-radius: ${RADIUS.button};
   cursor: pointer;
   padding: 4px 22px;
   font-size: ${FONT_SIZES.px18};
