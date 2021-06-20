@@ -3,7 +3,7 @@ export const COLORS = {
   text: "#2F5061",
   textActive: "#436170",
   error: "#A4031F",
-  errorHover: "#ad1c35",
+  errorHover: "#b6354b",
   errorActive: "#830218",
   errorTransparent: "rgba(164, 3, 31, 0.2)",
   errorActiveTransparent: "rgba(131, 2, 24, 0.2)",
