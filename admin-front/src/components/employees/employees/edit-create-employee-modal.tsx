@@ -90,6 +90,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
       hireDate: formValues.hireDate.substring(0, 10),
       birthDate: formValues.birthDate.substring(0, 10),
       state: formValues.state.toUpperCase(),
+      additionalInfo: formValues.additionalInfo || "",
     };
   };
 
