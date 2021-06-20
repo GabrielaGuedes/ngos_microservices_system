@@ -2,7 +2,7 @@ import { Box, FormField, TextInput } from "grommet";
 import React, { Fragment } from "react";
 import { signup } from "../../requests/authentication/signup";
 import { INewUser } from "../../requests/authentication/types";
-import { Button } from "../../ui-components/buttons/buttons";
+import Button from "../../ui-components/buttons/button";
 import { errorToast } from "../../ui-components/toasts/toasts";
 import { startSession } from "../../utils/session";
 import { LoginTitle, StyledForm } from "./login-form.style";

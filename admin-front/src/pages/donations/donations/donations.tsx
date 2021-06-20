@@ -4,7 +4,7 @@ import { getDonations } from "../../../requests/donations/get-donations";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { errorToast } from "../../../ui-components/toasts/toasts";
-import { Button } from "../../../ui-components/buttons/buttons";
+import Button from "../../../ui-components/buttons/button";
 import { InfosContainer, TotalDonated } from "./donations.style";
 import {
   IDonations,

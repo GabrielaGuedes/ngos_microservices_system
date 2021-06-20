@@ -3,7 +3,7 @@ import { StyledLink } from "../../App.style";
 import { getDetails } from "../../requests/settings/get-details-config";
 import { getServices } from "../../requests/settings/get-services-config";
 import { IServicesConfig } from "../../requests/settings/types";
-import { TextButton } from "../../ui-components/buttons/buttons";
+import Button from "../../ui-components/buttons/button";
 import { EMOJIS } from "../../ui-components/icons/emojis";
 import { errorToast } from "../../ui-components/toasts/toasts";
 import {
@@ -137,7 +137,9 @@ const Sidebar: React.FC<ISidebar> = () => {
       </StyledSidebar>
       <ExitButtonContainer>
         {isMobile() && <HamburguerIcon onClick={handleHamburguerClick} />}
-        <TextButton onClick={handleLogout}>Sair</TextButton>
+        <Button kind="text" onClick={handleLogout}>
+          Sair
+        </Button>
       </ExitButtonContainer>
     </Fragment>
   );

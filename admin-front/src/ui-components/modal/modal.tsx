@@ -9,7 +9,7 @@ import {
 } from "./modal.style";
 import CloseIcon from "../../ui-components/icons/close/close-icon";
 import { ReactNode } from "react";
-import { Button, SecondaryButton } from "../buttons/buttons";
+import Button from "../buttons/button";
 import { SPACES } from "../../ui-constants/sizes";
 
 interface IModal {
@@ -56,12 +56,13 @@ const Modal: React.FC<IModal> = ({
       <ChildrenContainer>{children}</ChildrenContainer>
       {footer && (
         <FooterContainer>
-          <SecondaryButton
+          <Button
             onClick={handleClose}
             style={{ marginRight: SPACES.px4 }}
+            kind="secondary"
           >
             Cancelar
-          </SecondaryButton>
+          </Button>
           <Button onClick={onConfirm} disabled={confirmDisabled}>
             {confirmLabel}
           </Button>

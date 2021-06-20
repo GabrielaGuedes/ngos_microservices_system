@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Fragment } from "react";
 import { getEmployees } from "../../../requests/employees/get-employees";
 import { IEmployee } from "../../../requests/employees/types";
-import { Button, TextButton } from "../../../ui-components/buttons/buttons";
+import Button from "../../../ui-components/buttons/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import { SPACES } from "../../../ui-constants/sizes";
@@ -48,8 +48,10 @@ const Employees: React.FC<IEmployees> = () => {
             creation
             refreshTable={refreshTable}
           />
-          <TextButton style={{ marginRight: SPACES.px4 }}>Novo time</TextButton>
-          <TextButton>Nova área</TextButton>
+          <Button style={{ marginRight: SPACES.px4 }} kind="text">
+            Novo time
+          </Button>
+          <Button kind="text">Nova área</Button>
         </AddNewButtons>
         <Button>Filtros</Button>
       </ButtonsContainer>

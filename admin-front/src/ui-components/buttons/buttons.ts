@@ -1,61 +1,34 @@
 import styled from "styled-components";
-import { COLORS } from "../../ui-constants/colors";
+import { BUTTONS_COLORS } from "../../ui-constants/colors";
 import { FONT_SIZES, RADIUS } from "../../ui-constants/sizes";
 
-export const Button = styled.button<{ disabled?: boolean }>`
-  border: 2px solid ${COLORS.mainHover};
+export const StyledButton = styled.button<{
+  kind: string;
+  danger: boolean;
+  disabled?: boolean;
+}>`
+  border: ${(props) =>
+    props.kind === "text"
+      ? "none"
+      : `2px solid ${BUTTONS_COLORS(props.danger)[props.kind].border}`};
   border-radius: ${RADIUS.button};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   padding: 4px 22px;
   font-size: ${FONT_SIZES.px18};
   background-color: ${(props) =>
-    props.disabled ? COLORS.mainHover : COLORS.main};
-  color: white;
+    props.disabled
+      ? BUTTONS_COLORS(props.danger)[props.kind].disabledBackground
+      : BUTTONS_COLORS(props.danger)[props.kind].background};
+  color: ${(props) => BUTTONS_COLORS(props.danger)[props.kind].font};
   font-weight: bold;
 
   :hover {
-    background-color: ${COLORS.mainHover};
+    background-color: ${(props) =>
+      BUTTONS_COLORS(props.danger)[props.kind].hover};
   }
 
   :active {
-    background-color: ${COLORS.mainActive};
-  }
-`;
-
-export const TextButton = styled.button`
-  border: none;
-  border-radius: ${RADIUS.button};
-  cursor: pointer;
-  padding: 4px 22px;
-  font-size: ${FONT_SIZES.px18};
-  background-color: transparent;
-  color: ${COLORS.main};
-  font-weight: bold;
-
-  :hover {
-    background-color: ${COLORS.mainTransparent};
-  }
-
-  :active {
-    background-color: ${COLORS.mainActiveTransparent};
-  }
-`;
-
-export const SecondaryButton = styled.button`
-  border: 2px solid ${COLORS.main};
-  border-radius: ${RADIUS.button};
-  cursor: pointer;
-  padding: 4px 22px;
-  font-size: ${FONT_SIZES.px18};
-  background-color: white;
-  color: ${COLORS.main};
-  font-weight: bold;
-
-  :hover {
-    background-color: ${COLORS.lightGray};
-  }
-
-  :active {
-    background-color: ${COLORS.gray};
+    background-color: ${(props) =>
+      BUTTONS_COLORS(props.danger)[props.kind].active};
   }
 `;

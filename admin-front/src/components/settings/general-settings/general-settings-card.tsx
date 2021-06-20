@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Box, FormField, TextInput } from "grommet";
 import BaseCard from "../../../ui-components/base-card/base-card";
 import { GeneralSettingsCardContainer } from "./general-settings-card.style";
-import { Button } from "../../../ui-components/buttons/buttons";
+import Button from "../../../ui-components/buttons/button";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getDetails } from "../../../requests/settings/get-details-config";
