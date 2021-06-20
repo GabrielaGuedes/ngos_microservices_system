@@ -6,14 +6,14 @@ import {
   RadioButtonGroup,
 } from "grommet";
 import React, { useState } from "react";
-import { getDonations } from "../../../../requests/donations/get-donations";
+import { getDonations } from "../../../requests/donations/get-donations";
 import {
   IDonations,
   IDonationsFilters,
-} from "../../../../requests/donations/types";
-import Modal from "../../../../ui-components/modal/modal";
-import { errorToast } from "../../../../ui-components/toasts/toasts";
+} from "../../../requests/donations/types";
+import { errorToast } from "../../../ui-components/toasts/toasts";
 import { ValuesContainer, ValueFieldContainer } from "./filters-modal.style";
+import Modal from "../../../ui-components/modal/modal";
 
 interface IFiltersModal {
   isOpen: boolean;

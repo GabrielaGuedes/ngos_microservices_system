@@ -1,5 +1,5 @@
 import React from "react";
-import { IDonator } from "../../../../../requests/donations/types";
+import { IDonator } from "../../../requests/donations/types";
 import { RowContainer, TupleContainer, TupleItem } from "./row-details.style";
 
 interface IRowDetails {

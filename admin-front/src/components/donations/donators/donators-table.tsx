@@ -1,7 +1,7 @@
 import React from "react";
-import { IDonator } from "../../../../requests/donations/types";
-import Table from "../../../../ui-components/table/table";
-import RowDetails from "./row-details/row-details";
+import { IDonator } from "../../../requests/donations/types";
+import Table from "../../../ui-components/table/table";
+import RowDetails from "./row-details";
 
 interface IDonatorsTable {
   donators: IDonator[];

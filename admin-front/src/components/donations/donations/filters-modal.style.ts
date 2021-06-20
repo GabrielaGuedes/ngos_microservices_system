@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { WIDTHS } from "../../../../ui-constants/sizes";
+import { WIDTHS } from "../../../ui-constants/sizes";
 
 export const ValuesContainer = styled.div`
   display: flex;

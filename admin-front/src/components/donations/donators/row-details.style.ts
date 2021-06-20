@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SPACES, WIDTHS } from "../../../../../ui-constants/sizes";
+import { SPACES, WIDTHS } from "../../../ui-constants/sizes";
 
 export const RowContainer = styled.div`
   padding-left: 5%;

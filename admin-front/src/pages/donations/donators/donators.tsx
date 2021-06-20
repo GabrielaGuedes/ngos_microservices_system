@@ -6,9 +6,9 @@ import { Button } from "../../../ui-components/buttons/buttons";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import { FilterButtonContainer } from "./donators.style";
-import FiltersModal from "../../../components/donations/donators/filters-modal/filters-modal";
+import FiltersModal from "../../../components/donations/donators/filters-modal";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
-import DonationsTable from "../../../components/donations/donators/donators-table/donators-table";
+import DonationsTable from "../../../components/donations/donators/donators-table";
 
 const Donators: React.FC = () => {
   const [donatorsResult, setDonatorsResult] = useState<IDonator[]>();

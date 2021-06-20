@@ -1,12 +1,9 @@
 import { Form, FormField, TextInput, RadioButtonGroup } from "grommet";
 import React, { useState } from "react";
-import { getDonators } from "../../../../requests/donations/get-donators";
-import {
-  IDonator,
-  IDonatorsFilters,
-} from "../../../../requests/donations/types";
-import Modal from "../../../../ui-components/modal/modal";
-import { errorToast } from "../../../../ui-components/toasts/toasts";
+import { getDonators } from "../../../requests/donations/get-donators";
+import { IDonator, IDonatorsFilters } from "../../../requests/donations/types";
+import Modal from "../../../ui-components/modal/modal";
+import { errorToast } from "../../../ui-components/toasts/toasts";
 import { ValuesContainer, ValueFieldContainer } from "./filters-modal.style";
 
 interface IFiltersModal {
