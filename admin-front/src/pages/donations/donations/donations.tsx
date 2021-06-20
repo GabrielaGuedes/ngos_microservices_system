@@ -4,14 +4,14 @@ import { getDonations } from "../../../requests/donations/get-donations";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { errorToast } from "../../../ui-components/toasts/toasts";
-import DonationsTable from "../../../components/donations/donations/donations-table/donations-table";
 import { Button } from "../../../ui-components/buttons/buttons";
 import { InfosContainer, TotalDonated } from "./donations.style";
 import {
   IDonations,
   IDonationsFilters,
 } from "../../../requests/donations/types";
-import FiltersModal from "../../../components/donations/donations/filters-modal/filters-modal";
+import FiltersModal from "../../../components/donations/donations/filters-modal";
+import DonationsTable from "../../../components/donations/donations/donations-table";
 
 const Donations: React.FC = () => {
   const [donationsResult, setDonationsResult] = useState<IDonations>();
