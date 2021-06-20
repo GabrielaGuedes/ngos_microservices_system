@@ -7,7 +7,7 @@ import {
   IEmployee,
   IEmployeesFilters,
 } from "../../../requests/employees/types";
-import Button from "../../../ui-components/buttons/button";
+import Button from "../../../ui-components/button/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import { SPACES } from "../../../ui-constants/sizes";

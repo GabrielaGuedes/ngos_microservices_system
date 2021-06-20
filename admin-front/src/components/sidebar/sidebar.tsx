@@ -3,7 +3,7 @@ import { StyledLink } from "../../App.style";
 import { getDetails } from "../../requests/settings/get-details-config";
 import { getServices } from "../../requests/settings/get-services-config";
 import { IServicesConfig } from "../../requests/settings/types";
-import Button from "../../ui-components/buttons/button";
+import Button from "../../ui-components/button/button";
 import { EMOJIS } from "../../ui-components/icons/emojis";
 import { errorToast } from "../../ui-components/toasts/toasts";
 import {

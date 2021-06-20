@@ -9,7 +9,7 @@ import {
 } from "./modal.style";
 import CloseIcon from "../../ui-components/icons/close/close-icon";
 import { ReactNode } from "react";
-import Button from "../buttons/button";
+import Button from "../button/button";
 import { SPACES } from "../../ui-constants/sizes";
 
 interface IModal {

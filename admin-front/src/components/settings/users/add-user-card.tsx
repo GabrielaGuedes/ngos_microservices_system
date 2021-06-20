@@ -3,7 +3,7 @@ import React from "react";
 import { INewUser } from "../../../requests/authentication/types";
 import { AddUserCardContainer } from "./add-user-card.style";
 import BaseCard from "../../../ui-components/base-card/base-card";
-import Button from "../../../ui-components/buttons/button";
+import Button from "../../../ui-components/button/button";
 import { registerUser } from "../../../requests/authentication/register-user";
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
 

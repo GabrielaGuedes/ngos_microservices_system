@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
 import { getDonators } from "../../../requests/donations/get-donators";
 import { IDonator, IDonatorsFilters } from "../../../requests/donations/types";
-import Button from "../../../ui-components/buttons/button";
+import Button from "../../../ui-components/button/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import { FilterButtonContainer } from "./donators.style";

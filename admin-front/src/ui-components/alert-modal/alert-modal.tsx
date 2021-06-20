@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import ReactModal from "react-modal";
 import { SPACES } from "../../ui-constants/sizes";
 import { customStyles, Title, ButtonsContainer } from "./alert-modal.style";
-import Button from "../../ui-components/buttons/button";
+import Button from "../button/button";
 
 interface IAlertModal {
   isOpen: boolean;

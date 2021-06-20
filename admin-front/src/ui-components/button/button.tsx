@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { StyledButton } from "./buttons";
+import { StyledButton } from "./button.style";
 
 interface IButton {
   kind?: "primary" | "secondary" | "text";

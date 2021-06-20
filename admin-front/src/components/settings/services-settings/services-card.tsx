@@ -3,7 +3,7 @@ import { getServices } from "../../../requests/settings/get-services-config";
 import { IServicesConfig } from "../../../requests/settings/types";
 import { updateServicesConfig } from "../../../requests/settings/update-services-config";
 import BaseCard from "../../../ui-components/base-card/base-card";
-import Button from "../../../ui-components/buttons/button";
+import Button from "../../../ui-components/button/button";
 import CheckBoxGroupField from "../../../ui-components/checkbox-group-field/checkbox-group-field";
 import { errorToast, successToast } from "../../../ui-components/toasts/toasts";
 import { serviceMapper } from "../../../utils/mappers/service-mapper";
