@@ -1,10 +1,9 @@
 import React from "react";
 import { IEmployee } from "../../../requests/employees/types";
-import { EMOJIS } from "../../../ui-components/icons/emojis";
 import Table from "../../../ui-components/table/table";
 import RowDetails from "./row-details";
-import EmojiIcon from "../../../ui-components/icons/emoji/emoji-icon";
 import EditEmployeeButton from "./edit-employee-button";
+import DeleteEmployeeButton from "./delete-employee-button";
 
 interface IEmployeesTable {
   employees: IEmployee[];
@@ -56,7 +55,11 @@ const EmployeesTable: React.FC<IEmployeesTable> = ({
       render: (row: IEmployee) => (
         <div style={{ display: "flex" }}>
           <EditEmployeeButton employee={row} refreshTable={refreshTable} />
-          <EmojiIcon emoji={EMOJIS.trash} />
+          <DeleteEmployeeButton
+            id={row.id}
+            name={row.name}
+            refreshTable={refreshTable}
+          />
         </div>
       ),
       align: "center",
