@@ -24,6 +24,7 @@ import {
 } from "../../../ui-components/base-containers/base-containers";
 import { updateEmployee } from "../../../requests/employees/update-employee";
 import { createEmployee } from "../../../requests/employees/create-employee";
+import { IOption } from "../../../ui-components/select/types";
 
 interface IEditCreateEmployeeModal {
   isOpen: boolean;
@@ -31,11 +32,6 @@ interface IEditCreateEmployeeModal {
   refreshTable: () => void;
   data?: IEmployee;
   creation?: boolean;
-}
-
-interface IOption {
-  label: string;
-  value: string | number;
 }
 
 const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
