@@ -12,4 +12,5 @@ export const EMOJIS = {
   happy: "😄",
   edit: "✏️",
   trash: "🗑️",
+  saving: "👩‍💻",
 };

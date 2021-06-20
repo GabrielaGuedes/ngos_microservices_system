@@ -29,3 +29,15 @@ export const successToast = (message: string = "Salvo com succeso!") =>
       boxShadow: SHADOWS.card,
     },
   });
+
+export const infoToast = (message: string = "Estamos salvando...") =>
+  toast(message, {
+    icon: EMOJIS.saving,
+    position: "bottom-center",
+    style: {
+      borderRadius: RADIUS.card,
+      background: COLORS.lightGray,
+      color: "black",
+      boxShadow: SHADOWS.card,
+    },
+  });

@@ -82,7 +82,7 @@ const Table: React.FC<ITable> = ({
             header: "horizontal",
           }}
           pad={isMobile() ? "xxsmall" : "small"}
-          size={isMobile() ? "" : "medium"}
+          size={isMobile() ? "" : "xlarge"}
           rowDetails={rowDetails || null}
         />
         {data.length > 0 || <EmptyState />}

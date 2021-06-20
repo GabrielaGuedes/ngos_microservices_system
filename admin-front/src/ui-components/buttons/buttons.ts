@@ -2,13 +2,14 @@ import styled from "styled-components";
 import { COLORS } from "../../ui-constants/colors";
 import { FONT_SIZES, RADIUS } from "../../ui-constants/sizes";
 
-export const Button = styled.button`
+export const Button = styled.button<{ disabled?: boolean }>`
   border: 2px solid ${COLORS.mainHover};
   border-radius: ${RADIUS.button};
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   padding: 4px 22px;
   font-size: ${FONT_SIZES.px18};
-  background-color: ${COLORS.main};
+  background-color: ${(props) =>
+    props.disabled ? COLORS.mainHover : COLORS.main};
   color: white;
   font-weight: bold;
 

@@ -21,6 +21,7 @@ interface IModal {
   onConfirm?: () => void;
   confirmLabel?: string;
   beforeClose?: () => void;
+  confirmDisabled?: boolean;
 }
 
 const Modal: React.FC<IModal> = ({
@@ -32,6 +33,7 @@ const Modal: React.FC<IModal> = ({
   onConfirm,
   confirmLabel,
   beforeClose,
+  confirmDisabled,
 }) => {
   const handleClose = () => {
     beforeClose && beforeClose();
@@ -60,7 +62,9 @@ const Modal: React.FC<IModal> = ({
           >
             Cancelar
           </SecondaryButton>
-          <Button onClick={onConfirm}>{confirmLabel}</Button>
+          <Button onClick={onConfirm} disabled={confirmDisabled}>
+            {confirmLabel}
+          </Button>
         </FooterContainer>
       )}
     </ReactModal>

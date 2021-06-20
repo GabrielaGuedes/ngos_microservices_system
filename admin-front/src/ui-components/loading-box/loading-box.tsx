@@ -25,7 +25,7 @@ const LoadingBox: React.FC<ILoadingBox> = ({ pad }) => {
       background={{ color: "transparent", opacity: false }}
     >
       <Spinner />
-      <Text weight="bold">Loading ...</Text>
+      <Text weight="bold">Carregando...</Text>
     </Box>
   );
 };

@@ -1,4 +1,11 @@
-import { Form, FormField, TextInput, DateInput, Select } from "grommet";
+import {
+  Form,
+  FormField,
+  TextInput,
+  DateInput,
+  Select,
+  MaskedInput,
+} from "grommet";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -6,7 +13,11 @@ import { getAreas } from "../../../requests/employees/get-areas";
 import { getTeams } from "../../../requests/employees/get-teams";
 import { IEmployee, INewEmployee } from "../../../requests/employees/types";
 import Modal from "../../../ui-components/modal/modal";
-import { errorToast } from "../../../ui-components/toasts/toasts";
+import {
+  errorToast,
+  infoToast,
+  successToast,
+} from "../../../ui-components/toasts/toasts";
 import {
   TupleFieldContainer,
   HalfFieldContainer,
@@ -17,7 +28,7 @@ import { createEmployee } from "../../../requests/employees/create-employee";
 interface IUpsertEmployeeModal {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  refreshTable?: () => void;
+  refreshTable: () => void;
   data?: IEmployee;
   creation?: boolean;
 }
@@ -37,6 +48,10 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
   const [formValues, setFormValues] = useState<INewEmployee | any>();
   const [areaOptions, setAreaOptions] = useState<IOption[]>([]);
   const [teamOptions, setTeamOptions] = useState<IOption[]>([]);
+  const [formIsInvalid, setFormIsInvalid] = useState<boolean>(
+    Boolean(creation)
+  );
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setFormValues({
@@ -72,25 +87,48 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
       areaIds: formValues.areas?.map((a: IOption) => a.value) || [],
       teamIds: formValues.teams?.map((t: IOption) => t.value) || [],
       phone: parseInt(formValues.phone),
+      hireDate: formValues.hireDate.substring(0, 10),
+      birthDate: formValues.birthDate.substring(0, 10),
+      state: formValues.state.toUpperCase(),
     };
   };
 
+  const handleSuccess = () => {
+    refreshTable();
+    creation && setFormValues({});
+    setLoading(false);
+    successToast();
+    setIsOpen(false);
+  };
+
+  const handleError = () => {
+    errorToast(
+      "Ops, aconteceu algo de errado. Cheque os dados informados e certifique-se que o email já não foi cadastrado."
+    );
+    setLoading(false);
+    setFormIsInvalid(false);
+  };
+
   const handleConfirm = () => {
+    setLoading(true);
+    infoToast();
     if (creation) {
       createEmployee(formattedFormValues())
         .then(() => {
-          refreshTable && refreshTable();
-          setIsOpen(false);
+          handleSuccess();
         })
-        .catch(() => errorToast());
+        .catch(() => {
+          handleError();
+        });
     } else {
       data &&
         updateEmployee(formattedFormValues(), data?.id)
           .then(() => {
-            refreshTable && refreshTable();
-            setIsOpen(false);
+            handleSuccess();
           })
-          .catch(() => errorToast());
+          .catch(() => {
+            handleError();
+          });
     }
   };
 
@@ -102,11 +140,15 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
       footer
       confirmLabel={creation ? "Criar" : "Editar"}
       onConfirm={handleConfirm}
+      confirmDisabled={formIsInvalid || loading}
     >
       <Form
         validate="blur"
         value={formValues}
         onChange={(nextValue) => setFormValues(nextValue)}
+        onValidate={(event) => {
+          setFormIsInvalid(!event.valid);
+        }}
         messages={{ required: "Obrigatório" }}
       >
         <TupleFieldContainer>
@@ -118,17 +160,56 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
               <TextInput name="address" placeholder="Rua Qualquer, 10" />
             </FormField>
             <FormField label="Estado (UF)" name="state" required>
-              <TextInput name="state" placeholder="SP" />
+              <MaskedInput
+                mask={[
+                  {
+                    length: 2,
+                    regexp: /^[A-Za-z]{1,2}$/,
+                    placeholder: "SP",
+                  },
+                ]}
+                name="state"
+              />
             </FormField>
             <FormField label="Celular" name="phone" required>
-              <TextInput
+              <MaskedInput
+                mask={[
+                  { fixed: "+" },
+                  {
+                    length: 2,
+                    regexp: /^[0-9]{1,2}$/,
+                    placeholder: "xx",
+                  },
+                  { fixed: " " },
+                  { fixed: "(" },
+                  {
+                    length: 2,
+                    regexp: /^[0-9]{1,2}$/,
+                    placeholder: "xx",
+                  },
+                  { fixed: ")" },
+                  { fixed: " " },
+                  {
+                    length: 5,
+                    regexp: /^[0-9]{1,5}$/,
+                    placeholder: "xxxxx",
+                  },
+                  { fixed: "-" },
+                  {
+                    length: 4,
+                    regexp: /^[0-9]{1,4}$/,
+                    placeholder: "xxxx",
+                  },
+                ]}
                 name="phone"
-                placeholder="5511987654321"
-                type="number"
               />
             </FormField>
             <FormField label="Data de nascimento" name="birthDate" required>
-              <DateInput name="birthDate" format="mm/dd/yyyy" />
+              <DateInput
+                name="birthDate"
+                format="dd/mm/yyyy"
+                placeholder="dd/mm/aaaa"
+              />
             </FormField>
             <FormField label="Áreas" name="areas">
               <Select
@@ -160,7 +241,11 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
               <TextInput name="occupation" placeholder="Desenvolvedora" />
             </FormField>
             <FormField label="Data de admissão" name="hireDate" required>
-              <DateInput name="hireDate" format="mm/dd/yyyy" />
+              <DateInput
+                name="hireDate"
+                format="dd/mm/yyyy"
+                placeholder="dd/mm/aaaa"
+              />
             </FormField>
             <FormField label="Times" name="teams">
               <Select
