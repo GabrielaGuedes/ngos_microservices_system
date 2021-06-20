@@ -11,7 +11,7 @@ import { SPACES } from "../../../ui-constants/sizes";
 import { ButtonsContainer, AddNewButtons } from "./employee.style";
 import EmployeesTable from "../../../components/employees/employees/employees-table";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
-import UpsertEmployeeModal from "../../../components/employees/employees/upsert-employee-modal";
+import EditCreateEmployeeModal from "../../../components/employees/employees/edit-create-employee-modal";
 
 interface IEmployees {}
 
@@ -42,7 +42,7 @@ const Employees: React.FC<IEmployees> = () => {
           >
             Novo funcionário
           </Button>
-          <UpsertEmployeeModal
+          <EditCreateEmployeeModal
             isOpen={addEmployeeModalOpen}
             setIsOpen={setAddEmployeeModalOpen}
             creation

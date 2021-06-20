@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { IEmployee } from "../../../requests/employees/types";
 import EmojiIcon from "../../../ui-components/icons/emoji/emoji-icon";
 import { EMOJIS } from "../../../ui-components/icons/emojis";
-import UpsertEmployee from "./upsert-employee-modal";
+import EditCreateEmployeeModal from "./edit-create-employee-modal";
 
 interface IEditEmployeeButton {
   employee: IEmployee;
@@ -19,7 +19,7 @@ const EditEmployeeButton: React.FC<IEditEmployeeButton> = ({
   return (
     <Fragment>
       <EmojiIcon emoji={EMOJIS.edit} onClick={() => setIsEditModalOpen(true)} />
-      <UpsertEmployee
+      <EditCreateEmployeeModal
         isOpen={isEditModalOpen}
         setIsOpen={setIsEditModalOpen}
         data={employee}

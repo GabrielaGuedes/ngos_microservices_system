@@ -25,7 +25,7 @@ import {
 import { updateEmployee } from "../../../requests/employees/update-employee";
 import { createEmployee } from "../../../requests/employees/create-employee";
 
-interface IUpsertEmployeeModal {
+interface IEditCreateEmployeeModal {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   refreshTable: () => void;
@@ -38,7 +38,7 @@ interface IOption {
   value: string | number;
 }
 
-const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
+const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
   isOpen,
   setIsOpen,
   refreshTable,
@@ -268,4 +268,4 @@ const UpsertEmployeeModal: React.FC<IUpsertEmployeeModal> = ({
   );
 };
 
-export default UpsertEmployeeModal;
+export default EditCreateEmployeeModal;
