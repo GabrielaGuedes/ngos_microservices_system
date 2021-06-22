@@ -95,7 +95,7 @@ const FiltersModal: React.FC<IFiltersModal> = ({
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title="Filtros"
-      confirmLabel="Aplicr"
+      confirmLabel="Aplicar"
       footer
       onConfirm={handleConfirm}
       beforeClose={() => setFormValues(filters)}
@@ -116,6 +116,7 @@ const FiltersModal: React.FC<IFiltersModal> = ({
         </FormField>
         <FormField label="Time" name="team">
           <Select
+            clear
             name="team"
             placeholder="Time legal"
             options={teamOptions}
@@ -125,6 +126,7 @@ const FiltersModal: React.FC<IFiltersModal> = ({
         </FormField>
         <FormField label="Área" name="area">
           <Select
+            clear
             name="area"
             placeholder="Área legal"
             options={areaOptions}
