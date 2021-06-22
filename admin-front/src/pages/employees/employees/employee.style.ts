@@ -13,6 +13,6 @@ export const AddNewButtons = styled.div`
   flex-direction: row;
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 `;

@@ -18,6 +18,7 @@ import EditCreateEmployeeModal from "../../../components/employees/employees/edi
 import FiltersModal from "../../../components/employees/employees/filters-modal";
 import EditCreateAreaModal from "../../../components/employees/areas/edit-create-area-modal";
 import EditCreateTeamModal from "../../../components/employees/teams/edit-create-team-modal";
+import { isMobile } from "../../../utils/is-mobile";
 
 interface IEmployees {}
 
@@ -73,7 +74,7 @@ const Employees: React.FC<IEmployees> = () => {
             refreshTable={refreshTable}
           />
           <Button
-            style={{ marginRight: SPACES.px4 }}
+            style={{ marginRight: isMobile() || SPACES.px4 }}
             kind="text"
             onClick={() => setAddTeamModalOpen(true)}
           >
