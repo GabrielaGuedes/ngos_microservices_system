@@ -16,12 +16,14 @@ import EmployeesTable from "../../../components/employees/employees/employees-ta
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import EditCreateEmployeeModal from "../../../components/employees/employees/edit-create-employee-modal";
 import FiltersModal from "../../../components/employees/employees/filters-modal";
+import EditCreateAreaModal from "../../../components/employees/areas/edit-create-area-modal";
 
 interface IEmployees {}
 
 const Employees: React.FC<IEmployees> = () => {
   const [employeesResult, setEmployeesResult] = useState<IEmployee[]>();
   const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
+  const [addAreaModalOpen, setAddAreaModalOpen] = useState(false);
   const [filtersModalOpen, setFiltersModalOpen] = useState(false);
   const [filters, setFilters] = useState<IEmployeesFilters>({});
 
@@ -71,8 +73,16 @@ const Employees: React.FC<IEmployees> = () => {
           <Button style={{ marginRight: SPACES.px4 }} kind="text">
             Novo time
           </Button>
-          <Button kind="text">Nova área</Button>
-        </AddNewButtons>{" "}
+          <Button kind="text" onClick={() => setAddAreaModalOpen(true)}>
+            Nova área
+          </Button>
+          <EditCreateAreaModal
+            isOpen={addAreaModalOpen}
+            setIsOpen={setAddAreaModalOpen}
+            creation
+            refreshTable={refreshTable}
+          />
+        </AddNewButtons>
         <div>
           <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
           <FiltersModal

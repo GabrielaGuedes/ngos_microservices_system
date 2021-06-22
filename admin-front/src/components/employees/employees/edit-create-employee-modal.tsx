@@ -15,7 +15,7 @@ import { IEmployee, INewEmployee } from "../../../requests/employees/types";
 import Modal from "../../../ui-components/modal/modal";
 import {
   errorToast,
-  infoToast,
+  loadingToast,
   successToast,
 } from "../../../ui-components/toasts/toasts";
 import {
@@ -108,7 +108,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
 
   const handleConfirm = () => {
     setLoading(true);
-    infoToast();
+    loadingToast();
     if (creation) {
       createEmployee(formattedFormValues())
         .then(() => {
@@ -217,6 +217,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
                 valueKey="value"
                 multiple
                 messages={{ multiple: "Vários itens" }}
+                closeOnChange={false}
               />
             </FormField>
           </HalfFieldContainer>
@@ -253,6 +254,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
                 valueKey="value"
                 multiple
                 messages={{ multiple: "Vários itens" }}
+                closeOnChange={false}
               />
             </FormField>
           </HalfFieldContainer>

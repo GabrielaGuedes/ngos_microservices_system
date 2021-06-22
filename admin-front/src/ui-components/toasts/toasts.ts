@@ -30,7 +30,7 @@ export const successToast = (message: string = "Salvo com succeso!") =>
     },
   });
 
-export const infoToast = (message: string = "Estamos salvando...") =>
+export const loadingToast = (message: string = "Estamos salvando...") =>
   toast(message, {
     icon: EMOJIS.saving,
     position: "bottom-center",
