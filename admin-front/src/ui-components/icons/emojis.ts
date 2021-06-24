@@ -13,4 +13,5 @@ export const EMOJIS = {
   edit: "✏️",
   trash: "🗑️",
   saving: "👩‍💻",
+  sad: "☹️",
 };
