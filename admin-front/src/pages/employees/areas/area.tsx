@@ -41,7 +41,11 @@ const Area: React.FC<IArea> = () => {
       {areasResult ? (
         <AreasGrid>
           {areasResult.map((a) => (
-            <AreaCard area={a} />
+            <AreaCard
+              key={`card-${a.id}-${a.name}`}
+              area={a}
+              refreshData={refreshData}
+            />
           ))}
         </AreasGrid>
       ) : (

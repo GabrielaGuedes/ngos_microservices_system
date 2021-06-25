@@ -6,6 +6,13 @@ export const AreaCardContainer = styled.div`
   margin: ${SPACES.px10};
 `;
 
-export const SeeMoreContainer = styled.div`
-  text-align: right;
+export const IconsContainer = styled.div`
+  display: flex;
+`;
+
+export const BottomButtonsContainer = styled.div`
+  margin-top: ${SPACES.px10};
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 `;
