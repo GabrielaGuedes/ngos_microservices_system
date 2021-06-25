@@ -5,6 +5,7 @@ import {
   EmployeeRow,
   Subtitle,
   DescriptionContainer,
+  EmployeeCol,
 } from "./area-detailed-info-modal.style";
 import ShyEmptyState from "../../../ui-components/shy-empty-state/shy-empty-state";
 
@@ -28,9 +29,9 @@ const AreaDetailedInfoModal: React.FC<IAreaDetailedInfoModal> = ({
       <Subtitle>Funcionários</Subtitle>
       {area.employees.length > 0 ? (
         area.employees.map((e) => (
-          <EmployeeRow key={`employee-row-${area.id}-${area.name}`}>
-            <div>{e.name}</div>
-            <div>{e.occupation}</div>
+          <EmployeeRow key={`employee-row-${e.id}`}>
+            <EmployeeCol>{e.name}</EmployeeCol>
+            <EmployeeCol>{e.occupation}</EmployeeCol>
           </EmployeeRow>
         ))
       ) : (

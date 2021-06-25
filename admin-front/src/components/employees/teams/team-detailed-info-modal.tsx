@@ -5,6 +5,7 @@ import {
   EmployeeRow,
   Subtitle,
   DescriptionContainer,
+  EmployeeCol,
 } from "./team-detailed-info-modal.style";
 import ShyEmptyState from "../../../ui-components/shy-empty-state/shy-empty-state";
 
@@ -28,9 +29,9 @@ const TeamDetailedInfoModal: React.FC<ITeamDetailedInfoModal> = ({
       <Subtitle>Funcionários</Subtitle>
       {team.employees.length > 0 ? (
         team.employees.map((e) => (
-          <EmployeeRow key={`employee-row-${team.id}-${team.name}`}>
-            <div>{e.name}</div>
-            <div>{e.occupation}</div>
+          <EmployeeRow key={`employee-row-${e.id}`}>
+            <EmployeeCol>{e.name}</EmployeeCol>
+            <EmployeeCol>{e.occupation}</EmployeeCol>
           </EmployeeRow>
         ))
       ) : (
