@@ -1,34 +1,34 @@
 import React from "react";
-import { IEmployeeArea } from "../../../requests/employees/types";
+import { IEmployeeTeam } from "../../../requests/employees/types";
 import Modal from "../../../ui-components/modal/modal";
 import {
   EmployeeRow,
   Subtitle,
   DescriptionContainer,
-} from "./area-detailed-info-modal.style";
+} from "./team-detailed-info-modal.style";
 import ShyEmptyState from "../../../ui-components/shy-empty-state/shy-empty-state";
 
-interface IAreaDetailedInfoModal {
-  area: IEmployeeArea;
+interface ITeamDetailedInfoModal {
+  team: IEmployeeTeam;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }
 
-const AreaDetailedInfoModal: React.FC<IAreaDetailedInfoModal> = ({
-  area,
+const TeamDetailedInfoModal: React.FC<ITeamDetailedInfoModal> = ({
+  team,
   isOpen,
   setIsOpen,
 }) => {
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={area.name}>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={team.name}>
       <DescriptionContainer>
         <Subtitle>Descrição</Subtitle>
-        {area.description || <ShyEmptyState />}
+        {team.description || <ShyEmptyState />}
       </DescriptionContainer>
       <Subtitle>Funcionários</Subtitle>
-      {area.employees.length > 0 ? (
-        area.employees.map((e) => (
-          <EmployeeRow key={`employee-row-${area.id}-${area.name}`}>
+      {team.employees.length > 0 ? (
+        team.employees.map((e) => (
+          <EmployeeRow key={`employee-row-${team.id}-${team.name}`}>
             <div>{e.name}</div>
             <div>{e.occupation}</div>
           </EmployeeRow>
@@ -40,4 +40,4 @@ const AreaDetailedInfoModal: React.FC<IAreaDetailedInfoModal> = ({
   );
 };
 
-export default AreaDetailedInfoModal;
+export default TeamDetailedInfoModal;

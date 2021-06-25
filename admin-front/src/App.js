@@ -14,6 +14,7 @@ import Donations from "./pages/donations/donations/donations";
 import Donators from "./pages/donations/donators/donators";
 import Employees from "./pages/employees/employees/employees";
 import Area from "./pages/employees/areas/area";
+import Team from "./pages/employees/teams/team";
 
 function App() {
   return (
@@ -55,7 +56,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/employees/teams">
           <Sidebar />
-          <StyledPage>Times</StyledPage>
+          <StyledPage>
+            <Team />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/volunteers" exact>
           <Sidebar />
