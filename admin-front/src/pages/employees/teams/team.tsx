@@ -7,9 +7,9 @@ import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import EditCreateTeamModal from "../../../components/employees/teams/edit-create-team-modal";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
-import { TeamsGrid } from "./team.style";
 import TeamCard from "../../../components/employees/teams/team-card";
 import EmptyState from "../../../ui-components/empty-state/empty-state";
+import { Grid } from "../../../ui-components/grid/grid.style";
 
 interface ITeam {}
 
@@ -40,7 +40,7 @@ const Team: React.FC<ITeam> = () => {
         refreshTable={refreshData}
       />
       {teamsResult ? (
-        <TeamsGrid>
+        <Grid>
           {teamsResult.length > 0 ? (
             teamsResult.map((a) => (
               <TeamCard
@@ -52,7 +52,7 @@ const Team: React.FC<ITeam> = () => {
           ) : (
             <EmptyState />
           )}
-        </TeamsGrid>
+        </Grid>
       ) : (
         <LoadingBox />
       )}

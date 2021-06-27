@@ -23,4 +23,5 @@ export const WIDTHS = {
   desktopSidebar: "20%",
   mobileSidebar: "60%",
   mobileThreshold: "600px",
+  gridCard: "325px",
 };

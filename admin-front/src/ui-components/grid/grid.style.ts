@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { SPACES } from "../../../ui-constants/sizes";
+import { SPACES } from "../../ui-constants/sizes";
 
-export const TeamsGrid = styled.div`
+export const Grid = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;

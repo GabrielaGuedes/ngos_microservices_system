@@ -7,9 +7,9 @@ import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import EditCreateAreaModal from "../../../components/employees/areas/edit-create-area-modal";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
-import { AreasGrid } from "./area.style";
 import AreaCard from "../../../components/employees/areas/area-card";
 import EmptyState from "../../../ui-components/empty-state/empty-state";
+import { Grid } from "../../../ui-components/grid/grid.style";
 
 interface IArea {}
 
@@ -40,7 +40,7 @@ const Area: React.FC<IArea> = () => {
         refreshTable={refreshData}
       />
       {areasResult ? (
-        <AreasGrid>
+        <Grid>
           {areasResult.length > 0 ? (
             areasResult.map((a) => (
               <AreaCard
@@ -52,7 +52,7 @@ const Area: React.FC<IArea> = () => {
           ) : (
             <EmptyState />
           )}
-        </AreasGrid>
+        </Grid>
       ) : (
         <LoadingBox />
       )}
