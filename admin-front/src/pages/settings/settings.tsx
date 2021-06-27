@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Tab, Tabs } from "grommet";
-import { ContentContainer } from "./settings.style";
+import { TabContentContainer } from "../../ui-components/base-containers/base-containers";
 import { PageTitle } from "../../ui-components/typography/page-title";
 import ServicesCard from "../../components/settings/services-settings/services-card";
 import GeneralSettingsCard from "../../components/settings/general-settings/general-settings-card";
@@ -14,15 +14,15 @@ const Settings: React.FC<ISettings> = () => {
       <PageTitle>Configurações</PageTitle>
       <Tabs alignControls="start">
         <Tab title="Configurações">
-          <ContentContainer>
+          <TabContentContainer>
             <ServicesCard />
             <GeneralSettingsCard />
-          </ContentContainer>
+          </TabContentContainer>
         </Tab>
         <Tab title="Usuários">
-          <ContentContainer>
+          <TabContentContainer>
             <AddUserCard />
-          </ContentContainer>
+          </TabContentContainer>
         </Tab>
       </Tabs>
     </Fragment>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { WIDTHS } from "../../ui-constants/sizes";
+import { SPACES, WIDTHS } from "../../ui-constants/sizes";
 
 export const TupleFieldContainer = styled.div`
   display: flex;
@@ -17,4 +17,8 @@ export const HalfFieldContainer = styled.div`
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
     width: auto;
   }
+`;
+
+export const TabContentContainer = styled.div`
+  padding-top: ${SPACES.px20};
 `;
