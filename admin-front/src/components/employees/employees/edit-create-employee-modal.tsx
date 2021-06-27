@@ -82,7 +82,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
       ...formValues,
       areaIds: formValues.areas?.map((a: IOption) => a.value) || [],
       teamIds: formValues.teams?.map((t: IOption) => t.value) || [],
-      phone: parseInt(formValues.phone),
+      phone: parseInt(formValues.phone.replace(/\D/g, "")),
       hireDate: formValues.hireDate.substring(0, 10),
       birthDate: formValues.birthDate.substring(0, 10),
       state: formValues.state.toUpperCase(),

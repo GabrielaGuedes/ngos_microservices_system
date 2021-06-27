@@ -9,6 +9,7 @@ import EditCreateTeamModal from "../../../components/employees/teams/edit-create
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { TeamsGrid } from "./team.style";
 import TeamCard from "../../../components/employees/teams/team-card";
+import EmptyState from "../../../ui-components/empty-state/empty-state";
 
 interface ITeam {}
 
@@ -40,13 +41,17 @@ const Team: React.FC<ITeam> = () => {
       />
       {teamsResult ? (
         <TeamsGrid>
-          {teamsResult.map((a) => (
-            <TeamCard
-              key={`card-${a.id}-${a.name}`}
-              team={a}
-              refreshData={refreshData}
-            />
-          ))}
+          {teamsResult.length > 0 ? (
+            teamsResult.map((a) => (
+              <TeamCard
+                key={`card-${a.id}-${a.name}`}
+                team={a}
+                refreshData={refreshData}
+              />
+            ))
+          ) : (
+            <EmptyState />
+          )}
         </TeamsGrid>
       ) : (
         <LoadingBox />

@@ -9,6 +9,7 @@ import EditCreateAreaModal from "../../../components/employees/areas/edit-create
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { AreasGrid } from "./area.style";
 import AreaCard from "../../../components/employees/areas/area-card";
+import EmptyState from "../../../ui-components/empty-state/empty-state";
 
 interface IArea {}
 
@@ -40,13 +41,17 @@ const Area: React.FC<IArea> = () => {
       />
       {areasResult ? (
         <AreasGrid>
-          {areasResult.map((a) => (
-            <AreaCard
-              key={`card-${a.id}-${a.name}`}
-              area={a}
-              refreshData={refreshData}
-            />
-          ))}
+          {areasResult.length > 0 ? (
+            areasResult.map((a) => (
+              <AreaCard
+                key={`card-${a.id}-${a.name}`}
+                area={a}
+                refreshData={refreshData}
+              />
+            ))
+          ) : (
+            <EmptyState />
+          )}
         </AreasGrid>
       ) : (
         <LoadingBox />
