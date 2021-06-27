@@ -13,8 +13,11 @@ import Settings from "./pages/settings/settings";
 import Donations from "./pages/donations/donations/donations";
 import Donators from "./pages/donations/donators/donators";
 import Employees from "./pages/employees/employees/employees";
-import Area from "./pages/employees/areas/area";
-import Team from "./pages/employees/teams/team";
+import EmployeeArea from "./pages/employees/areas/area";
+import EmployeeTeam from "./pages/employees/teams/team";
+import Volunteers from "./pages/volunteers/volunteers/volunteers";
+import VolunteerArea from "./pages/volunteers/areas/area";
+import VolunteerTeam from "./pages/volunteers/teams/team";
 
 function App() {
   return (
@@ -51,26 +54,32 @@ function App() {
         <ProtectedRoute servicePath path="/employees/areas">
           <Sidebar />
           <StyledPage>
-            <Area />
+            <EmployeeArea />
           </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/employees/teams">
           <Sidebar />
           <StyledPage>
-            <Team />
+            <EmployeeTeam />
           </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/volunteers" exact>
           <Sidebar />
-          <StyledPage>Voluntarios</StyledPage>
+          <StyledPage>
+            <Volunteers />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/volunteers/areas">
           <Sidebar />
-          <StyledPage>Areas</StyledPage>
+          <StyledPage>
+            <VolunteerArea />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/volunteers/teams">
           <Sidebar />
-          <StyledPage>Times</StyledPage>
+          <StyledPage>
+            <VolunteerTeam />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/projects">
           <Sidebar />
