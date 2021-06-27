@@ -75,7 +75,7 @@ const EditCreateEmployeeModal: React.FC<IEditCreateEmployeeModal> = ({
         );
       })
       .catch(() => errorToast());
-  }, []);
+  }, [data]);
 
   const formattedFormValues = () => {
     return {

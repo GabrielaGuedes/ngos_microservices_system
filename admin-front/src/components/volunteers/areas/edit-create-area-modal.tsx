@@ -53,7 +53,7 @@ const EditCreateAreaModal: React.FC<IEditCreateAreaModal> = ({
         );
       })
       .catch(() => errorToast());
-  }, []);
+  }, [data]);
 
   const formattedFormValues = () => {
     return {

@@ -75,7 +75,7 @@ const EditCreateVolunteerModal: React.FC<IEditCreateVolunteerModal> = ({
         );
       })
       .catch(() => errorToast());
-  }, []);
+  }, [data]);
 
   const formattedFormValues = () => {
     return {

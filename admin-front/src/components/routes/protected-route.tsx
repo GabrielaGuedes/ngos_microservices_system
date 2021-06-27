@@ -27,7 +27,7 @@ const ProtectedRoute: React.FC<IProtectedRoute> = ({
         if (disabled) window.location.href = "/";
       });
     }
-  }, []);
+  }, [path, servicePath]);
 
   return (
     <Route path={path} exact={exact}>

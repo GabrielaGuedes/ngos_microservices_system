@@ -53,7 +53,7 @@ const EditCreateTeamModal: React.FC<IEditCreateTeamModal> = ({
         );
       })
       .catch(() => errorToast());
-  }, []);
+  }, [data]);
 
   const formattedFormValues = () => {
     return {
