@@ -4,19 +4,17 @@ import { getDonations } from "../../../requests/donations/get-donations";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { errorToast } from "../../../ui-components/toasts/toasts";
-import Button from "../../../ui-components/button/button";
-import { InfosContainer, TotalDonated } from "./donations.style";
+import { TotalDonated } from "./donations.style";
 import {
   IDonations,
   IDonationsFilters,
 } from "../../../requests/donations/types";
-import FiltersModal from "../../../components/donations/donations/filters-modal";
 import DonationsTable from "../../../components/donations/donations/donations-table";
+import DataWithFilters from "../../../ui-components/data-with-filters/data-with-filters";
+import FiltersFormFields from "../../../components/donations/donations/filters-form-fields";
 
 const Donations: React.FC = () => {
   const [donationsResult, setDonationsResult] = useState<IDonations>();
-  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
-  const [filters, setFilters] = useState<IDonationsFilters>({});
 
   useEffect(() => {
     getDonations({})
@@ -24,45 +22,44 @@ const Donations: React.FC = () => {
       .catch(() => errorToast());
   }, []);
 
-  const filtersAppliedInfo = () => {
-    const filtersApplied = Object.keys(filters).filter(
-      (key) => key !== "sortBy"
-    ).length;
-
-    if (filtersApplied === 0) return;
-
-    return (
-      <div style={{ textAlign: "right" }}>{`${filtersApplied} filtro${
-        filtersApplied > 1 ? "s" : ""
-      } aplicado${filtersApplied > 1 ? "s" : ""}`}</div>
+  const cleanEmptyFilters = (nextFilters: IDonationsFilters) => {
+    const filtersInArray = Object.entries(nextFilters).filter(
+      (entry) => entry[1] !== false && entry[1] !== ""
     );
+    return Object.fromEntries(filtersInArray);
+  };
+
+  const handleConfirmForm = (value: IDonationsFilters): Promise<any> => {
+    const cleanedFilters = cleanEmptyFilters(value);
+
+    return getDonations(cleanedFilters)
+      .then((res) => {
+        setDonationsResult(res);
+        return cleanedFilters;
+      })
+      .catch(() => errorToast());
   };
 
   return (
     <Fragment>
       <PageTitle>Doações feitas</PageTitle>
-      <InfosContainer>
-        <TotalDonated>
-          Total dodado:{" "}
-          <b>R$ {donationsResult?.total.toString().replace(".", ",")}</b>
-        </TotalDonated>
-        <div>
-          <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
-          <FiltersModal
-            isOpen={filtersModalOpen}
-            setIsOpen={setFiltersModalOpen}
-            setDonations={setDonationsResult}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        </div>
-      </InfosContainer>
-      {filtersAppliedInfo()}
-      {donationsResult ? (
-        <DonationsTable donations={donationsResult.donations} />
-      ) : (
-        <LoadingBox />
-      )}
+      <DataWithFilters
+        dataContainer={
+          donationsResult ? (
+            <DonationsTable donations={donationsResult.donations} />
+          ) : (
+            <LoadingBox />
+          )
+        }
+        topRightInfo={
+          <TotalDonated>
+            Total dodado:{" "}
+            <b>R$ {donationsResult?.total.toString().replace(".", ",")}</b>
+          </TotalDonated>
+        }
+        filtersFormFields={<FiltersFormFields />}
+        handleConfirmForm={handleConfirmForm}
+      />
     </Fragment>
   );
 };

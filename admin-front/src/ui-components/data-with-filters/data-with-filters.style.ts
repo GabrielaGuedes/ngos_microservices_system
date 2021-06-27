@@ -5,5 +5,6 @@ export const InfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  align-items: flex-end;
   margin-bottom: ${SPACES.px20};
 `;

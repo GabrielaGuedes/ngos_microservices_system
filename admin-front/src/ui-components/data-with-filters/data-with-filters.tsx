@@ -37,7 +37,7 @@ const DataWithFilters: React.FC<IDataWithFilters> = ({
   return (
     <Fragment>
       <InfoContainer>
-        {topRightInfo}
+        {topRightInfo || <div />}
         <div>
           <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
           <FiltersModal

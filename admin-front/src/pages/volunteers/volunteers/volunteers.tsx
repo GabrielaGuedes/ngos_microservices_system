@@ -11,14 +11,17 @@ import Button from "../../../ui-components/button/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
 import { SPACES } from "../../../ui-constants/sizes";
-import { ButtonsContainer, AddNewButtons } from "./volunteers.style";
+import { AddNewButtons } from "./volunteers.style";
 import VolunteersTable from "../../../components/volunteers/volunteers/volunteers-table";
 import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import EditCreateVolunteerModal from "../../../components/volunteers/volunteers/edit-create-volunteer-modal";
-import FiltersModal from "../../../components/volunteers/volunteers/filters-modal";
 import EditCreateAreaModal from "../../../components/volunteers/areas/edit-create-area-modal";
 import EditCreateTeamModal from "../../../components/volunteers/teams/edit-create-team-modal";
 import { isMobile } from "../../../utils/is-mobile";
+import DataWithFilters from "../../../ui-components/data-with-filters/data-with-filters";
+import FiltersFormFields, {
+  IVolunteersFiltersForm,
+} from "../../../components/volunteers/volunteers/filters-form-fields";
 
 interface IVolunteers {}
 
@@ -27,8 +30,6 @@ const Volunteers: React.FC<IVolunteers> = () => {
   const [addVolunteerModalOpen, setAddVolunteerModalOpen] = useState(false);
   const [addAreaModalOpen, setAddAreaModalOpen] = useState(false);
   const [addTeamModalOpen, setAddTeamModalOpen] = useState(false);
-  const [filtersModalOpen, setFiltersModalOpen] = useState(false);
-  const [filters, setFilters] = useState<IVolunteersFilters>({});
 
   useEffect(() => {
     getVolunteers({})
@@ -42,80 +43,93 @@ const Volunteers: React.FC<IVolunteers> = () => {
       .catch(() => errorToast());
   };
 
-  const filtersAppliedInfo = () => {
-    const filtersApplied = Object.keys(filters).filter(
-      (key) => key !== "sortBy"
-    ).length;
+  const addNewButtons = (
+    <AddNewButtons>
+      <Button
+        style={{ marginRight: SPACES.px4 }}
+        onClick={() => setAddVolunteerModalOpen(true)}
+      >
+        Novo voluntário
+      </Button>
+      <EditCreateVolunteerModal
+        isOpen={addVolunteerModalOpen}
+        setIsOpen={setAddVolunteerModalOpen}
+        creation
+        refreshTable={refreshTable}
+      />
+      <Button
+        style={{ marginRight: isMobile() || SPACES.px4 }}
+        kind="text"
+        onClick={() => setAddTeamModalOpen(true)}
+      >
+        Novo time
+      </Button>
+      <EditCreateTeamModal
+        isOpen={addTeamModalOpen}
+        setIsOpen={setAddTeamModalOpen}
+        creation
+        refreshTable={refreshTable}
+      />
+      <Button kind="text" onClick={() => setAddAreaModalOpen(true)}>
+        Nova área
+      </Button>
+      <EditCreateAreaModal
+        isOpen={addAreaModalOpen}
+        setIsOpen={setAddAreaModalOpen}
+        creation
+        refreshTable={refreshTable}
+      />
+    </AddNewButtons>
+  );
 
-    if (filtersApplied === 0) return;
+  const formatFormValues = (values: IVolunteersFiltersForm) => {
+    const formatted = {
+      ...values,
+      teamId: values.team?.value,
+      areaId: values.area?.value,
+    };
+    delete formatted.area;
+    delete formatted.team;
+    return formatted;
+  };
 
-    return (
-      <div style={{ textAlign: "right" }}>{`${filtersApplied} filtro${
-        filtersApplied > 1 ? "s" : ""
-      } aplicado${filtersApplied > 1 ? "s" : ""}`}</div>
+  const cleanEmptyFilters = (formattedValues: IVolunteersFilters) => {
+    const filtersInArray = Object.entries(formattedValues).filter(
+      (entry) => entry[1] !== "" && entry[1] !== undefined
     );
+    return Object.fromEntries(filtersInArray);
+  };
+
+  const handleConfirmForm = (values: IVolunteersFiltersForm): Promise<any> => {
+    const formattedValues = formatFormValues(values);
+    const cleanedFilters = cleanEmptyFilters(formattedValues as any);
+
+    return getVolunteers(cleanedFilters)
+      .then((res) => {
+        setVolunteersResult(res);
+        return cleanedFilters;
+      })
+      .catch(() => errorToast());
   };
 
   return (
     <Fragment>
       <PageTitle>Voluntários</PageTitle>
-      <ButtonsContainer>
-        <AddNewButtons>
-          <Button
-            style={{ marginRight: SPACES.px4 }}
-            onClick={() => setAddVolunteerModalOpen(true)}
-          >
-            Novo voluntário
-          </Button>
-          <EditCreateVolunteerModal
-            isOpen={addVolunteerModalOpen}
-            setIsOpen={setAddVolunteerModalOpen}
-            creation
-            refreshTable={refreshTable}
-          />
-          <Button
-            style={{ marginRight: isMobile() || SPACES.px4 }}
-            kind="text"
-            onClick={() => setAddTeamModalOpen(true)}
-          >
-            Novo time
-          </Button>
-          <EditCreateTeamModal
-            isOpen={addTeamModalOpen}
-            setIsOpen={setAddTeamModalOpen}
-            creation
-            refreshTable={refreshTable}
-          />
-          <Button kind="text" onClick={() => setAddAreaModalOpen(true)}>
-            Nova área
-          </Button>
-          <EditCreateAreaModal
-            isOpen={addAreaModalOpen}
-            setIsOpen={setAddAreaModalOpen}
-            creation
-            refreshTable={refreshTable}
-          />
-        </AddNewButtons>
-        <div>
-          <Button onClick={() => setFiltersModalOpen(true)}>Filtros</Button>
-          <FiltersModal
-            isOpen={filtersModalOpen}
-            setIsOpen={setFiltersModalOpen}
-            setVolunteers={setVolunteersResult}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        </div>
-      </ButtonsContainer>
-      {filtersAppliedInfo()}
-      {volunteersResult ? (
-        <VolunteersTable
-          volunteers={volunteersResult}
-          refreshTable={refreshTable}
-        />
-      ) : (
-        <LoadingBox />
-      )}
+      <DataWithFilters
+        dataContainer={
+          volunteersResult ? (
+            <VolunteersTable
+              volunteers={volunteersResult}
+              refreshTable={refreshTable}
+            />
+          ) : (
+            <LoadingBox />
+          )
+        }
+        filtersFormFields={<FiltersFormFields />}
+        handleConfirmForm={handleConfirmForm}
+        topRightInfo={addNewButtons}
+      />
     </Fragment>
   );
 };
