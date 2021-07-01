@@ -10,6 +10,6 @@ RUN npm install nodemon -g --quiet
 
 COPY . . 
 
-EXPOSE 6000
+EXPOSE 6010
 
 ENTRYPOINT [ "./init.sh" ]

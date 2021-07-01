@@ -74,7 +74,7 @@ services:
     links:
       - postgres_db
     ports:
-      - "6000:6000"
+      - "6010:6010"
 
   financial_control_server:
     container_name: NGO_FINANCIAL_CONTROL
