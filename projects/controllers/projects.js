@@ -11,7 +11,7 @@ const { validate } = new Validator();
 
 router.get("/", verifyJWT, async (req, res) => {
   const query = {
-    order: [["startDate", req.query.startDateSort || "DESC"]],
+    order: [["startDate", req.query.startDateSort || "ASC"]],
     ...projectsQueryFilters(req.query),
   };
 

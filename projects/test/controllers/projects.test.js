@@ -107,11 +107,8 @@ describe("/GET Projects", () => {
   });
 
   describe("When token is valid", () => {
-    it("returns all projects ordered by startDate desc", async () => {
-      const sortedProjectsDates = projects
-        .map((proj) => proj.startDate)
-        .sort()
-        .reverse();
+    it("returns all projects ordered by startDate asc", async () => {
+      const sortedProjectsDates = projects.map((proj) => proj.startDate).sort();
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/projects")
@@ -148,8 +145,7 @@ describe("/GET Projects", () => {
       );
       const sortedFilteredProjectsDates = filteredProjects
         .map((proj) => proj.startDate)
-        .sort()
-        .reverse();
+        .sort();
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
@@ -178,8 +174,7 @@ describe("/GET Projects", () => {
       );
       const sortedFilteredProjectsDates = filteredProjects
         .map((proj) => proj.startDate)
-        .sort()
-        .reverse();
+        .sort();
 
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
