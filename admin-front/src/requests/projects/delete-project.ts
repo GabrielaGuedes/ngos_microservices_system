@@ -4,6 +4,6 @@ import { PROJECTS_ROUTES } from "./routes";
 
 export const deleteProject = async (id: string | number): Promise<IDestroy> => {
   return await deleteRequest(
-    `${process.env.REACT_APP_EMPLOYEES_SERVER_API}${PROJECTS_ROUTES.projects}/${id}`
+    `${process.env.REACT_APP_PROJECTS_SERVER_API}${PROJECTS_ROUTES.projects}/${id}`
   );
 };

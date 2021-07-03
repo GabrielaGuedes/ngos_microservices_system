@@ -1,5 +1,5 @@
 export interface IProject extends IBaseProject {
-  id: 7;
+  id: number;
   updatedAt?: Date;
   createdAt?: Date;
 }
