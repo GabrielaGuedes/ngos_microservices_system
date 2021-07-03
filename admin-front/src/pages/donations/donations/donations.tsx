@@ -12,6 +12,7 @@ import {
 import DonationsTable from "../../../components/donations/donations/donations-table";
 import DataWithFilters from "../../../ui-components/data-with-filters/data-with-filters";
 import FiltersFormFields from "../../../components/donations/donations/filters-form-fields";
+import { cleanEmptyEntries } from "../../../utils/empty-entries-cleaner";
 
 const Donations: React.FC = () => {
   const [donationsResult, setDonationsResult] = useState<IDonations>();
@@ -22,15 +23,8 @@ const Donations: React.FC = () => {
       .catch(() => errorToast());
   }, []);
 
-  const cleanEmptyFilters = (nextFilters: IDonationsFilters) => {
-    const filtersInArray = Object.entries(nextFilters).filter(
-      (entry) => entry[1] !== false && entry[1] !== ""
-    );
-    return Object.fromEntries(filtersInArray);
-  };
-
   const handleConfirmForm = (value: IDonationsFilters): Promise<any> => {
-    const cleanedFilters = cleanEmptyFilters(value);
+    const cleanedFilters = cleanEmptyEntries(value, [false, ""]);
 
     return getDonations(cleanedFilters)
       .then((res) => {

@@ -3,10 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";
 import { getVolunteers } from "../../../requests/volunteers/get-volunteers";
-import {
-  IVolunteer,
-  IVolunteersFilters,
-} from "../../../requests/volunteers/types";
+import { IVolunteer } from "../../../requests/volunteers/types";
 import Button from "../../../ui-components/button/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
@@ -22,6 +19,7 @@ import DataWithFilters from "../../../ui-components/data-with-filters/data-with-
 import FiltersFormFields, {
   IVolunteersFiltersForm,
 } from "../../../components/volunteers/volunteers/filters-form-fields";
+import { cleanEmptyEntries } from "../../../utils/empty-entries-cleaner";
 
 interface IVolunteers {}
 
@@ -93,16 +91,9 @@ const Volunteers: React.FC<IVolunteers> = () => {
     return formatted;
   };
 
-  const cleanEmptyFilters = (formattedValues: IVolunteersFilters) => {
-    const filtersInArray = Object.entries(formattedValues).filter(
-      (entry) => entry[1] !== "" && entry[1] !== undefined
-    );
-    return Object.fromEntries(filtersInArray);
-  };
-
   const handleConfirmForm = (values: IVolunteersFiltersForm): Promise<any> => {
     const formattedValues = formatFormValues(values);
-    const cleanedFilters = cleanEmptyFilters(formattedValues as any);
+    const cleanedFilters = cleanEmptyEntries(formattedValues, ["", undefined]);
 
     return getVolunteers(cleanedFilters)
       .then((res) => {

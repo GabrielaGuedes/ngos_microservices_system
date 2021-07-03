@@ -3,10 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";
 import { getEmployees } from "../../../requests/employees/get-employees";
-import {
-  IEmployee,
-  IEmployeesFilters,
-} from "../../../requests/employees/types";
+import { IEmployee } from "../../../requests/employees/types";
 import Button from "../../../ui-components/button/button";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
@@ -22,6 +19,7 @@ import DataWithFilters from "../../../ui-components/data-with-filters/data-with-
 import FiltersFormFields, {
   IEmployeesFiltersForm,
 } from "../../../components/employees/employees/filters-form-fields";
+import { cleanEmptyEntries } from "../../../utils/empty-entries-cleaner";
 
 interface IEmployees {}
 
@@ -93,16 +91,9 @@ const Employees: React.FC<IEmployees> = () => {
     return formatted;
   };
 
-  const cleanEmptyFilters = (formattedValues: IEmployeesFilters) => {
-    const filtersInArray = Object.entries(formattedValues).filter(
-      (entry) => entry[1] !== "" && entry[1] !== undefined
-    );
-    return Object.fromEntries(filtersInArray);
-  };
-
   const handleConfirmForm = (values: IEmployeesFiltersForm): Promise<any> => {
     const formattedValues = formatFormValues(values);
-    const cleanedFilters = cleanEmptyFilters(formattedValues as any);
+    const cleanedFilters = cleanEmptyEntries(formattedValues, ["", undefined]);
 
     return getEmployees(cleanedFilters)
       .then((res) => {

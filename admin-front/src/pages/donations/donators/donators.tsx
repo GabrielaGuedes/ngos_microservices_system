@@ -8,6 +8,7 @@ import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import DonationsTable from "../../../components/donations/donators/donators-table";
 import DataWithFilters from "../../../ui-components/data-with-filters/data-with-filters";
 import FiltersFormFields from "../../../components/donations/donators/filters-form-fields";
+import { cleanEmptyEntries } from "../../../utils/empty-entries-cleaner";
 
 const Donators: React.FC = () => {
   const [donatorsResult, setDonatorsResult] = useState<IDonator[]>();
@@ -18,15 +19,8 @@ const Donators: React.FC = () => {
       .catch(() => errorToast());
   }, []);
 
-  const cleanEmptyFilters = (nextFilters: IDonatorsFilters) => {
-    const filtersInArray = Object.entries(nextFilters).filter(
-      (entry) => entry[1] !== ""
-    );
-    return Object.fromEntries(filtersInArray);
-  };
-
   const handleConfirmForm = (values: IDonatorsFilters): Promise<any> => {
-    const cleanedFilters = cleanEmptyFilters(values);
+    const cleanedFilters = cleanEmptyEntries(values, [""]);
 
     return getDonators(cleanedFilters)
       .then((res) => {
