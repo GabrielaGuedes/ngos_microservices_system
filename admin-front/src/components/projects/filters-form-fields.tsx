@@ -84,7 +84,7 @@ const FiltersFormFields: React.FC<IFiltersFormFields> = () => {
           </FormField>
         </HalfFieldContainer>
         <HalfFieldContainer>
-          <FormField label="Custo mínimo esperado" name="maxCost">
+          <FormField label="Custo máximo esperado" name="maxCost">
             <TextInput name="maxCost" placeholder="0,00" type="number" />
           </FormField>
         </HalfFieldContainer>
