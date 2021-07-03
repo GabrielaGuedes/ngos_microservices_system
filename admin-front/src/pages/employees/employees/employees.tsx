@@ -10,7 +10,6 @@ import { PageTitle } from "../../../ui-components/typography/page-title";
 import { SPACES } from "../../../ui-constants/sizes";
 import { AddNewButtons } from "./employee.style";
 import EmployeesTable from "../../../components/employees/employees/employees-table";
-import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import EditCreateEmployeeModal from "../../../components/employees/employees/edit-create-employee-modal";
 import EditCreateAreaModal from "../../../components/employees/areas/edit-create-area-modal";
 import EditCreateTeamModal from "../../../components/employees/teams/edit-create-team-modal";
@@ -107,20 +106,18 @@ const Employees: React.FC<IEmployees> = () => {
     <Fragment>
       <PageTitle>Funcionários</PageTitle>
       <DataWithFilters
-        dataContainer={
-          employeesResult ? (
-            <EmployeesTable
-              employees={employeesResult}
-              refreshTable={refreshTable}
-            />
-          ) : (
-            <LoadingBox />
-          )
-        }
+        loading={!employeesResult}
         filtersFormFields={<FiltersFormFields />}
         topRightInfo={addNewButtons}
         handleConfirmForm={handleConfirmForm}
-      />
+      >
+        {employeesResult && (
+          <EmployeesTable
+            employees={employeesResult}
+            refreshTable={refreshTable}
+          />
+        )}
+      </DataWithFilters>
     </Fragment>
   );
 };

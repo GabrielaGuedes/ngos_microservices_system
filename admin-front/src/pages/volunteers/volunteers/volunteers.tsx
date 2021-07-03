@@ -10,7 +10,6 @@ import { PageTitle } from "../../../ui-components/typography/page-title";
 import { SPACES } from "../../../ui-constants/sizes";
 import { AddNewButtons } from "./volunteers.style";
 import VolunteersTable from "../../../components/volunteers/volunteers/volunteers-table";
-import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import EditCreateVolunteerModal from "../../../components/volunteers/volunteers/edit-create-volunteer-modal";
 import EditCreateAreaModal from "../../../components/volunteers/areas/edit-create-area-modal";
 import EditCreateTeamModal from "../../../components/volunteers/teams/edit-create-team-modal";
@@ -107,20 +106,18 @@ const Volunteers: React.FC<IVolunteers> = () => {
     <Fragment>
       <PageTitle>Voluntários</PageTitle>
       <DataWithFilters
-        dataContainer={
-          volunteersResult ? (
-            <VolunteersTable
-              volunteers={volunteersResult}
-              refreshTable={refreshTable}
-            />
-          ) : (
-            <LoadingBox />
-          )
-        }
+        loading={!volunteersResult}
         filtersFormFields={<FiltersFormFields />}
         handleConfirmForm={handleConfirmForm}
         topRightInfo={addNewButtons}
-      />
+      >
+        {volunteersResult && (
+          <VolunteersTable
+            volunteers={volunteersResult}
+            refreshTable={refreshTable}
+          />
+        )}
+      </DataWithFilters>
     </Fragment>
   );
 };

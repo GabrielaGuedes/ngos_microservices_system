@@ -12,7 +12,6 @@ import {
   ProjectsExpectationsContainer,
   ExpectedValue,
 } from "./pending-projects.style";
-import LoadingBox from "../../ui-components/loading-box/loading-box";
 import Button from "../../ui-components/button/button";
 import EditCreateProjectModal from "./edit-create-project-modal";
 import { getTotalIncomeExpected } from "../../requests/projects/get-total-income-expected";
@@ -50,32 +49,6 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
       .catch(() => errorToast());
   };
 
-  const container = projectsResult ? (
-    <PendingProjectsStyled>
-      <ProjectsGridContainer>
-        <ProjectsGrid
-          projects={projectsResult}
-          refreshData={refreshData}
-          actions={["FINISHED", "CANCELED"]}
-        />
-      </ProjectsGridContainer>
-      <ProjectsExpectationsContainer>
-        <BaseCard
-          title="Total de entradas esperadas"
-          textAlign="center"
-          style={{ marginBottom: SPACES.px10 }}
-        >
-          <ExpectedValue>{`R$ ${incomeExpected || "0,00"}`}</ExpectedValue>
-        </BaseCard>
-        <BaseCard title="Total de custos esperados" textAlign="center">
-          <ExpectedValue>{`R$ ${costExpected || "0,00"}`}</ExpectedValue>
-        </BaseCard>
-      </ProjectsExpectationsContainer>
-    </PendingProjectsStyled>
-  ) : (
-    <LoadingBox />
-  );
-
   const handleConfirmForm = (values: IProjectsFilters): Promise<any> => {
     const cleanedFilters = cleanEmptyEntries(values, [""]);
 
@@ -85,9 +58,9 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
   return (
     <Fragment>
       <DataWithFilters
-        dataContainer={container}
         filtersFormFields={<FiltersFormFields />}
         handleConfirmForm={handleConfirmForm}
+        loading={!projectsResult}
         topRightInfo={
           <Fragment>
             <Button onClick={() => setAddProjectModalOpen(true)}>
@@ -101,7 +74,33 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
             />
           </Fragment>
         }
-      />
+      >
+        {projectsResult && (
+          <PendingProjectsStyled>
+            <ProjectsGridContainer>
+              <ProjectsGrid
+                projects={projectsResult}
+                refreshData={refreshData}
+                actions={["FINISHED", "CANCELED"]}
+              />
+            </ProjectsGridContainer>
+            <ProjectsExpectationsContainer>
+              <BaseCard
+                title="Total de entradas esperadas"
+                textAlign="center"
+                style={{ marginBottom: SPACES.px10 }}
+              >
+                <ExpectedValue>{`R$ ${
+                  incomeExpected || "0,00"
+                }`}</ExpectedValue>
+              </BaseCard>
+              <BaseCard title="Total de custos esperados" textAlign="center">
+                <ExpectedValue>{`R$ ${costExpected || "0,00"}`}</ExpectedValue>
+              </BaseCard>
+            </ProjectsExpectationsContainer>
+          </PendingProjectsStyled>
+        )}
+      </DataWithFilters>
     </Fragment>
   );
 };

@@ -3,17 +3,20 @@ import { Fragment } from "react";
 import Button from "../button/button";
 import { InfoContainer } from "./data-with-filters.style";
 import FiltersModal from "../filters-modal/filters-modal";
+import LoadingBox from "../loading-box/loading-box";
 
 interface IDataWithFilters {
   filtersFormFields: ReactNode;
-  dataContainer: ReactNode;
+  children?: ReactNode;
+  loading?: boolean;
   handleConfirmForm: (values: any) => Promise<any>;
   topRightInfo?: ReactNode;
 }
 
 const DataWithFilters: React.FC<IDataWithFilters> = ({
   filtersFormFields,
-  dataContainer,
+  children,
+  loading,
   handleConfirmForm,
   topRightInfo,
 }) => {
@@ -51,7 +54,7 @@ const DataWithFilters: React.FC<IDataWithFilters> = ({
         </div>
       </InfoContainer>
       {filtersAppliedInfo()}
-      {dataContainer}
+      {loading ? <LoadingBox /> : children}
     </Fragment>
   );
 };

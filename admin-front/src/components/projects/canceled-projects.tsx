@@ -3,7 +3,6 @@ import { getProjects } from "../../requests/projects/get-projects";
 import { IProject, IProjectsFilters } from "../../requests/projects/types";
 import { errorToast } from "../../ui-components/toasts/toasts";
 import ProjectsGrid from "./projects-grid";
-import LoadingBox from "../../ui-components/loading-box/loading-box";
 import { cleanEmptyEntries } from "../../utils/empty-entries-cleaner";
 import { Fragment } from "react";
 import DataWithFilters from "../../ui-components/data-with-filters/data-with-filters";
@@ -28,16 +27,6 @@ const CanceledProjects: React.FC<ICanceledProjects> = () => {
       .catch(() => errorToast());
   };
 
-  const container = projectsResult ? (
-    <ProjectsGrid
-      projects={projectsResult}
-      refreshData={refreshData}
-      actions={["FINISHED", "PENDING"]}
-    />
-  ) : (
-    <LoadingBox />
-  );
-
   const handleConfirmForm = (values: IProjectsFilters): Promise<any> => {
     const cleanedFilters = cleanEmptyEntries(values, [""]);
 
@@ -47,10 +36,18 @@ const CanceledProjects: React.FC<ICanceledProjects> = () => {
   return (
     <Fragment>
       <DataWithFilters
-        dataContainer={container}
         filtersFormFields={<FiltersFormFields />}
         handleConfirmForm={handleConfirmForm}
-      />
+        loading={!projectsResult}
+      >
+        {projectsResult && (
+          <ProjectsGrid
+            projects={projectsResult}
+            refreshData={refreshData}
+            actions={["FINISHED", "PENDING"]}
+          />
+        )}
+      </DataWithFilters>
     </Fragment>
   );
 };

@@ -2,7 +2,6 @@ import React, { useEffect, Fragment } from "react";
 import { useState } from "react";
 import { getDonations } from "../../../requests/donations/get-donations";
 import { PageTitle } from "../../../ui-components/typography/page-title";
-import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { TotalDonated } from "./donations.style";
 import {
@@ -38,13 +37,7 @@ const Donations: React.FC = () => {
     <Fragment>
       <PageTitle>Doações feitas</PageTitle>
       <DataWithFilters
-        dataContainer={
-          donationsResult ? (
-            <DonationsTable donations={donationsResult.donations} />
-          ) : (
-            <LoadingBox />
-          )
-        }
+        loading={!donationsResult}
         topRightInfo={
           <TotalDonated>
             Total dodado:{" "}
@@ -53,7 +46,11 @@ const Donations: React.FC = () => {
         }
         filtersFormFields={<FiltersFormFields />}
         handleConfirmForm={handleConfirmForm}
-      />
+      >
+        {donationsResult && (
+          <DonationsTable donations={donationsResult.donations} />
+        )}
+      </DataWithFilters>
     </Fragment>
   );
 };

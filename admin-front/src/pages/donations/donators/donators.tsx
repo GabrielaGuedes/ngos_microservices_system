@@ -4,7 +4,6 @@ import { getDonators } from "../../../requests/donations/get-donators";
 import { IDonator, IDonatorsFilters } from "../../../requests/donations/types";
 import { errorToast } from "../../../ui-components/toasts/toasts";
 import { PageTitle } from "../../../ui-components/typography/page-title";
-import LoadingBox from "../../../ui-components/loading-box/loading-box";
 import DonationsTable from "../../../components/donations/donators/donators-table";
 import DataWithFilters from "../../../ui-components/data-with-filters/data-with-filters";
 import FiltersFormFields from "../../../components/donations/donators/filters-form-fields";
@@ -34,16 +33,12 @@ const Donators: React.FC = () => {
     <Fragment>
       <PageTitle>Doadores</PageTitle>
       <DataWithFilters
-        dataContainer={
-          donatorsResult ? (
-            <DonationsTable donators={donatorsResult} />
-          ) : (
-            <LoadingBox />
-          )
-        }
+        loading={!donatorsResult}
         handleConfirmForm={handleConfirmForm}
         filtersFormFields={<FiltersFormFields />}
-      />
+      >
+        {donatorsResult && <DonationsTable donators={donatorsResult} />}
+      </DataWithFilters>
     </Fragment>
   );
 };
