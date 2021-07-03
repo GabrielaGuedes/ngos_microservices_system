@@ -18,6 +18,7 @@ import EmployeeTeam from "./pages/employees/teams/team";
 import Volunteers from "./pages/volunteers/volunteers/volunteers";
 import VolunteerArea from "./pages/volunteers/areas/area";
 import VolunteerTeam from "./pages/volunteers/teams/team";
+import Projects from "./pages/projects/projects";
 
 function App() {
   return (
@@ -83,7 +84,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/projects">
           <Sidebar />
-          <StyledPage>Projetos</StyledPage>
+          <StyledPage>
+            <Projects />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/financial-control" exact>
           <Sidebar />
