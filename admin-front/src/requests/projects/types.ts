@@ -41,4 +41,4 @@ interface IBaseProject {
   status?: ProjectStatus;
 }
 
-type ProjectStatus = "PENDING" | "FINISHED" | "CANCELED";
+export type ProjectStatus = "PENDING" | "FINISHED" | "CANCELED";

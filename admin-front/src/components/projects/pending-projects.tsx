@@ -20,6 +20,7 @@ import { getTotalCostExpected } from "../../requests/projects/get-total-cost-exp
 import ProjectsGrid from "./projects-grid";
 import BaseCard from "../../ui-components/base-card/base-card";
 import { SPACES } from "../../ui-constants/sizes";
+import { cleanEmptyEntries } from "../../utils/empty-entries-cleaner";
 
 interface IPendingProjects {}
 
@@ -52,7 +53,11 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
   const container = projectsResult ? (
     <PendingProjectsStyled>
       <ProjectsGridContainer>
-        <ProjectsGrid projects={projectsResult} refreshData={refreshData} />
+        <ProjectsGrid
+          projects={projectsResult}
+          refreshData={refreshData}
+          actions={["FINISHED", "CANCELED"]}
+        />
       </ProjectsGridContainer>
       <ProjectsExpectationsContainer>
         <BaseCard
@@ -71,15 +76,8 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
     <LoadingBox />
   );
 
-  const cleanEmptyFilters = (formattedValues: IProjectsFilters) => {
-    const filtersInArray = Object.entries(formattedValues).filter(
-      (entry) => entry[1] !== ""
-    );
-    return Object.fromEntries(filtersInArray);
-  };
-
   const handleConfirmForm = (values: IProjectsFilters): Promise<any> => {
-    const cleanedFilters = cleanEmptyFilters(values as any);
+    const cleanedFilters = cleanEmptyEntries(values, [""]);
 
     return refreshData(cleanedFilters).then(() => cleanedFilters);
   };

@@ -28,7 +28,11 @@ const FinishedProjects: React.FC<IFinishedProjects> = () => {
   };
 
   const container = projectsResult ? (
-    <ProjectsGrid projects={projectsResult} refreshData={refreshData} />
+    <ProjectsGrid
+      projects={projectsResult}
+      refreshData={refreshData}
+      actions={["CANCELED", "PENDING"]}
+    />
   ) : (
     <LoadingBox />
   );

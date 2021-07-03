@@ -5,12 +5,19 @@ import { CardContainer } from "./grid-card.style";
 interface IGridCard {
   title: string;
   children: ReactNode;
+  topRightElement?: ReactNode;
 }
 
-const GridCard: React.FC<IGridCard> = ({ title, children }) => {
+const GridCard: React.FC<IGridCard> = ({
+  title,
+  children,
+  topRightElement,
+}) => {
   return (
     <CardContainer>
-      <BaseCard title={title}>{children}</BaseCard>
+      <BaseCard title={title} topRightElement={topRightElement}>
+        {children}
+      </BaseCard>
     </CardContainer>
   );
 };

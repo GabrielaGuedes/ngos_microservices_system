@@ -16,6 +16,12 @@ export const BaseCardStyled = styled.div`
   }
 `;
 
+export const TopRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+
 export const CardTitle = styled.div`
   font-size: ${FONT_SIZES.px30};
   font-weight: bold;
