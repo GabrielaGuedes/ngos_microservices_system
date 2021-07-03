@@ -44,10 +44,10 @@ const EditCreateProjectModal: React.FC<IEditCreateProjectModal> = ({
       incomeDate: formValues.incomeDate?.substring(0, 10),
       costDate: formValues.costDate?.substring(0, 10),
       expectedCost: formValues.expectedCost
-        ? parseInt(formValues.expectedCost)
+        ? parseFloat(formValues.expectedCost)
         : null,
       expectedIncome: formValues.expectedIncome
-        ? parseInt(formValues.expectedIncome)
+        ? parseFloat(formValues.expectedIncome)
         : null,
     };
     return cleanEmptyEntries(withDateFormatted);
@@ -155,8 +155,12 @@ const EditCreateProjectModal: React.FC<IEditCreateProjectModal> = ({
         </TupleFieldContainer>
         <TupleFieldContainer>
           <HalfFieldContainer>
-            <FormField label="Receita esperada" name="costDate">
-              <TextInput name="costDate" placeholder="0,00" type="number" />
+            <FormField label="Receita esperada" name="expectedIncome">
+              <TextInput
+                name="expectedIncome"
+                placeholder="0,00"
+                type="number"
+              />
             </FormField>
           </HalfFieldContainer>
           <HalfFieldContainer>
@@ -177,12 +181,12 @@ const EditCreateProjectModal: React.FC<IEditCreateProjectModal> = ({
         <TupleFieldContainer>
           <HalfFieldContainer>
             <FormField label="Área responsável" name="responsibleArea">
-              <TextInput name="responsibleArea" />
+              <TextInput name="responsibleArea" placeholder="Área legal" />
             </FormField>
           </HalfFieldContainer>
           <HalfFieldContainer>
             <FormField label="Time responsável" name="responsibleTeam">
-              <TextInput name="responsibleTeam" />
+              <TextInput name="responsibleTeam" placeholder="Time top" />
             </FormField>
           </HalfFieldContainer>
         </TupleFieldContainer>
