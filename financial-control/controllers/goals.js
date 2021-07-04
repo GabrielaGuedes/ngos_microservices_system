@@ -9,7 +9,8 @@ const { validate } = new Validator();
 
 router.get("/", verifyJWT, async (req, res) => {
   const where = {};
-  if (req.query.reached) where.reached = req.query.reached;
+  if (req.query.reached || req.query.reached === false)
+    where.reached = req.query.reached;
   const query = { order: [["deadline", "ASC"]], where };
 
   await Goal.Model.findAll(query)
@@ -28,7 +29,7 @@ router.post(
   validate({ body: Goal.jsonSchema }),
   verifyJWT,
   async (req, res) => {
-    await Goal.Model.create(req.body)
+    await Goal.Model.create({ reached: false, ...req.body })
       .then((result) => res.json(result))
       .catch((error) => res.status(500).json(error));
   }
