@@ -71,7 +71,6 @@ const EditCreateProjectModal: React.FC<IEditCreateProjectModal> = ({
     setLoading(true);
     loadingToast();
     if (creation) {
-      console.log(formattedFormValues());
       createProject(formattedFormValues() as INewProject)
         .then(() => {
           handleSuccess();
