@@ -40,7 +40,11 @@ const StatusCards: React.FC<IStatusCards> = () => {
           </Tooltip>
         </StatusValue>
       </BaseCard>
-      <BaseCard title="Recorrência mensal" textAlign="center">
+      <BaseCard
+        title="Recorrência mensal"
+        textAlign="center"
+        style={{ marginBottom: SPACES.px20 }}
+      >
         <StatusValue>{`R$ ${recurrent?.currentValue || "0,00"}`}</StatusValue>
       </BaseCard>
     </Fragment>

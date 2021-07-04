@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { WIDTHS } from "../../../ui-constants/sizes";
+import { SPACES, WIDTHS } from "../../../ui-constants/sizes";
 
 export const FinancialControlStyled = styled.div`
   display: flex;
@@ -12,8 +12,10 @@ export const FinancialControlStyled = styled.div`
 
 export const TransactionsContainer = styled.div`
   width: 70%;
+  padding-right: ${SPACES.px10};
 
   @media only screen and (max-width: ${WIDTHS.mobileThreshold}) {
+    padding-right: 0px;
     width: auto;
   }
 `;
