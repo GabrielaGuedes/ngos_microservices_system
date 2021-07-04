@@ -5,8 +5,5 @@ import { IVolunteerTeam, IVolunteerTeamsFilters } from "./types";
 export const getTeams = async (
   filters?: IVolunteerTeamsFilters
 ): Promise<IVolunteerTeam[]> => {
-  return await getRequest(
-    `${process.env.REACT_APP_VOLUNTEERS_SERVER_API}${VOLUNTEERS_ROUTES.teams}`,
-    filters
-  );
+  return await getRequest(VOLUNTEERS_ROUTES.teams, filters);
 };

@@ -6,8 +6,5 @@ export const updateVolunteer = async (
   data: INewVolunteer,
   id: string | number
 ): Promise<IVolunteer> => {
-  return await putRequest(
-    `${process.env.REACT_APP_VOLUNTEERS_SERVER_API}${VOLUNTEERS_ROUTES.volunteers}/${id}`,
-    data
-  );
+  return await putRequest(`${VOLUNTEERS_ROUTES.volunteers}/${id}`, data);
 };

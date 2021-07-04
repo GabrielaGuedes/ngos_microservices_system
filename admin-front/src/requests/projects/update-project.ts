@@ -6,8 +6,5 @@ export const updateProject = async (
   data: INewProject,
   id: string | number
 ): Promise<IProject> => {
-  return await putRequest(
-    `${process.env.REACT_APP_PROJECTS_SERVER_API}${PROJECTS_ROUTES.projects}/${id}`,
-    data
-  );
+  return await putRequest(`${PROJECTS_ROUTES.projects}/${id}`, data);
 };

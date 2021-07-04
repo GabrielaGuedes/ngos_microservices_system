@@ -5,8 +5,5 @@ import { IEmployeeArea, IEmployeeAreasFilters } from "./types";
 export const getAreas = async (
   filters?: IEmployeeAreasFilters
 ): Promise<IEmployeeArea[]> => {
-  return await getRequest(
-    `${process.env.REACT_APP_EMPLOYEES_SERVER_API}${EMPLOYEES_ROUTES.areas}`,
-    filters
-  );
+  return await getRequest(EMPLOYEES_ROUTES.areas, filters);
 };

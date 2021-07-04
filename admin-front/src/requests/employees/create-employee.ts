@@ -5,8 +5,5 @@ import { IEmployee, INewEmployee } from "./types";
 export const createEmployee = async (
   data: INewEmployee
 ): Promise<IEmployee> => {
-  return await postRequest(
-    `${process.env.REACT_APP_EMPLOYEES_SERVER_API}${EMPLOYEES_ROUTES.employees}`,
-    data
-  );
+  return await postRequest(EMPLOYEES_ROUTES.employees, data);
 };

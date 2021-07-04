@@ -5,8 +5,5 @@ import { IDetailsConfig } from "./types";
 export const updateDetailsConfig = async (
   data: IDetailsConfig
 ): Promise<IDetailsConfig> => {
-  return await postRequest(
-    `${process.env.REACT_APP_SETTINGS_SERVER_API}${SETTINGS_ROUTES.details}`,
-    data
-  );
+  return await postRequest(SETTINGS_ROUTES.details, data);
 };

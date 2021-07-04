@@ -5,8 +5,5 @@ import { IProject, IProjectsFilters } from "./types";
 export const getProjects = async (
   filters?: IProjectsFilters
 ): Promise<IProject[]> => {
-  return await getRequest(
-    `${process.env.REACT_APP_PROJECTS_SERVER_API}${PROJECTS_ROUTES.projects}`,
-    filters
-  );
+  return await getRequest(PROJECTS_ROUTES.projects, filters);
 };

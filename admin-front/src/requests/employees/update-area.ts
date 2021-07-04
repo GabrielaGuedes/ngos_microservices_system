@@ -6,8 +6,5 @@ export const updateArea = async (
   data: INewEmployeeArea,
   id: string | number
 ): Promise<IEmployeeArea> => {
-  return await putRequest(
-    `${process.env.REACT_APP_EMPLOYEES_SERVER_API}${EMPLOYEES_ROUTES.areas}/${id}`,
-    data
-  );
+  return await putRequest(`${EMPLOYEES_ROUTES.areas}/${id}`, data);
 };

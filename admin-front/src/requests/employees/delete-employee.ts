@@ -5,7 +5,5 @@ import { EMPLOYEES_ROUTES } from "./routes";
 export const deleteEmployee = async (
   id: string | number
 ): Promise<IDestroy> => {
-  return await deleteRequest(
-    `${process.env.REACT_APP_EMPLOYEES_SERVER_API}${EMPLOYEES_ROUTES.employees}/${id}`
-  );
+  return await deleteRequest(`${EMPLOYEES_ROUTES.employees}/${id}`);
 };

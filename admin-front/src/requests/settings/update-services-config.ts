@@ -5,8 +5,5 @@ import { IServicesConfig } from "./types";
 export const updateServicesConfig = async (
   data: IServicesConfig
 ): Promise<IServicesConfig> => {
-  return await postRequest(
-    `${process.env.REACT_APP_SETTINGS_SERVER_API}${SETTINGS_ROUTES.services}`,
-    data
-  );
+  return await postRequest(SETTINGS_ROUTES.services, data);
 };

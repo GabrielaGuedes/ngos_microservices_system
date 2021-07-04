@@ -5,8 +5,5 @@ import { IAuthentication, IUserCredentials } from "./types";
 export const login = async (
   data: IUserCredentials
 ): Promise<IAuthentication> => {
-  return await postRequest(
-    `${process.env.REACT_APP_AUTHENTICATION_SERVER_API}${AUTHENTICATION_ROUTES.login}`,
-    data
-  );
+  return await postRequest(AUTHENTICATION_ROUTES.login, data);
 };

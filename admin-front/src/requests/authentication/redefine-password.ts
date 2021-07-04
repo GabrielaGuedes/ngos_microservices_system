@@ -5,8 +5,5 @@ import { INewPassword, ISuccess } from "./types";
 export const redefinePassword = async (
   data: INewPassword
 ): Promise<ISuccess> => {
-  return await putRequest(
-    `${process.env.REACT_APP_AUTHENTICATION_SERVER_API}${AUTHENTICATION_ROUTES.redefinePassword}`,
-    data
-  );
+  return await putRequest(AUTHENTICATION_ROUTES.redefinePassword, data);
 };

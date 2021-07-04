@@ -5,7 +5,5 @@ import { VOLUNTEERS_ROUTES } from "./routes";
 export const deleteVolunteer = async (
   id: string | number
 ): Promise<IDestroy> => {
-  return await deleteRequest(
-    `${process.env.REACT_APP_VOLUNTEERS_SERVER_API}${VOLUNTEERS_ROUTES.volunteers}/${id}`
-  );
+  return await deleteRequest(`${VOLUNTEERS_ROUTES.volunteers}/${id}`);
 };

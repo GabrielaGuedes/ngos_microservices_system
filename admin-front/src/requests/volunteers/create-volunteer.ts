@@ -5,8 +5,5 @@ import { IVolunteer, INewVolunteer } from "./types";
 export const createVolunteer = async (
   data: INewVolunteer
 ): Promise<IVolunteer> => {
-  return await postRequest(
-    `${process.env.REACT_APP_VOLUNTEERS_SERVER_API}${VOLUNTEERS_ROUTES.volunteers}`,
-    data
-  );
+  return await postRequest(VOLUNTEERS_ROUTES.volunteers, data);
 };

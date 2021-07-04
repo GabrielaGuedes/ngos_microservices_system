@@ -5,8 +5,5 @@ import { IProjectsFilters, ITotalCostExpected } from "./types";
 export const getTotalCostExpected = async (
   filters?: IProjectsFilters
 ): Promise<ITotalCostExpected> => {
-  return await getRequest(
-    `${process.env.REACT_APP_PROJECTS_SERVER_API}${PROJECTS_ROUTES.totalCostExpected}`,
-    filters
-  );
+  return await getRequest(PROJECTS_ROUTES.totalCostExpected, filters);
 };

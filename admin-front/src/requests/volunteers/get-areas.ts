@@ -5,8 +5,5 @@ import { IVolunteerArea, IVolunteerAreasFilters } from "./types";
 export const getAreas = async (
   filters?: IVolunteerAreasFilters
 ): Promise<IVolunteerArea[]> => {
-  return await getRequest(
-    `${process.env.REACT_APP_VOLUNTEERS_SERVER_API}${VOLUNTEERS_ROUTES.areas}`,
-    filters
-  );
+  return await getRequest(VOLUNTEERS_ROUTES.areas, filters);
 };
