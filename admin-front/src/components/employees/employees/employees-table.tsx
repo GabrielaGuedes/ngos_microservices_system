@@ -56,6 +56,7 @@ const EmployeesTable: React.FC<IEmployeesTable> = ({
         <div style={{ display: "flex" }}>
           <EditEmployeeButton employee={row} refreshTable={refreshTable} />
           <DeleteEmployeeButton
+            key={`delete-${row.id}-employee-button`}
             id={row.id}
             name={row.name}
             refreshTable={refreshTable}

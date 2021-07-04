@@ -50,6 +50,7 @@ const VolunteersTable: React.FC<IVolunteersTable> = ({
         <div style={{ display: "flex" }}>
           <EditVolunteerButton volunteer={row} refreshTable={refreshTable} />
           <DeleteVolunteerButton
+            key={`delete-${row.id}-volunteer-button`}
             id={row.id}
             name={row.name}
             refreshTable={refreshTable}

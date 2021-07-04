@@ -28,7 +28,11 @@ const DeleteVolunteerButton: React.FC<IDeleteVolunteerButton> = ({
   };
   return (
     <Fragment>
-      <EmojiIcon emoji={EMOJIS.trash} onClick={() => setIsAlertOpen(true)} />
+      <EmojiIcon
+        key={`delete-${id}-volunteer-emoji`}
+        emoji={EMOJIS.trash}
+        onClick={() => setIsAlertOpen(true)}
+      />
       <AlertModal
         title={`Tem certeza que deseja excluir '${name}'?`}
         isOpen={isAlertOpen}
