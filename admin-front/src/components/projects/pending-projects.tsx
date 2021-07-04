@@ -88,13 +88,17 @@ const PendingProjects: React.FC<IPendingProjects> = () => {
               <BaseCard
                 title="Total de entradas esperadas"
                 textAlign="center"
-                style={{ marginBottom: SPACES.px10 }}
+                style={{ marginBottom: SPACES.px20 }}
               >
                 <ExpectedValue>{`R$ ${
                   incomeExpected || "0,00"
                 }`}</ExpectedValue>
               </BaseCard>
-              <BaseCard title="Total de custos esperados" textAlign="center">
+              <BaseCard
+                title="Total de custos esperados"
+                textAlign="center"
+                style={{ marginBottom: SPACES.px20 }}
+              >
                 <ExpectedValue>{`R$ ${costExpected || "0,00"}`}</ExpectedValue>
               </BaseCard>
             </ProjectsExpectationsContainer>
