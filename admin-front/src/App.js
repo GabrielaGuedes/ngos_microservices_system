@@ -20,6 +20,7 @@ import VolunteerArea from "./pages/volunteers/areas/area";
 import VolunteerTeam from "./pages/volunteers/teams/team";
 import Projects from "./pages/projects/projects";
 import FinancialControl from "./pages/financial-control/financial-control/financial-control";
+import Goals from "./pages/financial-control/goals/goals";
 
 function App() {
   return (
@@ -97,7 +98,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/financial-control/goals">
           <Sidebar />
-          <StyledPage>Metas</StyledPage>
+          <StyledPage>
+            <Goals />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/marketing" exact>
           <Sidebar />
