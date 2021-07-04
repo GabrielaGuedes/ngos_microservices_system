@@ -6,15 +6,17 @@ interface IGridCard {
   title: string;
   children: ReactNode;
   topRightElement?: ReactNode;
+  size?: "normal" | "large";
 }
 
 const GridCard: React.FC<IGridCard> = ({
   title,
   children,
   topRightElement,
+  size = "normal",
 }) => {
   return (
-    <CardContainer>
+    <CardContainer bigSize={size === "large"}>
       <BaseCard title={title} topRightElement={topRightElement}>
         {children}
       </BaseCard>
