@@ -19,6 +19,7 @@ import Volunteers from "./pages/volunteers/volunteers/volunteers";
 import VolunteerArea from "./pages/volunteers/areas/area";
 import VolunteerTeam from "./pages/volunteers/teams/team";
 import Projects from "./pages/projects/projects";
+import FinancialControl from "./pages/financial-control/financial-control/financial-control";
 
 function App() {
   return (
@@ -90,7 +91,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/financial-control" exact>
           <Sidebar />
-          <StyledPage>Controle financeiro</StyledPage>
+          <StyledPage>
+            <FinancialControl />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/financial-control/goals">
           <Sidebar />

@@ -18,10 +18,14 @@ const BaseCard: React.FC<IBaseCard> = ({
 }) => {
   return (
     <BaseCardStyled style={{ ...style, textAlign: textAlign }}>
-      <TopRow>
-        {title ? <CardTitle>{title}</CardTitle> : <div />}
-        {topRightElement}
-      </TopRow>
+      {topRightElement ? (
+        <TopRow>
+          {title ? <CardTitle>{title}</CardTitle> : <div />}
+          {topRightElement}
+        </TopRow>
+      ) : (
+        <CardTitle>{title}</CardTitle>
+      )}
       {children}
     </BaseCardStyled>
   );
