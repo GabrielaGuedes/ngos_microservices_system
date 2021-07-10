@@ -14,14 +14,14 @@ export interface IPostFilters {
 }
 
 export interface IFilesAdded {
-  images: IFile[];
+  images: IFileAdded[];
 }
 
 export interface IRemoveFiles {
   paths: string[];
 }
 
-interface IFile {
+interface IFileAdded {
   fieldname: "multiple_files";
   originalname: string;
   encoding: string;
@@ -37,5 +37,13 @@ interface IBasePost {
   text?: string;
   postedAt?: Date;
   peopleReached?: number;
-  filePaths: string[];
+  files: IFile[];
+}
+
+interface IFile {
+  id: number;
+  path: string;
+  postId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
