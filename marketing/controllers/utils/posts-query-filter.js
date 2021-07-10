@@ -29,7 +29,11 @@ exports.postsQueryFilter = (queryParms) => {
     },
   };
 
-  if (posted) query.where = { ...query.where, postedAt: { [Op.ne]: null } };
+  if (posted)
+    query.where = {
+      ...query.where,
+      postedAt: posted === "true" ? { [Op.ne]: null } : { [Op.eq]: null },
+    };
   if (withPeopleReached)
     query.where = { ...query.where, peopleReached: { [Op.ne]: null } };
 
