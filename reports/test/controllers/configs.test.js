@@ -74,14 +74,14 @@ describe("/GET configs", () => {
       await Config.Model.remove({});
     });
 
-    it("returns empty object", async () => {
+    it("returns the default value", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/configs/")
         .set("x-access-token", token);
 
       res.should.have.status(200);
-      expect(res.body).to.eql({});
+      expect(res.body).to.eql({ allowCharts: true, allowExport: true });
     });
   });
 

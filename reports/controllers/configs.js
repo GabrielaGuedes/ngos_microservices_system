@@ -10,7 +10,7 @@ router.get("/", verifyJWT, async (req, res) => {
   await Config.Model.findOne({ current: true }).exec((err, docs) => {
     if (err) return res.status(500).json(err);
 
-    return res.json(docs || {});
+    return res.json(docs || { allowCharts: true, allowExport: true });
   });
 });
 
