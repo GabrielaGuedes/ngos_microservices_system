@@ -1,5 +1,6 @@
 export interface IPost extends IBasePost {
   id: number;
+  files: IFile[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +28,7 @@ export interface IFile {
   postId: number;
   createdAt: Date;
   updatedAt: Date;
+  filePaths: string[];
 }
 
 interface IFileAdded {
@@ -45,5 +47,4 @@ interface IBasePost {
   text?: string;
   postedAt?: Date;
   peopleReached?: number;
-  files: IFile[];
 }

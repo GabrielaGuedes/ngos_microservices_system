@@ -122,7 +122,6 @@ const EditCreatePostModal: React.FC<IEditCreatePostModal> = ({
       peopleReached: parseInt(formValues.peopleReached),
       filePaths: filePaths(),
     };
-    console.log(withDateFormatted);
     return cleanEmptyEntries(withDateFormatted);
   };
 

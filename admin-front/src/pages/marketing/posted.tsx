@@ -7,6 +7,7 @@ import { IPost, IPostFilters } from "../../requests/marketing/types";
 import Button from "../../ui-components/button/button";
 import DataWithFilters from "../../ui-components/data-with-filters/data-with-filters";
 import { errorToast } from "../../ui-components/toasts/toasts";
+import { PageTitle } from "../../ui-components/typography/page-title";
 import { cleanEmptyEntries } from "../../utils/empty-entries-cleaner";
 
 interface IPosted {}
@@ -47,26 +48,29 @@ const Posted: React.FC<IPosted> = () => {
   };
 
   return (
-    <DataWithFilters
-      loading={!postsResult}
-      filtersFormFields={<FiltersFormFields />}
-      topRightInfo={
-        <Fragment>
-          <Button onClick={() => setAddPostModalOpen(true)}>Novo post</Button>
-          <EditCreatePostModal
-            isOpen={addPostModalOpen}
-            setIsOpen={setAddPostModalOpen}
-            creation
-            refreshData={refreshData}
-          />
-        </Fragment>
-      }
-      handleConfirmForm={handleConfirmForm}
-    >
-      {postsResult && (
-        <PostedPostsTable posts={postsResult} refreshData={refreshData} />
-      )}
-    </DataWithFilters>
+    <Fragment>
+      <PageTitle>Postados</PageTitle>
+      <DataWithFilters
+        loading={!postsResult}
+        filtersFormFields={<FiltersFormFields />}
+        topRightInfo={
+          <Fragment>
+            <Button onClick={() => setAddPostModalOpen(true)}>Novo post</Button>
+            <EditCreatePostModal
+              isOpen={addPostModalOpen}
+              setIsOpen={setAddPostModalOpen}
+              creation
+              refreshData={refreshData}
+            />
+          </Fragment>
+        }
+        handleConfirmForm={handleConfirmForm}
+      >
+        {postsResult && (
+          <PostedPostsTable posts={postsResult} refreshData={refreshData} />
+        )}
+      </DataWithFilters>
+    </Fragment>
   );
 };
 
