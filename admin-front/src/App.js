@@ -23,6 +23,7 @@ import FinancialControl from "./pages/financial-control/financial-control/financ
 import Goals from "./pages/financial-control/goals/goals";
 import Marketing from "./pages/marketing/marketing";
 import Posted from "./pages/marketing/posted";
+import Reports from "./pages/reports/reports";
 
 function App() {
   return (
@@ -118,7 +119,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/reports">
           <Sidebar />
-          <StyledPage>relatórios</StyledPage>
+          <StyledPage>
+            <Reports />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/invoices">
           <Sidebar />
