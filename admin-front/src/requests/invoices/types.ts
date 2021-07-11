@@ -1,5 +1,5 @@
 export interface IInvoice extends IBaseInvoice {
-  id: number;
+  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -24,6 +24,7 @@ import Goals from "./pages/financial-control/goals/goals";
 import Marketing from "./pages/marketing/marketing";
 import Posted from "./pages/marketing/posted";
 import Reports from "./pages/reports/reports";
+import Invoices from "./pages/invoices/invoices";
 
 function App() {
   return (
@@ -125,7 +126,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/invoices">
           <Sidebar />
-          <StyledPage>notas fiscais</StyledPage>
+          <StyledPage>
+            <Invoices />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute path="/settings">
           <Sidebar />
