@@ -22,6 +22,7 @@ import Projects from "./pages/projects/projects";
 import FinancialControl from "./pages/financial-control/financial-control/financial-control";
 import Goals from "./pages/financial-control/goals/goals";
 import Marketing from "./pages/marketing/marketing";
+import Posted from "./pages/marketing/posted";
 
 function App() {
   return (
@@ -111,7 +112,9 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/marketing/posted">
           <Sidebar />
-          <StyledPage>Postadas</StyledPage>
+          <StyledPage>
+            <Posted />
+          </StyledPage>
         </ProtectedRoute>
         <ProtectedRoute servicePath path="/reports">
           <Sidebar />

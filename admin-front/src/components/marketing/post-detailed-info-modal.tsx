@@ -19,7 +19,7 @@ const PostDetailedInfoModal: React.FC<IPostDetailedInfoModal> = ({
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={post.title}>
       <Subtitle>Texto</Subtitle>
-      {post.text}
+      {post.text || <ShyEmptyState />}
       {post.files.length > 0 ? <Subtitle>Imagens</Subtitle> : <ShyEmptyState />}
       <ImagesContainer id={`images-post-${post.id}`}>
         <ImagesLoader post={post} />

@@ -110,7 +110,7 @@ const EditCreatePostModal: React.FC<IEditCreatePostModal> = ({
 
   const filePaths = () => {
     if (!data) {
-      return fileNames;
+      return fileNames || [];
     }
     return (fileNames || []).concat(data.files.map((f) => f.path));
   };
@@ -119,8 +119,10 @@ const EditCreatePostModal: React.FC<IEditCreatePostModal> = ({
     const withDateFormatted = {
       ...formValues,
       postedAt: formValues.postedAt?.substring(0, 10),
+      peopleReached: parseInt(formValues.peopleReached),
       filePaths: filePaths(),
     };
+    console.log(withDateFormatted);
     return cleanEmptyEntries(withDateFormatted);
   };
 
