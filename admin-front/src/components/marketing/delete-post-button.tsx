@@ -26,7 +26,9 @@ const DeletePostButton: React.FC<IDeletePostButton> = ({
   const handleClick = () => {
     deletePost(id)
       .then(() => {
-        removeFiles({ paths: files.map((f) => FILE_DIRECTORY + f) });
+        removeFiles({ paths: files.map((f) => FILE_DIRECTORY + f) }).catch(
+          () => {}
+        );
         refreshData();
       })
       .catch(() => errorToast());

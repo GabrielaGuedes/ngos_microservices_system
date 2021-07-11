@@ -21,6 +21,14 @@ export interface IRemoveFiles {
   paths: string[];
 }
 
+export interface IFile {
+  id: number;
+  path: string;
+  postId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface IFileAdded {
   fieldname: "multiple_files";
   originalname: string;
@@ -38,12 +46,4 @@ interface IBasePost {
   postedAt?: Date;
   peopleReached?: number;
   files: IFile[];
-}
-
-interface IFile {
-  id: number;
-  path: string;
-  postId: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
