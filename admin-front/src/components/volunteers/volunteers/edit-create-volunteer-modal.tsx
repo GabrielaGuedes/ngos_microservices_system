@@ -139,7 +139,7 @@ const EditCreateVolunteerModal: React.FC<IEditCreateVolunteerModal> = ({
       confirmDisabled={formIsInvalid || loading}
     >
       <Form
-        validate="blur"
+        validate="change"
         value={formValues}
         onChange={(nextValue) => setFormValues(nextValue)}
         onValidate={(event) => {

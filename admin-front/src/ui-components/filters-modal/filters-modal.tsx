@@ -39,7 +39,7 @@ const FiltersModal: React.FC<IFiltersModal> = ({
       beforeClose={() => setFormValues(filters)}
     >
       <Form
-        validate="blur"
+        validate="change"
         value={formValues}
         onChange={(nextValue) => setFormValues(nextValue)}
       >

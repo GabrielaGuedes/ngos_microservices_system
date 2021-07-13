@@ -28,7 +28,7 @@ const LoginForm: React.FC<ILoginForm> = () => {
     <Fragment>
       <LoginTitle>Olá! Faça seu login.</LoginTitle>
       <StyledForm
-        validate="blur"
+        validate="change"
         onSubmit={({ value }) => handleSubmit(value)}
         messages={{ required: "Obrigatório" }}
       >

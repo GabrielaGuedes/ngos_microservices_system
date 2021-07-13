@@ -35,7 +35,7 @@ const GeneralSettingsCard: React.FC<IGeneralSettingsCard> = () => {
       <BaseCard title="Geral">
         {value ? (
           <Form
-            validate="blur"
+            validate="change"
             value={value}
             onChange={(formValue) => setValue(formValue)}
             onSubmit={() => handleSave()}
