@@ -25,6 +25,7 @@ import Marketing from "./pages/marketing/marketing";
 import Posted from "./pages/marketing/posted";
 import Reports from "./pages/reports/reports";
 import Invoices from "./pages/invoices/invoices";
+import Initial from "./pages/initial/initial";
 
 function App() {
   return (
@@ -35,7 +36,9 @@ function App() {
       <Switch>
         <ProtectedRoute path="/" exact>
           <Sidebar />
-          <StyledPage>Pagina inicial</StyledPage>
+          <StyledPage>
+            <Initial />
+          </StyledPage>
         </ProtectedRoute>
         <Route path="/login">
           <Login />
