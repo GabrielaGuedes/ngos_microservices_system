@@ -164,6 +164,19 @@ services:
     ports:
       - "12000:12000"
 
+  user_front:
+    container_name: NGO_USER_FRONT
+    build: "./user-front"
+    stdin_open: true
+    volumes:
+      - "./user-front:/user-front"
+      - "./user-front/node_modules:/user-front/node_modules"
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "13000:13000"
+
   mongo_db:
     image: "mongo"
     container_name: NGO_MONGODB
