@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { grommet, Grommet } from "grommet";
+import { Toaster } from "react-hot-toast";
+import { Route, Switch } from "react-router-dom";
+import { deepMerge } from "grommet/utils";
+import { customThemeForGrommet } from "./ui-constants/custom-theme-for-grommet";
+import { COLORS } from "./ui-constants/colors";
+import Initial from "./pages/initial";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grommet
+      theme={deepMerge(grommet, customThemeForGrommet)}
+      style={{ backgroundColor: COLORS.background, minHeight: "100vh" }}
+    >
+      <Switch>
+        <Route path="/" exact>
+          <Initial />
+        </Route>
+      </Switch>
+      <Toaster />
+    </Grommet>
   );
 }
 
