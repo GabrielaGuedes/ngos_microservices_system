@@ -34,7 +34,7 @@ You can check the full description of each one below the table.
 
 | Endpoint            | Only Admin | Request Fields                                                                              | Headers        | Filters | Description                              |
 | ------------------- | ---------- | ------------------------------------------------------------------------------------------- | -------------- | ------- | ---------------------------------------- |
-| GET /api/services   | True       | -                                                                                           | x-access-token | -       | Returns the current service config       |
+| GET /api/services   | False      | -                                                                                           | x-access-token | -       | Returns the current service config       |
 | POST /api/services/ | True       | donations, employees, financialControl, invoices, marketing, projects, reports, volunteeers | x-access-token | -       | Updates the permissions for the services |
 | GET /api/details    | False      | -                                                                                           | -              | -       | Returns the current details config       |
 | POST /api/details/  | True       | name                                                                                        | x-access-token | -       | Updates the details configs              |
@@ -42,8 +42,6 @@ You can check the full description of each one below the table.
 ### GET /api/services/
 
 Returns the current service config. If there isn't a current config on the database, returns the default value.
-
-The authentication token needs to be passed in the header field `x-access-token`.
 
 When request is done correctly, returns success (200). Example response:
 
@@ -60,7 +58,7 @@ When request is done correctly, returns success (200). Example response:
 }
 ```
 
-When token is missing, returns unauthorized (401). When token is incorrect or there was an error, returns internal server error (500).
+When there was an error, returns internal server error (500).
 
 ---
 

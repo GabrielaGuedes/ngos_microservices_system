@@ -22,49 +22,21 @@ describe("/GET services", () => {
   before(async () => {
     await Service.Model.remove({});
 
-    token = await getTokenForTests();
-
     service = await new Service.Model(servicesDefault)
       .save()
       .then((doc) => doc);
   });
 
-  describe("When token is correct", () => {
+  describe("When request is ok", () => {
     it("returns the current service", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/services/")
-        .set("x-access-token", token);
+        .get("/api/services/");
 
       res.should.have.status(200);
       expect(res.body.donations).to.eq(service.donations);
       expect(res.body.employees).to.eq(service.employees);
       expect(res.body.volunteers).to.eq(service.volunteers);
-    });
-  });
-
-  describe("When token is not passed", () => {
-    it("returns unauthorized", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/services/");
-
-      res.should.have.status(401);
-      expect(res.error.text).to.include("No");
-      expect(res.error.text).to.include("provided");
-    });
-  });
-
-  describe("When token is invalid", () => {
-    it("returns error", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/services/")
-        .set("x-access-token", "invalid token");
-
-      res.should.have.status(500);
-      res.body.should.not.be.a("array");
-      expect(res.error.text).to.include("Failed");
     });
   });
 
@@ -76,8 +48,7 @@ describe("/GET services", () => {
     it("returns empty object", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/services/")
-        .set("x-access-token", token);
+        .get("/api/services/");
 
       res.should.have.status(200);
       expect(res.body).to.eql(servicesDefault);
