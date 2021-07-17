@@ -2,8 +2,8 @@ export interface IChargeCreditCard {
   creditCardNumber: number;
   cvv: number;
   donatedValue: number;
-  expireMonth: number;
-  expireYear: number;
+  expireMonth: string;
+  expireYear: string;
   name: string;
   birthDate: string;
   city: string;
