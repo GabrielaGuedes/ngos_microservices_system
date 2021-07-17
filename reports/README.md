@@ -15,7 +15,7 @@ You can check the full description of each one below the table.
 | GET /api/configs        | True       | -                        | x-access-token | -                                       | Returns the current config                                                       |
 | POST /api/configs/      | True       | allowExport, allowCharts | x-access-token | Updates the permissions for the reports |
 | GET /api/reports/charts | False      | -                        |                | -                                       | Returns all the transactions from the financial-control server grouped by origin |
-| GET /api/reports/export | True       | -                        |                | -                                       | Returns all the transactions in a `.xlsx` file                                   |
+| GET /api/reports/export | False      | -                        |                | -                                       | Returns all the transactions in a `.xlsx` file                                   |
 
 ### GET /api/configs/
 
