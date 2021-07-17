@@ -38,7 +38,6 @@ const Reports: React.FC<IReports> = () => {
       <PageTitle>Relatórios de transparência - Configurações</PageTitle>
       {configs ? (
         <Fragment>
-          {console.log(configs)}
           <CheckBoxGroupField
             value={configs}
             onChange={(value) => setConfigs(value)}

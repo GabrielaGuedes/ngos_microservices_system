@@ -41,14 +41,14 @@ const Reports: React.FC<IReports> = () => {
       <Subtitle>
         Aqui você pode ver como administramos nosso dinheiro :)
       </Subtitle>
-      <ExportContainer>
-        Baixe a nossa planilha com as entradas e saídas
-        {configs?.allowExport && (
+      {configs?.allowExport && (
+        <ExportContainer>
+          Baixe a nossa planilha com as entradas e saídas
           <a href={`${REPORTS_ROUTES.reports}/export`}>
             <Button>Download</Button>
           </a>
-        )}
-      </ExportContainer>
+        </ExportContainer>
+      )}
       {chartItems && (
         <ChartContainer>
           <Chart>
