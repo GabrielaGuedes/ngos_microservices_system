@@ -12,7 +12,7 @@ You can check the full description of each one below the table.
 
 | Endpoint                | Only Admin | Request fields           | Headers        | Filters                                 | Description                                                                      |
 | ----------------------- | ---------- | ------------------------ | -------------- | --------------------------------------- | -------------------------------------------------------------------------------- |
-| GET /api/configs        | True       | -                        | x-access-token | -                                       | Returns the current config                                                       |
+| GET /api/configs        | False      | -                        | x-access-token | -                                       | Returns the current config                                                       |
 | POST /api/configs/      | True       | allowExport, allowCharts | x-access-token | Updates the permissions for the reports |
 | GET /api/reports/charts | False      | -                        |                | -                                       | Returns all the transactions from the financial-control server grouped by origin |
 | GET /api/reports/export | False      | -                        |                | -                                       | Returns all the transactions in a `.xlsx` file                                   |
@@ -20,8 +20,6 @@ You can check the full description of each one below the table.
 ### GET /api/configs/
 
 Get the current config for the reports.
-
-The authentication token needs to be passed in the header field `x-access-token`.
 
 When body is passed correctly, returns success (200). Example response:
 

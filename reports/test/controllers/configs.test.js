@@ -21,8 +21,6 @@ describe("/GET configs", () => {
   before(async () => {
     await Config.Model.remove({});
 
-    token = await getTokenForTests();
-
     config = await new Config.Model({
       allowExport: false,
       allowCharts: true,
@@ -31,41 +29,15 @@ describe("/GET configs", () => {
       .then((doc) => doc);
   });
 
-  describe("When token is correct", () => {
+  describe("When everything is correct", () => {
     it("returns the current config", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/configs/")
-        .set("x-access-token", token);
-
-      res.should.have.status(200);
-      expect(res.body.allowCharts).to.eq(config.allowCharts);
-      expect(res.body.allowExport).to.eq(config.allowExport);
-    });
-  });
-
-  describe("When token is not passed", () => {
-    it("returns unauthorized", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
         .get("/api/configs/");
 
-      res.should.have.status(401);
-      expect(res.error.text).to.include("No");
-      expect(res.error.text).to.include("provided");
-    });
-  });
-
-  describe("When token is invalid", () => {
-    it("returns error", async () => {
-      const res = await chai
-        .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/configs/")
-        .set("x-access-token", "invalid token");
-
-      res.should.have.status(500);
-      res.body.should.not.be.a("array");
-      expect(res.error.text).to.include("Failed");
+      res.should.have.status(200);
+      expect(res.body.allowCharts).to.eq(config.allowCharts);
+      expect(res.body.allowExport).to.eq(config.allowExport);
     });
   });
 
@@ -77,8 +49,7 @@ describe("/GET configs", () => {
     it("returns the default value", async () => {
       const res = await chai
         .request(`http://localhost:${process.env.TEST_PORT}`)
-        .get("/api/configs/")
-        .set("x-access-token", token);
+        .get("/api/configs/");
 
       res.should.have.status(200);
       expect(res.body).to.eql({ allowCharts: true, allowExport: true });
