@@ -1,6 +1,7 @@
 import { Tab, Tabs } from "grommet";
 import React, { useEffect, useState } from "react";
 import Donations from "../components/donations/donations";
+import Reports from "../components/reports/reports";
 import { getDetails } from "../requests/settings/get-details-config";
 import { getServices } from "../requests/settings/get-services-config";
 import { IServicesConfig } from "../requests/settings/types";
@@ -32,7 +33,11 @@ const Initial: React.FC<IInitial> = () => {
             <Donations />
           </Tab>
         )}
-        {services?.reports && <Tab title="Transparência">a</Tab>}
+        {services?.reports && (
+          <Tab title="Transparência">
+            <Reports />
+          </Tab>
+        )}
       </Tabs>
     </PageContainer>
   );
