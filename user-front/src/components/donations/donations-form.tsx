@@ -16,6 +16,7 @@ import {
 import Button from "../../ui-components/button/button";
 import { EMOJIS } from "../../ui-components/icons/emojis";
 import { errorToast, successToast } from "../../ui-components/toasts/toasts";
+import { cleanEmptyEntries } from "../../utils/empty-entries-cleaner";
 import { ButtonContainer } from "./donations-form.style";
 
 interface IDonationsForm {}
@@ -24,8 +25,8 @@ const DonationsForm: React.FC<IDonationsForm> = () => {
   const [formValues, setFormValues] = useState<IChargeCreditCard | any>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const formattedValues = () => {
-    return {
+  const formattedValues = (): IChargeCreditCard => {
+    const parsedValues = {
       ...formValues,
       phone: formValues.phone ? parseInt(formValues.phone) : null,
       cvv: parseInt(formValues.cvv),
@@ -34,6 +35,7 @@ const DonationsForm: React.FC<IDonationsForm> = () => {
       ),
       donatedValue: parseFloat(formValues.donatedValue),
     };
+    return cleanEmptyEntries(parsedValues) as IChargeCreditCard;
   };
 
   const handleSubmit = () => {
