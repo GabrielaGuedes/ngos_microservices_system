@@ -41,11 +41,9 @@ const LoginForm: React.FC<ILoginForm> = () => {
         <Box
           direction="row"
           align="center"
-          justify="between"
+          justify="end"
           margin={{ top: "medium" }}
         >
-          {/* TODO: add forgot password */}
-          <div>Esqueceu sua senha?</div>
           <Button type="submit">Entrar</Button>
         </Box>
       </StyledForm>

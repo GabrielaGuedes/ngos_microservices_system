@@ -23,7 +23,9 @@ const Login: React.FC<ILogin> = () => {
     <LoginPageContainer>
       <Title>Nome da ONG</Title>
       <LoginCardContainer>
-        <BaseCard>{isFirstUser ? <SignupForm /> : <LoginForm />}</BaseCard>
+        <BaseCard style={{ minWidth: "350px" }}>
+          {isFirstUser ? <SignupForm /> : <LoginForm />}
+        </BaseCard>
       </LoginCardContainer>
     </LoginPageContainer>
   );
