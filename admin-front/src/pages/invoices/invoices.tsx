@@ -51,7 +51,7 @@ const Invoices: React.FC<IInvoices> = () => {
               style={{ marginRight: SPACES.px4 }}
               onClick={() => setAddInvoiceModalOpen(true)}
             >
-              Novo funcionário
+              Novo registro de doação
             </Button>
             <EditCreateInvoiceModal
               isOpen={addInvoiceModalOpen}
