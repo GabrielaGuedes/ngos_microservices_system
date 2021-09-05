@@ -119,7 +119,8 @@ const EditCreatePostModal: React.FC<IEditCreatePostModal> = ({
     const withDateFormatted = {
       ...formValues,
       postedAt: formValues.postedAt?.substring(0, 10),
-      peopleReached: parseInt(formValues.peopleReached),
+      peopleReached:
+        formValues.peopleReached && parseInt(formValues.peopleReached),
       filePaths: filePaths(),
     };
     return cleanEmptyEntries(withDateFormatted);
